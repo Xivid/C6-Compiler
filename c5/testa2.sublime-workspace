@@ -1,0 +1,1147 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+			[
+				"p",
+				"printf	printf …"
+			],
+			[
+				"loop",
+				"loop_stack"
+			],
+			[
+				"in",
+				"include"
+			],
+			[
+				"typ",
+				"typeInt"
+			],
+			[
+				"st",
+				"status"
+			],
+			[
+				"lo",
+				"lookup_sym_index"
+			],
+			[
+				"look",
+				"lookup_sym"
+			],
+			[
+				"type",
+				"typeEnum"
+			],
+			[
+				"check",
+				"checkFunEnv"
+			],
+			[
+				"tc",
+				"tcheck"
+			],
+			[
+				"Bool",
+				"Bool"
+			],
+			[
+				"tcheck",
+				"tcheckargs"
+			],
+			[
+				"return",
+				"returntype"
+			],
+			[
+				"tfune",
+				"tfunenv"
+			],
+			[
+				"show",
+				"showArgs"
+			],
+			[
+				"x",
+				"x"
+			],
+			[
+				"En",
+				"EnvF"
+			],
+			[
+				"tick",
+				"ticket_id"
+			],
+			[
+				"join",
+				"joined_query"
+			],
+			[
+				"ticket",
+				"ticket_n"
+			],
+			[
+				"query",
+				"query3"
+			],
+			[
+				"fe",
+				"fetch_assoc"
+			],
+			[
+				"tic",
+				"ticket_n"
+			],
+			[
+				"M",
+				"MAX"
+			],
+			[
+				"FROM",
+				"FROM"
+			],
+			[
+				"re",
+				"referee"
+			],
+			[
+				"member",
+				"member_id"
+			],
+			[
+				"refer",
+				"referred_by"
+			],
+			[
+				"refe",
+				"referred_by"
+			],
+			[
+				"max",
+				"max_n"
+			],
+			[
+				"es",
+				"escaped_id"
+			],
+			[
+				"price",
+				"price"
+			],
+			[
+				"sc",
+				"schedule"
+			],
+			[
+				"sch",
+				"schedule_id"
+			],
+			[
+				"house",
+				"house_no"
+			],
+			[
+				"AND",
+				"AND"
+			],
+			[
+				"html",
+				"htmlspecialchars"
+			],
+			[
+				"movie",
+				"movie_id"
+			],
+			[
+				"escape",
+				"escaped_house"
+			],
+			[
+				"escap",
+				"escaped_term"
+			],
+			[
+				"cinea",
+				"cinema_id"
+			],
+			[
+				"cinema",
+				"cinema_id"
+			],
+			[
+				"mem",
+				"member_id"
+			],
+			[
+				"T",
+				"TBool"
+			],
+			[
+				"Int",
+				"IntV"
+			],
+			[
+				"env",
+				"env"
+			],
+			[
+				"de",
+				"delete"
+			],
+			[
+				"v",
+				"v"
+			],
+			[
+				"sub",
+				"substitute"
+			],
+			[
+				"l",
+				"l"
+			],
+			[
+				"f",
+				"f"
+			],
+			[
+				"yy",
+				"yyerror"
+			],
+			[
+				"R",
+				"REPEAT_OPEN"
+			],
+			[
+				"r",
+				"return"
+			],
+			[
+				"rena",
+				"renameDeclare"
+			],
+			[
+				"s",
+				"String"
+			],
+			[
+				"ev",
+				"evalMulti"
+			],
+			[
+				"new",
+				"newenv"
+			],
+			[
+				"Mu",
+				"module"
+			],
+			[
+				"De",
+				"DeclareMulti"
+			],
+			[
+				"del",
+				"DeclMulti"
+			],
+			[
+				"Decl",
+				"DeclMulti"
+			],
+			[
+				"Mult",
+				"Mult"
+			],
+			[
+				"Va",
+				"Variable"
+			],
+			[
+				"V",
+				"Variable"
+			],
+			[
+				"subst",
+				"substitute"
+			],
+			[
+				"long",
+				"longChain"
+			],
+			[
+				"find",
+				"findChain"
+			],
+			[
+				"sum",
+				"sumSquares"
+			],
+			[
+				"lar",
+				"largestDivisible"
+			],
+			[
+				"bind",
+				"bindE"
+			],
+			[
+				"e",
+				"evaluate3"
+			],
+			[
+				"bin",
+				"bindE"
+			],
+			[
+				"A",
+				"Add"
+			],
+			[
+				"b",
+				"b"
+			],
+			[
+				"so",
+				"showExpr"
+			],
+			[
+				"sho",
+				"showExpr"
+			],
+			[
+				"all",
+				"allButLast"
+			],
+			[
+				"ca",
+				"catMaybes"
+			],
+			[
+				"y",
+				"y"
+			],
+			[
+				"zi",
+				"zipList"
+			],
+			[
+				"zip",
+				"zipSum2"
+			],
+			[
+				"fi",
+				"filterList"
+			],
+			[
+				"map",
+				"mapList"
+			],
+			[
+				"li",
+				"listAscii2"
+			],
+			[
+				"ma",
+				"mapList"
+			],
+			[
+				"S",
+				"String"
+			],
+			[
+				"imp",
+				"import"
+			],
+			[
+				"ne",
+				"nested_if"
+			],
+			[
+				"fun",
+				"function"
+			],
+			[
+				"set",
+				"setUserName"
+			],
+			[
+				"backgroun",
+				"background-image"
+			],
+			[
+				"ba",
+				"background-color"
+			],
+			[
+				"font",
+				"font-family"
+			],
+			[
+				"consumer",
+				"consumer_status"
+			],
+			[
+				"pro",
+				"producer_id"
+			],
+			[
+				"buffer",
+				"buffer_status"
+			],
+			[
+				"ME",
+				"MAX_THREAD"
+			],
+			[
+				"alarm",
+				"alarm_end"
+			],
+			[
+				"bu",
+				"buffer_item"
+			],
+			[
+				"n",
+				"N"
+			],
+			[
+				"com",
+				"command"
+			],
+			[
+				"comm",
+				"comm"
+			],
+			[
+				"chil",
+				"childPid2"
+			],
+			[
+				"C",
+				"CommArray"
+			],
+			[
+				"child",
+				"childPid1"
+			],
+			[
+				"pip",
+				"pipeNum"
+			],
+			[
+				"cm",
+				"command"
+			],
+			[
+				"search",
+				"searchprefix"
+			],
+			[
+				"alu",
+				"aluCtr"
+			],
+			[
+				"mux",
+				"muxMem2Reg"
+			],
+			[
+				"readD",
+				"readData2"
+			],
+			[
+				"read",
+				"readData1"
+			],
+			[
+				"Bi",
+				"BinaryNode"
+			],
+			[
+				"THETA",
+				"THETALEFT"
+			],
+			[
+				"THE",
+				"THETARIGHT"
+			],
+			[
+				"MIN",
+				"MINDIS"
+			],
+			[
+				"out",
+				"outofmaze"
+			],
+			[
+				"iter",
+				"interator"
+			],
+			[
+				"count",
+				"counter_r"
+			],
+			[
+				"pri",
+				"priorityqueue"
+			],
+			[
+				"end",
+				"endver"
+			],
+			[
+				"en",
+				"endver"
+			],
+			[
+				"edge",
+				"edgecount"
+			],
+			[
+				"h",
+				"head"
+			],
+			[
+				"ver",
+				"verNode"
+			],
+			[
+				"gen",
+				"generator"
+			],
+			[
+				"hash",
+				"hashtable"
+			]
+		]
+	},
+	"buffers":
+	[
+		{
+			"file": "sc_list",
+			"settings":
+			{
+				"buffer_size": 142,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "c5.y",
+			"settings":
+			{
+				"buffer_size": 4736,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "continue2.sc",
+			"settings":
+			{
+				"buffer_size": 59,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "fact.sc",
+			"settings":
+			{
+				"buffer_size": 195,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "fib.sc",
+			"settings":
+			{
+				"buffer_size": 222,
+				"line_ending": "Windows",
+				"name": "//FIB (x)"
+			}
+		},
+		{
+			"file": "makefile",
+			"settings":
+			{
+				"buffer_size": 236,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "README",
+			"settings":
+			{
+				"buffer_size": 20,
+				"line_ending": "Windows",
+				"name": "LI SHA [3035267231]"
+			}
+		}
+	],
+	"build_system": "",
+	"command_palette":
+	{
+		"height": 81.0,
+		"selected_items":
+		[
+			[
+				"P",
+				"Package Control: Install Package"
+			],
+			[
+				"",
+				"Package Control: Install Package"
+			]
+		],
+		"width": 400.0
+	},
+	"console":
+	{
+		"height": 133.0
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"file_history":
+	[
+		"/D/compiler/assignment2/vagrant/c5/c5c.c",
+		"/D/compiler/assignment2/vagrant/c5/continue3.sc",
+		"/D/compiler/assignment2/vagrant/c5/continue2.as",
+		"/D/compiler/assignment2/vagrant/c5/fib.input0",
+		"/D/compiler/assignment2/vagrant/c5/break3.sc",
+		"/D/compiler/assignment2/vagrant/c5/break2.sc",
+		"/D/compiler/assignment2/vagrant/c5/break1.sc",
+		"/D/compiler/assignment2/vagrant/c5/continue2.sc",
+		"/D/compiler/assignment2/vagrant/c5/continue1.sc",
+		"/D/compiler/assignment2/vagrant/c5/c5.l",
+		"/D/compiler/assignment2/vagrant/c5/c5.y",
+		"/D/compiler/assignment2/vagrant/c5/sym.c",
+		"/D/compiler/assignment2/vagrant/c5/continue4.sc",
+		"/D/compiler/assignment2/vagrant/c5/continue4.as",
+		"/D/compiler/assignment2/vagrant/c5/fact.input1",
+		"/D/compiler/assignment2/vagrant/c5/fact.input0",
+		"/D/compiler/assignment2/vagrant/c5/xmas.sc",
+		"/D/compiler/assignment2/vagrant/c5/for.sc",
+		"/D/compiler/assignment2/vagrant/c5/x.sc",
+		"/D/compiler/assignment2/vagrant/c5/do.sc",
+		"/D/compiler/assignment2/vagrant/c5/test",
+		"/D/compiler/assignment2/vagrant/c5/readme",
+		"/D/compiler/assignment2/vagrant/NAS/nas-is.txt",
+		"/D/compiler/assignment2/vagrant/NAS/syntax-tree.txt",
+		"/D/compiler/assignment2/vagrant/NAS/notes.txt",
+		"/D/compiler/assignment2/vagrant/c5/for.as",
+		"/D/compiler/assignment2/vagrant/c5/sc_list.txt",
+		"/D/compiler/assignment2/vagrant/c5/x.as",
+		"/D/compiler/assignment2/vagrant/c5/continue.sc",
+		"/D/compiler/assignment2/vagrant/c5/continue.as",
+		"/D/compiler/assignment2/vagrant/c5/xmas.as",
+		"/D/compiler/assignment2/vagrant/c5/loop.h",
+		"/D/compiler/assignment2/vagrant/c5/fact.sc",
+		"/D/compiler/assignment2/vagrant/c5/do.as",
+		"/D/compiler/assignment2/vagrant/c5/fact_new.as",
+		"/D/compiler/assignment2/vagrant/c4/calc3.h",
+		"/D/compiler/assignment2/vagrant/c4/c4.y",
+		"/D/compiler/assignment2/vagrant/c4/c4.l",
+		"/D/compiler/assignment2/vagrant/c5/makefile",
+		"/D/compiler/assignment2/vagrant/NAS/nas/makefile",
+		"/D/compiler/assignment2/vagrant/c5/fact2.as",
+		"/D/compiler/assignment2/vagrant/c5/fact.as",
+		"/D/compiler/assignment2/vagrant/c5/for5.as",
+		"/D/compiler/assignment2/vagrant/c5/testsym.c",
+		"/D/compiler/assignment2/vagrant/c5/calc3.h",
+		"/D/compiler/assignment2/vagrant/c4/c4c.c",
+		"/D/compiler/assignment2/vagrant/c5/sym.h",
+		"/D/compiler/assignment2/NAS/nas/max.as",
+		"/D/compiler/assignment2/NAS/nas/fact.as",
+		"/D/compiler/assignment2/vagrant/c4/for.sas",
+		"/D/compiler/assignment2/c4/fact.sas",
+		"/D/compiler/assignment2/vagrant/c5/cal.l",
+		"/D/compiler/assignment2/vagrant/c5/cal.y",
+		"/D/compiler/assignment2/NAS/nas/rev.as",
+		"/D/compiler/assignment2/NAS/nas/rev-c.as",
+		"/D/compiler/assignment2/NAS/nas/nas.l",
+		"/D/compiler/assignment2/NAS/nas/nas.y",
+		"/D/compiler/assignment2/nas-is.txt",
+		"/D/dy_web/vagrant-test/host/Vagrantfile",
+		"/D/dy_web/vagrant-test/vagrantfile",
+		"/D/ProgrammingLanguages/bundle_tutorial6/CallByName.hs",
+		"/D/ProgrammingLanguages/bundle_tutorial6/TypeCheck.hs",
+		"/D/ProgrammingLanguages/bundle_tutorial6/Interp.hs",
+		"/D/database/sql-cheatsheet.sql",
+		"/D/ProgrammingLanguages/bundle_tutorial6/Declare.hs",
+		"/D/ProgrammingLanguages/bundle_tutorial5/recursion/TypeCheck.hs",
+		"/D/ProgrammingLanguages/bundle_tutorial5/recursion/Parser.y",
+		"/D/ProgrammingLanguages/bundle_tutorial5/recursion/Main.hs",
+		"/D/ProgrammingLanguages/bundle_tutorial5/recursion/Interp.hs",
+		"/D/ProgrammingLanguages/bundle_tutorial5/recursion/Declare.hs",
+		"/D/ProgrammingLanguages/bundle_tutorial5/bundle_stu/TypeCheck.hs",
+		"/D/ProgrammingLanguages/bundle_tutorial5/recursion/demo.txt",
+		"/D/ProgrammingLanguages/bundle_tutorial5/recursion/Parser.hs",
+		"/D/ProgrammingLanguages/ppt&reference/Lecture7/Lecture7/FirstClassFunctionsTest.hs",
+		"/D/ProgrammingLanguages/ppt&reference/Lecture7/Lecture7/FirstClassFunctions.hs",
+		"/D/ProgrammingLanguages/ppt&reference/Lecture7/Lecture7/Env.hs",
+		"/D/ProgrammingLanguages/ppt&reference/Lecture7/Lecture7/Base.hs",
+		"/D/ProgrammingLanguages/ppt&reference/Lecture7/Lecture7/Lexer.hs",
+		"/D/ProgrammingLanguages/ppt&reference/Lecture7/Lecture7/FirstClassFunctionsParse.y",
+		"/D/ProgrammingLanguages/ppt&reference/Lecture7/Lecture7/FirstClassFunctionsParse.hs",
+		"/D/ProgrammingLanguages/bundle_tutorial5/bundle_stu/Main.hs",
+		"/D/ProgrammingLanguages/bundle_tutorial5/bundle_stu/Interp.hs",
+		"/D/ProgrammingLanguages/bundle_tutorial5/bundle_stu/demo.txt",
+		"/D/ProgrammingLanguages/bundle_tutorial5/bundle_stu/Declare.hs",
+		"/D/ProgrammingLanguages/lecture7.hs",
+		"/D/compiler/nas-is.txt",
+		"/D/ProgrammingLanguages/Basics.hs",
+		"/D/ProgrammingLanguages/bundle_tutorial4/bundle_stu/Declare.hs",
+		"/D/ProgrammingLanguages/bundle_tutorial4/bundle_stu/Interp.hs",
+		"/D/ProgrammingLanguages/bundle_tutorial4/bundle_stu/TypeCheck.hs",
+		"/D/XAMPP/htdocs/A2/questions/q10.php",
+		"/D/XAMPP/htdocs/A2/index.php",
+		"/D/XAMPP/htdocs/A2/questions/q10b.php",
+		"/D/dy_web/config.yml",
+		"/D/XAMPP/htdocs/A2/questions/q4.php",
+		"/D/dy_web/spider/news_spider.py",
+		"/D/XAMPP/htdocs/A2/config.php",
+		"/D/database/tables.sql",
+		"/D/XAMPP/htdocs/A2/questions/q8.php",
+		"/D/XAMPP/htdocs/A2/questions/q3.php",
+		"/D/XAMPP/htdocs/A2/questions/q2.php",
+		"/D/XAMPP/htdocs/A2/questions/q7.php",
+		"/D/XAMPP/htdocs/A2/questions/q9.php",
+		"/D/XAMPP/htdocs/A2/questions/q6.php",
+		"/D/XAMPP/htdocs/A2/questions/q5.php",
+		"/D/database/questions-2015-10-10/questions/q2.php",
+		"/D/database/questions-2015-10-10/questions/q4.php",
+		"/D/database/questions-2015-10-10/questions/q5.php",
+		"/D/database/tutorial2/b-local.php",
+		"/D/database/tutorial2/a-local.php",
+		"/D/database/tutorial2/a.php",
+		"/D/database/tutorial2/b.php",
+		"/D/database/questions-2015-10-10/questions/q1.php",
+		"/D/ProgrammingLanguages/bundle_answer2/bundle_answer/Declare.hs",
+		"/D/ProgrammingLanguages/bundle_answer2/bundle_answer/Interp.hs",
+		"/D/ProgrammingLanguages/bundle_student/bundle_student/Interp.hs",
+		"/D/ProgrammingLanguages/bundle_answer2/bundle_answer/Parser.hs",
+		"/D/ProgrammingLanguages/tutorial3/bundle_stu/Interp.hs",
+		"/D/ProgrammingLanguages/Lecture4/Variables.hs",
+		"/D/ProgrammingLanguages/Lecture4/Interp.hs",
+		"/D/ProgrammingLanguages/Lecture4/Declare.hs",
+		"/D/ProgrammingLanguages/tutorial3/bundle_stu/Declare.hs",
+		"/D/ProgrammingLanguages/Lecture4/parser.hs",
+		"/D/ProgrammingLanguages/tutorial3/bundle_stu/Parser.hs",
+		"/D/compiler/a1skeleton/README",
+		"/D/compiler/a1skeleton/piano.y",
+		"/D/compiler/a1skeleton/piano.l",
+		"/D/compiler/piano/piano.y"
+	],
+	"find":
+	{
+		"height": 38.0
+	},
+	"find_in_files":
+	{
+		"height": 0.0,
+		"where_history":
+		[
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": false,
+		"find_history":
+		[
+			"ex(p->opr.op",
+			"ex(p->opr.op[0])",
+			"ex(p->opr.op[1])",
+			"ex(p->opr.op[2])",
+			"ex(p->opr.op[3])",
+			"ex(p->opr.op[2])",
+			"ex(p->opr.op[0])",
+			"ex(p->opr.op[1])",
+			"Int",
+			"best",
+			"movie_id",
+			"substitute",
+			"substituteWithout",
+			"insertl(output,$$);",
+			"printf",
+			"group bracket group",
+			"));",
+			"$$=*(",
+			";}",
+			"$$=create_node",
+			"create_pitch",
+			"show_note(*($$.val));",
+			"struct note\n	{\n	int pitch;\n	int length;\n\n	note (int p,int l)\n	{\n	pitch=p;\n	length=l;\n	}\n	};",
+			"strcpy",
+			";",
+			"$$=",
+			")",
+			"printf(\"%s \",",
+			"^",
+			"\"  ",
+			"\"",
+			"%token",
+			"LOWER_",
+			"LOWER",
+			"HIGHER_",
+			"LOWER",
+			"_",
+			"DeclMulti",
+			"e2",
+			"e1",
+			"\\t",
+			"LoaderManager",
+			"SYSCTL_RCC",
+			"SYSCTL_OSC_MAIN",
+			"SYSCTL_USE_OSC",
+			"SYSCTL_LDO",
+			"SYSCTL_LDO_",
+			"SYSCTL_LDO_2_50V",
+			"GPIODir",
+			"SYSCTL_RCGC2",
+			"waves",
+			"vex_r_x",
+			"i",
+			"keys",
+			"in",
+			"keys",
+			"carState",
+			"img_dst",
+			"result",
+			"img_dst",
+			"img_r",
+			"result",
+			"originpoints",
+			"100px",
+			"';\n"
+		],
+		"highlight": true,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": false,
+		"replace_history":
+		[
+			"ex(p->opr.op[0],-1,-1)",
+			"ex(p->opr.op[1],-1,-1)",
+			"ex(p->opr.op[2],-1,-1)",
+			"ex(p->opr.op[3],-1,-1)",
+			"ex(p->opr.op[2],-1,-1)",
+			"ex(p->opr.op[0],-1,-1)",
+			"ex(p->opr.op[1],-1,-1)",
+			"substituteWithout",
+			"substitute",
+			"",
+			"fprintf",
+			"mixed_group",
+			");",
+			"$$=",
+			");}",
+			"$$=*(create_node",
+			"create_node",
+			"",
+			"memcpy",
+			");",
+			";)",
+			"strcpy($$,",
+			"",
+			"$$=",
+			"\\^",
+			"",
+			"|    ",
+			"",
+			"HIGHER",
+			"",
+			"HIGHER",
+			"^",
+			"DeclareMulti",
+			"b",
+			"a",
+			"    "
+		],
+		"reverse": false,
+		"show_context": true,
+		"use_buffer2": true,
+		"whole_word": false,
+		"wrap": true
+	},
+	"groups":
+	[
+		{
+			"selected": 0,
+			"sheets":
+			[
+				{
+					"buffer": 0,
+					"file": "sc_list",
+					"settings":
+					{
+						"buffer_size": 142,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								141,
+								141
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Text/Plain text.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "c5.y",
+					"settings":
+					{
+						"buffer_size": 4736,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Text/Plain text.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				}
+			]
+		},
+		{
+			"selected": 4,
+			"sheets":
+			[
+				{
+					"buffer": 2,
+					"file": "continue2.sc",
+					"settings":
+					{
+						"buffer_size": 59,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								57,
+								57
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Text/Plain text.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 3,
+					"file": "fact.sc",
+					"settings":
+					{
+						"buffer_size": 195,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							],
+							[
+								24,
+								24
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Text/Plain text.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 4,
+					"file": "fib.sc",
+					"settings":
+					{
+						"buffer_size": 222,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								59,
+								59
+							]
+						],
+						"settings":
+						{
+							"auto_name": "//FIB (x)",
+							"syntax": "Packages/Text/Plain text.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 5,
+					"file": "makefile",
+					"settings":
+					{
+						"buffer_size": 236,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								236,
+								236
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Makefile/Makefile.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 6,
+					"file": "README",
+					"settings":
+					{
+						"buffer_size": 20,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								20,
+								20
+							]
+						],
+						"settings":
+						{
+							"auto_name": "LI SHA [3035267231]",
+							"syntax": "Packages/Text/Plain text.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				}
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 0.0
+	},
+	"input":
+	{
+		"height": 0.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			],
+			[
+				1,
+				0,
+				2,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			0.524155404487,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"output.haskell_error_checker":
+	{
+		"height": 59.0
+	},
+	"replace":
+	{
+		"height": 64.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 0.0,
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"show_minimap": true,
+	"show_open_files": false,
+	"show_tabs": true,
+	"side_bar_visible": true,
+	"side_bar_width": 150.0,
+	"status_bar_visible": true
+}

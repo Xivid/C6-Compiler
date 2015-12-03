@@ -29,7 +29,7 @@ SCOPE_STACK* ss;
 
 %token <iValue> INTEGER
 %token <var> VARIABLE
-%token FOR WHILE IF PRINT READ DO BREAK CONTINUE
+%token FOR WHILE IF PRINT READ DO BREAK CONTINUE ARRAY
 %nonassoc IFX
 %nonassoc ELSE
 

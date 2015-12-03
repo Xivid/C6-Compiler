@@ -1,5 +1,6 @@
 %{
 #include <stdlib.h>
+#include <ctype.h>
 #include <string.h>
 #include "calc3.h"
 #include "y.tab.h"
@@ -23,8 +24,15 @@ void yyerror(char *);
 "do"            return DO;
 "break"         return BREAK;
 "continue"      return CONTINUE;
-[a-zA-Z]+   { 
-                yylval.var = strdup(yytext);
+"array"         return ARRAY;
+[a-zA-Z][a-zA-Z0-9]+   { 
+                s = strdup(yytext);
+                for (i=0;s[i];i++){
+                    if (s[i] >='0' && s[i]<='9') continue;
+                    s[i]=tolower(s[i]);
+                }
+                /* coverting to lowercase */
+                yylval.var =s ;
                 return VARIABLE;
             }
 

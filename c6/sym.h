@@ -4,7 +4,7 @@
 #include <string.h>
 #define TABLE_SIZE 101 
 #define STACK_SIZE 10
-#define NAME_MAX 30
+#define NAME_MAX 12
 typedef enum {typeInt,typeChar,typeString} typeEnum;
 typedef struct{
 	char* name;

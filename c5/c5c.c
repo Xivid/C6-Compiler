@@ -105,7 +105,7 @@ int ex(nodeType *p,int l1,int l2) {
         if (lookup_sym_index(name) ==-1){
             //redundant push
             ex(p->opr.op[1],l1,l2);
-            //printf("//variable %s not defined, saved at fp[%d]\n",name,var-1);
+            printf("//variable %s not defined, saved at fp[%d]\n",name,var-1);
             insert_sym(name,var,typeInt);
         } 
         ex(p->opr.op[1],l1,l2);
@@ -116,26 +116,30 @@ int ex(nodeType *p,int l1,int l2) {
         ex(p->opr.op[0],l1,l2);
         printf("\tneg\n");
         break;
+    case ':':
+        ex(p->opr.op[0],l1,l2);
+        ex(p->opr.op[1],l1,l2);
+        break;
     default:
         ex(p->opr.op[0],l1,l2);
         ex(p->opr.op[1],l1,l2);
         switch(p->opr.oper) {
-        case '+':   printf("\tadd\n"); break;
-        case '-':   printf("\tsub\n"); break; 
-        case '*':   printf("\tmul\n"); break;
-        case '/':   printf("\tdiv\n"); break;
-        case '%':   printf("\tmod\n"); break;
-        case '<':   printf("\tcomplt\n"); break;
-        case '>':   printf("\tcompgt\n"); break;
-        case GE:    printf("\tcompge\n"); break;
-        case LE:    printf("\tcomple\n"); break;
-        case NE:    printf("\tcompne\n"); break;
-        case EQ:    printf("\tcompeq\n"); break;
-        case AND:   printf("\tand\n"); break;
-        case OR:    printf("\tor\n"); break;
+        case '+':   printf("\tadd\n"); var--;break;
+        case '-':   printf("\tsub\n"); var--;break; 
+        case '*':   printf("\tmul\n"); var--;break;
+        case '/':   printf("\tdiv\n"); var--;break;
+        case '%':   printf("\tmod\n"); var--;break;
+        case '<':   printf("\tcomplt\n"); var--;break;
+        case '>':   printf("\tcompgt\n"); var--;break;
+        case GE:    printf("\tcompge\n"); var--;break;
+        case LE:    printf("\tcomple\n"); var--;break;
+        case NE:    printf("\tcompne\n"); var--;break;
+        case EQ:    printf("\tcompeq\n"); var--;break;
+        case AND:   printf("\tand\n"); var--;break;
+        case OR:    printf("\tor\n"); var--;break;
         }
-        var--;
         }
     }
+    printf("//fp now at %d \n",var-1);
     return 0;
 }

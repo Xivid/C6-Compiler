@@ -27,6 +27,9 @@ int ex(nodeType *p,int l1,int l2) {
         break;
     case typeOpr:
         switch(p->opr.oper) {
+    case '$':break;//function definition
+    case ':':break;//params
+    case '#':break;//function call
     case CONTINUE:
         if (l1 != -1) printf("\tjmp\tL%03d\n", l1);
         else printf("invalid continue !\n");
@@ -120,21 +123,20 @@ int ex(nodeType *p,int l1,int l2) {
         ex(p->opr.op[0],l1,l2);
         ex(p->opr.op[1],l1,l2);
         switch(p->opr.oper) {
-        case '+':   printf("\tadd\n"); break;
-        case '-':   printf("\tsub\n"); break; 
-        case '*':   printf("\tmul\n"); break;
-        case '/':   printf("\tdiv\n"); break;
-        case '%':   printf("\tmod\n"); break;
-        case '<':   printf("\tcomplt\n"); break;
-        case '>':   printf("\tcompgt\n"); break;
-        case GE:    printf("\tcompge\n"); break;
-        case LE:    printf("\tcomple\n"); break;
-        case NE:    printf("\tcompne\n"); break;
-        case EQ:    printf("\tcompeq\n"); break;
-        case AND:   printf("\tand\n"); break;
-        case OR:    printf("\tor\n"); break;
+        case '+':   printf("\tadd\n"); var--;break;
+        case '-':   printf("\tsub\n"); var--;break; 
+        case '*':   printf("\tmul\n"); var--;break;
+        case '/':   printf("\tdiv\n"); var--;break;
+        case '%':   printf("\tmod\n"); var--;break;
+        case '<':   printf("\tcomplt\n"); var--;break;
+        case '>':   printf("\tcompgt\n"); var--;break;
+        case GE:    printf("\tcompge\n"); var--;break;
+        case LE:    printf("\tcomple\n"); var--;break;
+        case NE:    printf("\tcompne\n"); var--;break;
+        case EQ:    printf("\tcompeq\n"); var--;break;
+        case AND:   printf("\tand\n"); var--;break;
+        case OR:    printf("\tor\n"); var--;break;
         }
-        var--;
         }
     }
     return 0;

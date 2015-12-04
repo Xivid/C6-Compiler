@@ -29,7 +29,7 @@ SCOPE_STACK* ss;
 
 %token <iValue> INTEGER
 %token <var> VARIABLE
-%token FOR WHILE IF PRINT READ DO BREAK CONTINUE ARRAY
+%token FOR WHILE IF PRINT READ DO BREAK CONTINUE ARRAY RETURN
 %nonassoc IFX
 %nonassoc ELSE
 
@@ -40,16 +40,31 @@ SCOPE_STACK* ss;
 %left '*' '/' '%'
 %nonassoc UMINUS
 
-%type <nPtr> stmt expr stmt_list
+%type <nPtr> stmt expr stmt_list definition params return 
 
 %%
 
-program:
-        function                { exit(0); }
+program: 
+          function                { exit(0); }
+        ;
+
+definition:
+         VARIABLE '(' params ')' '{' stmt_list return '}' 
+         {$$= opr('$',4,id($1),$3,$6,$7); } 
+         | VARIABLE '(' ')''{' stmt_list return '}' 
+         {$$= opr('$',3,id($1),$5,$6); } 
+         ;
+params: 
+        params',' VARIABLE          {$$ = opr(':',2,$1,$3); /*concatenate variables*/}
+        | VARIABLE                  {$$ = opr(':',1,id($1));}
+        ;
+return:
+        RETURN VARIABLE ';' {$$=opr(RETURN,1,id($2));}
         ;
 
 function:
           function stmt         { ex($2,-1,-1); freeNode($2); }
+        | function definition   { ex($2,-1,-1); freeNode($2); }
         | /* NULL */
         ;
 
@@ -93,6 +108,7 @@ expr:
 	    | expr AND expr		{ $$ = opr(AND, 2, $1, $3); }
 	    | expr OR expr		{ $$ = opr(OR, 2, $1, $3); }
         | '(' expr ')'          { $$ = $2; }
+        |  VARIABLE '(' params ')'  {$$ = opr('#',2,id($1),$3);}
         ;
 
 %%

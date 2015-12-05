@@ -380,8 +380,8 @@ struct yy_trans_info
 static yyconst flex_int16_t yy_accept[78] =
     {   0,
         0,    0,   26,   24,   23,   23,   24,   21,   24,   21,
-       19,   20,   21,   21,   21,   24,   24,   24,   24,   24,
-       24,   24,   24,   24,   24,   24,   24,   23,    4,   11,
+       19,   20,   21,   21,   21,   18,   18,   18,   18,   18,
+       18,   18,   18,   18,   18,   18,   24,   23,    4,   11,
         0,   20,    2,    3,    1,   18,   18,   18,   18,   13,
        18,   18,    7,   18,   18,   18,   12,    0,   22,   18,
        18,   18,   18,    5,   18,   18,   18,   18,   18,   18,
@@ -875,7 +875,8 @@ YY_RULE_SETUP
 { 
                 char* s = strdup(yytext);
                 int i;
-                for (i=0;s[i];i++){
+                for (i=0;s[i];i++)
+                {
                     if (s[i] >='0' && s[i]<='9') continue;
                     s[i]=tolower(s[i]);
                 }
@@ -886,7 +887,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
-#line 41 "c5.l"
+#line 42 "c5.l"
 {
                 yylval.iValue = atoi(yytext);
                 return INTEGER;
@@ -894,7 +895,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
-#line 46 "c5.l"
+#line 47 "c5.l"
 {
                 yylval.iValue = atoi(yytext);
                 return INTEGER;
@@ -902,7 +903,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
-#line 51 "c5.l"
+#line 52 "c5.l"
 {
                 return *yytext;
              }
@@ -910,26 +911,26 @@ YY_RULE_SETUP
 case 22:
 /* rule 22 can match eol */
 YY_RULE_SETUP
-#line 57 "c5.l"
+#line 58 "c5.l"
 ;	/* skip comments */
 	YY_BREAK
 case 23:
 /* rule 23 can match eol */
 YY_RULE_SETUP
-#line 59 "c5.l"
+#line 60 "c5.l"
 ;   /* ignore whitespace */
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
-#line 61 "c5.l"
+#line 62 "c5.l"
 yyerror("Unknown character");
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
-#line 62 "c5.l"
+#line 63 "c5.l"
 ECHO;
 	YY_BREAK
-#line 933 "lex.yy.c"
+#line 934 "lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -1927,7 +1928,7 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 62 "c5.l"
+#line 63 "c5.l"
 
 
 int yywrap(void) {

@@ -26,10 +26,11 @@ void yyerror(char *);
 "continue"      return CONTINUE;
 "array"         return ARRAY;
 "return"        return RETURN;
-[a-zA-Z][a-zA-Z0-9]+   { 
+[a-zA-Z][a-zA-Z0-9]*   { 
                 char* s = strdup(yytext);
                 int i;
-                for (i=0;s[i];i++){
+                for (i=0;s[i];i++)
+                {
                     if (s[i] >='0' && s[i]<='9') continue;
                     s[i]=tolower(s[i]);
                 }

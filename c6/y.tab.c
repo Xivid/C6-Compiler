@@ -1865,7 +1865,7 @@ nodeType *id(char* x) {
     size_t nodeSize;
 
     /* allocate node */
-    nodeSize = SIZEOF_NODETYPE + sizeof(idNodeType)+ (strlen(x)+1)*sizeof(char);
+    nodeSize = SIZEOF_NODETYPE + sizeof(idNodeType);
     if ((p = malloc(nodeSize)) == NULL)
         yyerror("out of memory");
 

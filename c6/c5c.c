@@ -140,13 +140,13 @@ int ex(nodeType *p,int l1,int l2) {
         break;
     case '=':       
         name = p->opr.op[0]->id.name;
+        ex(p->opr.op[1],l1,l2);
         if (lookup(name) ==NULL){
             //redundant push
-            ex(p->opr.op[1],l1,l2);
+            printf("\tpush\tsp[-1]\n");
             //printf("//variable %s not defined, saved at fp[%d]\n",name,var-1);
             insert_var(name,var,typeInt);
         } 
-        ex(p->opr.op[1],l1,l2);
         printf("\tpop\tfp[%d]\n", (lookup(name)->var.index)-1);
         var--;
         break;

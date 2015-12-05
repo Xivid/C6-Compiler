@@ -22,13 +22,48 @@ int ex(nodeType *p,int l1,int l2) {
         break;
     case typeId: 
         //push lookup id.name       
-        printf("\tpush\tfp[%d]\n", lookup_sym_index(p->id.name)-1); 
+        printf("\tpush\tfp[%d]\n", (lookup(p->id.name)->var.index)-1); 
         var++;
         break;
     case typeOpr:
         switch(p->opr.oper) {
-    case '$':break;//function definition
-    case ':':break;//params
+    case '$':
+    if (p->opr.nops>3){
+        //add function to sym table 
+        printf("L%03d:\n", lbl++);
+        ex(p->opr.op[2],l1,l2);//body
+        ex(p->opr.op[3],l1,l2);//return
+    }
+    else {//no params
+        //add function to sym table 
+        printf("L%03d:\n", lbl++);
+        ex(p->opr.op[1],l1,l2);//body
+        ex(p->opr.op[2],l1,l2);//return
+    }
+    break;//function definition
+
+    /*VARIABLE '(' params ')' '{' stmt_list return '}' 
+         {$$= opr('$',4,id($1),$3,$6,$7); } 
+         | VARIABLE '(' ')''{' stmt_list return '}' 
+         {$$= opr('$',3,id($1),$5,$6); } 
+         */
+    case RETURN:
+        //RETURN VARIABLE ';' {$$=opr(RETURN,1,id($2));}
+        name = p->opr.op[0]->id.name;
+        printf("\tpush\tfp[%d]\n", (lookup(name)->var.index)-1);
+        printf("\tret\n");
+        break;
+    case ':':
+    //params',' VARIABLE          {$$ = opr(':',2,$1,$3); /*concatenate variables*/}
+     //   | VARIABLE                  {$$ = opr(':',1,id($1));}
+    if (p->opr.nops==1){
+        //create PARAMLIST
+        ;
+    }
+    else {
+        ;
+    }
+    break;//params
     case '#':break;//function call
     case CONTINUE:
         if (l1 != -1) printf("\tjmp\tL%03d\n", l1);
@@ -95,7 +130,7 @@ int ex(nodeType *p,int l1,int l2) {
         var++;
         name = p->opr.op[0]->id.name;
         printf("//variable %s from input, saved at fp[%d]\n",name,var-1);
-        insert_sym(name,var,typeInt);
+        insert_var(name,var,typeInt);
 	    break;
     case PRINT:     
         ex(p->opr.op[0],l1,l2);
@@ -105,14 +140,14 @@ int ex(nodeType *p,int l1,int l2) {
         break;
     case '=':       
         name = p->opr.op[0]->id.name;
-        if (lookup_sym_index(name) ==-1){
+        if (lookup(name) ==NULL){
             //redundant push
             ex(p->opr.op[1],l1,l2);
             //printf("//variable %s not defined, saved at fp[%d]\n",name,var-1);
-            insert_sym(name,var,typeInt);
+            insert_var(name,var,typeInt);
         } 
         ex(p->opr.op[1],l1,l2);
-        printf("\tpop\tfp[%d]\n", lookup_sym_index(name)-1);
+        printf("\tpop\tfp[%d]\n", (lookup(name)->var.index)-1);
         var--;
         break;
     case UMINUS:    

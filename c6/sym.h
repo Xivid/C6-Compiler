@@ -6,15 +6,11 @@
 #define STACK_SIZE 10
 #define NAME_MAX 12
 typedef enum {typeInt,typeChar,typeString,typeFunc,typeArray} typeEnum;
+
 typedef struct{
-	char* name;
-	typeEnum type;
-	union{
-		variableType var; 
-		functionType func; 
-		arrayType array;
-	};	
-}ENTRY;
+	int paramno;
+	char** paramlist;
+}PARAMLIST;
 
 typedef struct {
 	int index;
@@ -30,11 +26,15 @@ typedef struct {
 	int size;
 	int index;//base index
 }arrayType;
-
 typedef struct{
-	int paramno;
-	(char paramlist[NAME_MAX])*;
-}PARAMLIST;
+	char* name;
+	typeEnum type;
+	union{
+		variableType var; 
+		functionType func; 
+		arrayType array;
+	};	
+}ENTRY;
 
 typedef ENTRY* HASH_TABLE[TABLE_SIZE];  
 

@@ -73,14 +73,51 @@ void allocate_ht()
 	push_ht(ss,ht);
 	return;
 }
+ENTRY* var_entry(char* name,int index,typeEnum type){
+	ENTRY* e;
+	e = malloc(sizeof(ENTRY));
+	e->name = strdup(name);
+	e->type = type;
+	e->var.index = index;
+	return e;
+}
+ENTRY* func_entry(char* name,int label,PARAMLIST* params){
+	ENTRY* e;
+	e = malloc(sizeof(ENTRY));
+	e->name =strdup(name);
+	e->type = typeFunc;
+	e->func.label = label;
+	e->func.params = params;
+	return e;
+
+}
+
+ENTRY* array_entry(char* name,int index,int size,typeEnum elementtype){
+	ENTRY* e;
+	e= malloc(sizeof(ENTRY));
+	e->name = strdup(name);
+	e->type = typeArray;
+	e->array.type= elementtype;
+	e->array.size = size;
+	e->array.index = index;
+	return e;
+}
+
+void free_entry(ENTRY* e){
+	if (e==NULL) return;
+	if (e->type == typeFunc){
+		free(e->func.params);//free_params?
+	}
+	free(e);
+}
 void free_ht()
 {
 	HASH_TABLE* ht = current_ht(ss);
 	//free every entry
 	int i=0;
 	for (;i<TABLE_SIZE;i++)
-	{	free((*ht)[i].name);
-		free(ht[i]);
+	{	
+		free_entry((*ht)[i]);
 	}
 	free(ht);
 	pop_ht(ss);
@@ -147,7 +184,7 @@ ENTRY* lookup(char* name)
 		while (((*ht)[h]!=NULL) && (strcmp((*ht)[h]->name,name)!=0))//stores another entry
 		{
 			h=(h+1)%TABLE_SIZE;
-			if (h == original) return -1;//not found
+			if (h == original) return NULL;//not found
 		}
 
 	}
@@ -155,32 +192,3 @@ ENTRY* lookup(char* name)
 }
 
 
-ENTRY* var_entry(char* name,int index,typeEnum type){
-	ENTRY* e;
-	e = malloc(sizeof(ENTRY));
-	e->name = strdup(name);
-	e->type = type;
-	e->var.index = index;
-	return e;
-}
-ENTRY* func_entry(char* name,int label,PARAMLIST* params){
-	ENTRY* e;
-	e = malloc(sizeof(ENTRY));
-	e->name =strdup(name);
-	e->type = typeFunc;
-	e->func.label = label;
-	e->func.params = params;
-	return e;
-
-}
-
-ENTRY* array_entry(char* name,int index,int size,typeEnum elementtype){
-	ENTRY* e;
-	e= malloc(sizeof(ENTRY));
-	e->name = strdup(name);
-	e->type = typeArray;
-	e->array.type= elementtype;
-	e->array.size = size;
-	e->array.index = index;
-	return e;
-}

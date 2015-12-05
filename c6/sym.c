@@ -73,6 +73,21 @@ void allocate_ht()
 	push_ht(ss,ht);
 	return;
 }
+
+PARAMLIST* paramlist(){
+	PARAMLIST* p = malloc(sizeof(PARAMLIST));
+	p->no= 0;
+	return p;
+}
+
+void add_param(PARAMLIST* p,char* name){
+	if (strlen(name)>=NAME_MAX){
+		printf("Error:%s name too long\n",name);return;	
+	}
+	p->paramlist[p->no++] = name;	
+
+}
+
 ENTRY* var_entry(char* name,int index,typeEnum type){
 	ENTRY* e;
 	e = malloc(sizeof(ENTRY));

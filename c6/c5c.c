@@ -9,6 +9,7 @@ static int lbl;
 //the number of variables on stack
 static int var;
 char* name;
+PARAMLIST* pl;
 //l1 for continue 
 //l2 for break
 int ex(nodeType *p,int l1,int l2) {
@@ -53,17 +54,6 @@ int ex(nodeType *p,int l1,int l2) {
         printf("\tpush\tfp[%d]\n", (lookup(name)->var.index)-1);
         printf("\tret\n");
         break;
-    case ':':
-    //params',' VARIABLE          {$$ = opr(':',2,$1,$3); /*concatenate variables*/}
-     //   | VARIABLE                  {$$ = opr(':',1,id($1));}
-    if (p->opr.nops==1){
-        //create PARAMLIST
-        ;
-    }
-    else {
-        ;
-    }
-    break;//params
     case '#':break;//function call
     case CONTINUE:
         if (l1 != -1) printf("\tjmp\tL%03d\n", l1);

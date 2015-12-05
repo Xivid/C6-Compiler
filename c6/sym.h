@@ -4,11 +4,11 @@
 #include <string.h>
 #define TABLE_SIZE 101 
 #define STACK_SIZE 10
-#define NAME_MAX 12
+#define NAME_MAX 13
 typedef enum {typeInt,typeChar,typeString,typeFunc,typeArray} typeEnum;
 
 typedef struct{
-	int paramno;
+	int no;
 	char** paramlist;
 }PARAMLIST;
 

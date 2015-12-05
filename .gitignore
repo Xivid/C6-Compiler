@@ -10,3 +10,7 @@
 
 #vagrant related
 /.vagrant
+
+#test programs 
+*.sc
+*.as

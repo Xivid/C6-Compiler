@@ -61,14 +61,14 @@ unsigned long djb2(unsigned char *str)
     }
 
 //allocate_ht for every function call
+//entry size is now variable
 void allocate_ht()
 {
-	HASH_TABLE* ht = (HASH_TABLE*) (malloc ((sizeof(ENTRY)+sizeof(char)*NAME_MAX)*TABLE_SIZE));
+	HASH_TABLE* ht = (HASH_TABLE*) (malloc (sizeof(HASH_TABLE)));
 	int i;
 	for (i=0;i<TABLE_SIZE;i++)
 	{
-		(*ht)[i].status=0;//empty
-		(*ht)[i].index=-1;
+		(*ht)[i]=NULL;//pointing to no entry
 	}
 	push_ht(ss,ht);
 	return;
@@ -88,40 +88,99 @@ void free_ht()
 }
 
 //fp[index] = value
-void insert_sym(char* name,int index,typeEnum type)
+//variable
+void insert_var(char* name,int index,typeEnum type)
 {	if (strlen(name)>=NAME_MAX) {
 		printf("Error:%s name too long\n",name);return;
 	}
 	HASH_TABLE* ht = current_ht(ss);
 	int h = hash(name);
 	int original= h;
-	while ((*ht)[h].status !=0 ) {
+	while ((*ht)[h]!=NULL ) {
 		h=(h+1)%TABLE_SIZE;
 		if (h == original) printf("Error: sym table full!\n");
 	}
-	(*ht)[h].name = strdup(name);
-	(*ht)[h].status = 1;
-	(*ht)[h].index = index;
-	(*ht)[h].type = type;
+	//create variable entry 
+	(*ht)[h] = var_entry(name,index,type);
 	return;
-
 }
 
-int lookup_sym_index(char* name)
+void insert_func(char* name,int label,PARAMLIST* params){
+	if (strlen(name)>=NAME_MAX) {
+		printf("Error:%s name too long\n",name);return;
+	}
+	HASH_TABLE* ht = current_ht(ss);
+	int h = hash(name);
+	int original= h;
+	while ((*ht)[h]!=NULL ) {
+		h=(h+1)%TABLE_SIZE;
+		if (h == original) printf("Error: sym table full!\n");
+	}
+	(*ht)[h] = func_entry(name,label,params);
+	return;
+}
+
+void insert_array(char* name,int index,int size,typeEnum elementtype)
+{
+	if (strlen(name)>=NAME_MAX) {
+		printf("Error:%s name too long\n",name);return;
+	}
+	HASH_TABLE* ht = current_ht(ss);
+	int h = hash(name);
+	int original= h;
+	while ((*ht)[h]!=NULL ) {
+		h=(h+1)%TABLE_SIZE;
+		if (h == original) printf("Error: sym table full!\n");
+	}
+	 
+	(*ht)[h] = array_entry(name,index,size,elementtype);
+	return;
+}
+
+//for var,function,array
+ENTRY* lookup(char* name)
 {	HASH_TABLE* ht = current_ht(ss);
 	int h = hash(name);
 	int original= h;
-	if ((*ht)[h].status==0) {return -1;}//not found 
+	if ((*ht)[h]==NULL) {return NULL;}//not found 
 	else {
-		while ((strcmp((*ht)[h].name,name)!=0) && ((*ht)[h].status==1))//stores another entry
+		while (((*ht)[h]!=NULL) && (strcmp((*ht)[h]->name,name)!=0))//stores another entry
 		{
 			h=(h+1)%TABLE_SIZE;
 			if (h == original) return -1;//not found
 		}
 
 	}
-	return (*ht)[h].index;
+	return (*ht)[h];
 }
 
 
+ENTRY* var_entry(char* name,int index,typeEnum type){
+	ENTRY* e;
+	e = malloc(sizeof(ENTRY));
+	e->name = strdup(name);
+	e->type = type;
+	e->var.index = index;
+	return e;
+}
+ENTRY* func_entry(char* name,int label,PARAMLIST* params){
+	ENTRY* e;
+	e = malloc(sizeof(ENTRY));
+	e->name =strdup(name);
+	e->type = typeFunc;
+	e->func.label = label;
+	e->func.params = params;
+	return e;
 
+}
+
+ENTRY* array_entry(char* name,int index,int size,typeEnum elementtype){
+	ENTRY* e;
+	e= malloc(sizeof(ENTRY));
+	e->name = strdup(name);
+	e->type = typeArray;
+	e->array.type= elementtype;
+	e->array.size = size;
+	e->array.index = index;
+	return e;
+}

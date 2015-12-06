@@ -40,7 +40,7 @@ SCOPE_STACK* ss;
 %left '*' '/' '%'
 %nonassoc UMINUS
 
-%type <nPtr> stmt expr stmt_list definition return params
+%type <nPtr> stmt expr stmt_list definition params
 
 %%
 
@@ -49,17 +49,14 @@ program:
         ;
 
 definition:
-         VARIABLE '(' params ')' '{' stmt_list return '}' 
-         {$$= opr('$',4,id($1),$3,$6,$7); } 
-         | VARIABLE '(' ')''{' stmt_list return '}' 
-         {$$= opr('$',3,id($1),$5,$6); } 
+         VARIABLE '(' params ')' '{' stmt_list'}' 
+         {$$= opr('$',3,id($1),$3,$6); } 
+         | VARIABLE '(' ')''{' stmt_list'}' 
+         {$$= opr('$',2,id($1),$5); } 
          ;
 params: 
         params',' VARIABLE          {$$=opr(':',2,$1,id($3));}
         | VARIABLE                  {$$=opr(':',1,id($1));}
-        ;
-return:
-        RETURN VARIABLE ';' {$$=opr(RETURN,1,id($2));}
         ;
 
 function:
@@ -71,6 +68,7 @@ function:
 stmt:
           ';'                            { $$ = opr(';', 2, NULL, NULL); }
         | expr ';'                       { $$ = $1; }
+        | RETURN VARIABLE ';'            {$$=opr(RETURN,1,id($2));}
         | BREAK ';'                      { $$ = opr(BREAK,0);}
         | CONTINUE ';'                   { $$ = opr(CONTINUE,0);}
         | PRINT expr ';'                 { $$ = opr(PRINT, 1, $2); }

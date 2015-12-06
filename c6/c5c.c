@@ -32,7 +32,7 @@ int ex(nodeType *p,int l1,int l2) {
         switch(p->opr.oper) {
     case '$':
     printf("\tjmp\tL%03d\n", lbl1 = lbl++);
-    if (p->opr.nops>3){
+    if (p->opr.nops>2){
         ex(p->opr.op[1],l1,l2);
        
     }
@@ -56,7 +56,9 @@ int ex(nodeType *p,int l1,int l2) {
     oldvar = var;
     var =0;//fp starts from 0
     ex(p->opr.op[2],l1,l2);//body
-    ex(p->opr.op[3],l1,l2);//return
+    free_ht();//pop ht,error checking?
+    //var should be restored to the value of fp 
+    var =oldvar;
     printf("L%03d:\n",lbl1);
     break;
     case ':':
@@ -78,9 +80,6 @@ int ex(nodeType *p,int l1,int l2) {
         var ++;
         //pass the type of return value 
         printf("\tret\n");
-        free_ht();//pop ht
-        //var should be restored to the value of fp 
-        var =oldvar;
         break;
     case '#':
         ex(p->opr.op[1],l1,l2);//create pl

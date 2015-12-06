@@ -33,8 +33,14 @@ int ex(nodeType *p,int l1,int l2) {
     case '$':
     printf("\tjmp\tL%03d\n", lbl1 = lbl++);
     if (p->opr.nops>2){
-        ex(p->opr.op[1],l1,l2);
-       
+        nodeType* args = p->opr.op[1];
+        //create param list from argument op[1]
+        pl = paramlist();
+        for (i=0;i<args->opr.nops;i++)
+        {
+            name = args->opr.op[i]->id.name;
+            add_param(pl,name);
+        }
     }
     printf("L%03d:\n", lbl2 = lbl++);
     insert_func((p->opr.op[0])->id.name,lbl,pl);
@@ -81,9 +87,15 @@ int ex(nodeType *p,int l1,int l2) {
         //pass the type of return value 
         printf("\tret\n");
         break;
+    case '|'://argument list 
+        if (p->opr.nops >1){//execute all arguments 
+            for (i=0;i<p->opr.nops;i++)
+                ex(p->opr.op[i],-1,-1);
+        }
+        break;
     case '#':
-        ex(p->opr.op[1],l1,l2);//create pl
-        //VARIABLE '(' params ')'  {$$ = opr('#',2,id($1),$3)
+        ex(p->opr.op[1],l1,l2);//execute arguments (push)
+        //VARIABLE '(' arguments ')'  {$$ = opr('#',2,id($1),$3)
         //lookup function
         ENTRY* f;
         f= lookup(p->opr.op[0]->id.name);
@@ -92,21 +104,21 @@ int ex(nodeType *p,int l1,int l2) {
             return;
         }
         //push arguments 
-        char** al = pl->paramlist;
-        int paramn = pl->no;
-        i=paramn;
-        while (1){
+        // char** al = pl->paramlist;
+        // int paramn = pl->no;
+        // i=paramn;
+        // while (1){
 
-            printf("\tpush\tfp[%d]\n",lookup(*al)->var.index);
-            var ++;
-            i--;
-            if (i==0) break;
-            al++;
-        }
+        //     printf("\tpush\tfp[%d]\n",lookup(*al)->var.index);
+        //     var ++;
+        //     i--;
+        //     if (i==0) break;
+        //     al++;
+        // }
         
-        pl=NULL;//release param list
+        // pl=NULL;//release param list
         printf("\tcall L%03d, %d\n",f->func.label,f->func.params->no);
-        var = var -paramn;
+        var = var - (p->opr.op[1])->opr.nops;
         insert_var(name,var,typeInt);
         var++;
         //add return value to scope
@@ -220,7 +232,6 @@ int ex(nodeType *p,int l1,int l2) {
         case OR:    printf("\tor\n"); var--;break;
         }
         }
-        printf("//fp now at %d\n",var);
     }
     return 0;
 }

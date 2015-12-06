@@ -10,6 +10,7 @@
 nodeType *opr(int oper, int nops, ...);
 nodeType *id(char* x);
 nodeType *con(int value);
+nodeType* addOperand(nodeType* p1,nodeType* p2);
 void freeNode(nodeType *p);
 int ex(nodeType *p,int l1,int l2);
 int yylex(void);
@@ -40,7 +41,7 @@ SCOPE_STACK* ss;
 %left '*' '/' '%'
 %nonassoc UMINUS
 
-%type <nPtr> stmt expr stmt_list definition params
+%type <nPtr> stmt expr stmt_list definition arguments 
 
 %%
 
@@ -49,15 +50,11 @@ program:
         ;
 
 definition:
-         VARIABLE '(' params ')' '{' stmt_list'}' 
+         VARIABLE '(' arguments ')' '{' stmt_list'}' 
          {$$= opr('$',3,id($1),$3,$6); } 
          | VARIABLE '(' ')''{' stmt_list'}' 
          {$$= opr('$',2,id($1),$5); } 
          ;
-params: 
-        params',' VARIABLE          {$$=opr(':',2,$1,id($3));}
-        | VARIABLE                  {$$=opr(':',1,id($1));}
-        ;
 
 function:
           function stmt         { ex($2,-1,-1); freeNode($2); }
@@ -87,6 +84,9 @@ stmt_list:
           stmt                  { $$ = $1; }
         | stmt_list stmt        { $$ = opr(';', 2, $1, $2); }
         ;
+arguments:
+         arguments ',' expr     {$$= addOperand($1,$3);}
+        | expr                  {$$= opr('|',1,$1);}
 
 expr:
           INTEGER               { $$ = con($1); }
@@ -106,7 +106,7 @@ expr:
 	    | expr AND expr		{ $$ = opr(AND, 2, $1, $3); }
 	    | expr OR expr		{ $$ = opr(OR, 2, $1, $3); }
         | '(' expr ')'          { $$ = $2; }
-        |  VARIABLE '(' params ')'  {$$ = opr('#',2,id($1),$3);}
+        |  VARIABLE '(' arguments ')'  {$$ = opr('#',2,id($1),$3);}
         ;
 
 %%
@@ -166,6 +166,25 @@ nodeType *opr(int oper, int nops, ...) {
         p->opr.op[i] = va_arg(ap, nodeType*);
     va_end(ap);
     return p;
+}
+//add p2 to p1
+nodeType* addOperand(nodeType* p1,nodeType* p2){
+    nodeType* p;
+    size_t nodeSize;
+    int i;
+    /* allocate node */
+    nodeSize = SIZEOF_NODETYPE + sizeof(oprNodeType) +
+        (p1->opr.nops) * sizeof(nodeType*);
+    if ((p = malloc(nodeSize)) == NULL)
+        yyerror("out of memory");
+    //copy from old to newp
+    p->type = typeOpr;
+    p->opr.oper = p1->opr.oper;
+    p->opr.nops = p1->opr.nops +1;
+    for (i=0;i<p1->opr.nops;i++)
+        p->opr.op[i] = p1->opr.op[i];
+    p->opr.op[i] = p2;
+    return p; 
 }
 
 void freeNode(nodeType *p) {

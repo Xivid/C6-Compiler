@@ -1383,13 +1383,13 @@ yyreduce:
 
   case 5:
 #line 58 "c5.y" /* yacc.c:1646  */
-    {(yyval.nPtr) = opr(':',2,(yyvsp[-2].nPtr),(yyvsp[0].var)); /*concatenate variables*/}
+    {(yyval.nPtr)=opr(':',2,(yyvsp[-2].nPtr),id((yyvsp[0].var)));}
 #line 1388 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 6:
 #line 59 "c5.y" /* yacc.c:1646  */
-    {(yyval.nPtr) = opr(':',1,id((yyvsp[0].var)));}
+    {(yyval.nPtr)=opr(':',1,id((yyvsp[0].var)));}
 #line 1394 "y.tab.c" /* yacc.c:1646  */
     break;
 

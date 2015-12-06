@@ -5,7 +5,6 @@
 #include <string.h>
 #include "calc3.h"
 #include "sym.h"
-#include "sym.c"
 
 /* prototypes */
 nodeType *opr(int oper, int nops, ...);
@@ -41,8 +40,7 @@ SCOPE_STACK* ss;
 %left '*' '/' '%'
 %nonassoc UMINUS
 
-%type <nPtr> stmt expr stmt_list definition return 
-%type <PARAMLIST*> params
+%type <nPtr> stmt expr stmt_list definition return params
 
 %%
 
@@ -57,8 +55,8 @@ definition:
          {$$= opr('$',3,id($1),$5,$6); } 
          ;
 params: 
-        params',' VARIABLE          {add_param($1,$3);$$=$1;}
-        | VARIABLE                  {$$ = paramlist(); add_param($$,$1);}
+        params',' VARIABLE          {$$=opr(':',2,$1,id($3));}
+        | VARIABLE                  {$$=opr(':',1,id($1));}
         ;
 return:
         RETURN VARIABLE ';' {$$=opr(RETURN,1,id($2));}

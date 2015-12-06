@@ -8,8 +8,10 @@
 static int lbl;
 //the number of variables on stack
 static int var;
+static int oldvar;
 char* name;
 PARAMLIST* pl;
+int i;
 //l1 for continue 
 //l2 for break
 int ex(nodeType *p,int l1,int l2) {
@@ -23,46 +25,101 @@ int ex(nodeType *p,int l1,int l2) {
         break;
     case typeId: 
         //push lookup id.name       
-        printf("\tpush\tfp[%d]\n", (lookup(p->id.name)->var.index)-1); 
+        printf("\tpush\tfp[%d]\n", lookup(p->id.name)->var.index); 
         var++;
         break;
     case typeOpr:
         switch(p->opr.oper) {
     case '$':
+    printf("\tjmp\tL%03d\n", lbl1 = lbl++);
     if (p->opr.nops>3){
-        //add function to sym table 
-        printf("L%03d:\n", lbl++);
-        ex(p->opr.op[2],l1,l2);//body
-        ex(p->opr.op[3],l1,l2);//return
+        ex(p->opr.op[1],l1,l2);
+       
     }
-    else {//no params
-        //add function to sym table 
-        printf("L%03d:\n", lbl++);
-        ex(p->opr.op[1],l1,l2);//body
-        ex(p->opr.op[2],l1,l2);//return
+    printf("L%03d:\n", lbl2 = lbl++);
+    insert_func((p->opr.op[0])->id.name,lbl,pl);
+    //insert param list into scope 
+    //new scope 
+    allocate_ht();//already pushed to stack
+    //insert params 
+    char** varl = pl->paramlist;
+    i= pl->no;
+    while (1){
+    insert_var(*varl,-(3+i),typeInt);
+    printf("//inserted %s at fp[%d]\n",*varl,-(3+i));
+    i--;
+    if (i==0) break;
+    varl++;
     }
-    break;//function definition
 
-    /*VARIABLE '(' params ')' '{' stmt_list return '}' 
-         {$$= opr('$',4,id($1),$3,$6,$7); } 
-         | VARIABLE '(' ')''{' stmt_list return '}' 
-         {$$= opr('$',3,id($1),$5,$6); } 
-         */
+    pl=NULL;//release param list
+    oldvar = var;
+    var =0;//fp starts from 0
+    ex(p->opr.op[2],l1,l2);//body
+    ex(p->opr.op[3],l1,l2);//return
+    printf("L%03d:\n",lbl1);
+    break;
+    case ':':
+        if (p->opr.nops==1){
+            name = p->opr.op[0]->id.name;
+            pl = paramlist();
+            add_param(pl,name);
+        }
+        else{
+            ex(p->opr.op[0],-1,-1);
+            name = p->opr.op[1]->id.name;
+            add_param(pl,name);
+        }
+        break;
     case RETURN:
         //RETURN VARIABLE ';' {$$=opr(RETURN,1,id($2));}
         name = p->opr.op[0]->id.name;
-        printf("\tpush\tfp[%d]\n", (lookup(name)->var.index)-1);
+        printf("\tpush\tfp[%d]\n", lookup(name)->var.index);
+        var ++;
+        //pass the type of return value 
         printf("\tret\n");
+        free_ht();//pop ht
+        //var should be restored to the value of fp 
+        var =oldvar;
         break;
-    case '#':break;//function call
+    case '#':
+        ex(p->opr.op[1],l1,l2);//create pl
+        //VARIABLE '(' params ')'  {$$ = opr('#',2,id($1),$3)
+        //lookup function
+        ENTRY* f;
+        f= lookup(p->opr.op[0]->id.name);
+        if (f == NULL) {
+            printf("function %s not defined!",p->opr.op[0]->id.name);
+            return;
+        }
+        //push arguments 
+        char** al = pl->paramlist;
+        int paramn = pl->no;
+        i=paramn;
+        while (1){
+
+            printf("\tpush\tfp[%d]\n",lookup(*al)->var.index);
+            var ++;
+            i--;
+            if (i==0) break;
+            al++;
+        }
+        
+        pl=NULL;//release param list
+        printf("\tcall L%03d, %d\n",f->func.label,f->func.params->no);
+        var = var -paramn;
+        insert_var(name,var,typeInt);
+        var++;
+        //add return value to scope
+        break;
     case CONTINUE:
         if (l1 != -1) printf("\tjmp\tL%03d\n", l1);
         else printf("invalid continue !\n");
-        break;
+        return;
     case BREAK:
         if (l2!= -1) printf("\tjmp\tL%03d\n", l2);
         else printf("invalid break !\n");
-        break;
+        return;
 	case FOR:
 		ex(p->opr.op[0],l1,l2);
 		printf("L%03d:\n", lblx = lbl++);
@@ -120,7 +177,7 @@ int ex(nodeType *p,int l1,int l2) {
         var++;
         name = p->opr.op[0]->id.name;
         printf("//variable %s from input, saved at fp[%d]\n",name,var-1);
-        insert_var(name,var,typeInt);
+        insert_var(name,var-1,typeInt);
 	    break;
     case PRINT:     
         ex(p->opr.op[0],l1,l2);
@@ -129,15 +186,16 @@ int ex(nodeType *p,int l1,int l2) {
         var--;
         break;
     case '=':       
-        name = p->opr.op[0]->id.name;
         ex(p->opr.op[1],l1,l2);
+        name = p->opr.op[0]->id.name;
         if (lookup(name) ==NULL){
             //redundant push
             printf("\tpush\tsp[-1]\n");
-            //printf("//variable %s not defined, saved at fp[%d]\n",name,var-1);
-            insert_var(name,var,typeInt);
+            var++;
+            printf("//variable %s not defined, saved at fp[%d]\n",name,var-1);
+            insert_var(name,var-1,typeInt);
         } 
-        printf("\tpop\tfp[%d]\n", (lookup(name)->var.index)-1);
+        printf("\tpop\tfp[%d]\n", lookup(name)->var.index);
         var--;
         break;
     case UMINUS:    
@@ -163,6 +221,7 @@ int ex(nodeType *p,int l1,int l2) {
         case OR:    printf("\tor\n"); var--;break;
         }
         }
+        printf("//fp now at %d\n",var);
     }
     return 0;
 }

@@ -2,6 +2,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+//only for debugging
+//SCOPE_STACK* ss;
+
 //scope 
 SCOPE_STACK* init_scope()
 {
@@ -77,6 +80,7 @@ void allocate_ht()
 PARAMLIST* paramlist(){
 	PARAMLIST* p = malloc(sizeof(PARAMLIST));
 	p->no= 0;
+	p->paramlist = malloc(sizeof(char*)*PARAM_MAX);
 	return p;
 }
 
@@ -84,7 +88,12 @@ void add_param(PARAMLIST* p,char* name){
 	if (strlen(name)>=NAME_MAX){
 		printf("Error:%s name too long\n",name);return;	
 	}
-	p->paramlist[p->no++] = name;	
+	if ((p->no+1)%10 == 0){
+		//extend paramlist
+		p->paramlist = malloc (sizeof(char*)* ((p->no+1)+PARAM_MAX));
+	}
+	(p->paramlist)[p->no] = name;
+	p->no++;	
 
 }
 

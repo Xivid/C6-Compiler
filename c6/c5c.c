@@ -203,8 +203,8 @@ int ex(nodeType *p,int l1,int l2) {
             //redundant push
             printf("\tpush\tsp[-1]\n");
             var++;
-            printf("//variable %s not defined, saved at fp[%d]\n",name,var-1);
-            insert_var(name,var-1,typeInt);
+            printf("//variable %s not defined, saved at fp[%d]\n",name,var-2);
+            insert_var(name,var-2,typeInt);
         } 
         printf("\tpop\tfp[%d]\n", lookup(name)->var.index);
         var--;

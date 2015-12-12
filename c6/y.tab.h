@@ -112,7 +112,7 @@ extern int yydebug;
 typedef union YYSTYPE YYSTYPE;
 union YYSTYPE
 {
-#line 26 "c5.y" /* yacc.c:1909  */
+#line 28 "c5.y" /* yacc.c:1909  */
 
     int iValue;                 /* integer value */
     char* var;                /* symbol table variable name */

@@ -60,7 +60,7 @@ void yyerror(char *);
                 yylval.cValue = yytext[1];//any character
                 return CHAR;
             }
-".*"        {   
+\".*\"        {   
                 int len = strlen(yytext);
                 strncpy(yylval.sValue,yytext+1,len-2);
                 yylval.sValue[len-1] = '\0';

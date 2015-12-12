@@ -10,6 +10,8 @@
 nodeType *opr(int oper, int nops, ...);
 nodeType *id(char* x);
 nodeType *con(int value);
+nodeType *ch(char value);
+nodeType *str(char* value);
 nodeType* addOperand(nodeType* p1,nodeType* p2);
 void freeNode(nodeType *p);
 int ex(nodeType *p,int l1,int l2,int* fp);
@@ -104,6 +106,7 @@ arguments:
 expr:
           INTEGER               { $$ = con($1); }
         | CHAR                  { $$ = con($1); }
+        | STRING                { $$ = str($1);}
         | VARIABLE              { $$ = id($1); }
         | '@' VARIABLE          { $$ = opr('@', 1, id($2)); }
         | '-' expr %prec UMINUS { $$ = opr(UMINUS, 1, $2); }
@@ -140,6 +143,40 @@ nodeType *con(int value) {
     /* copy information */
     p->type = typeCon;
     p->con.value = value;
+
+    return p;
+}
+
+nodeType* ch(char value){
+    nodeType *p;
+    size_t nodeSize;
+
+    /* allocate node */
+    nodeSize = SIZEOF_NODETYPE + sizeof(conNodeType);
+    if ((p = malloc(nodeSize)) == NULL)
+        yyerror("out of memory");
+
+    /* copy information */
+    p->type = typeCh;
+    p->ch.value = value;
+
+    return p;
+    
+}
+
+nodeType* str(char* value){
+    nodeType *p;
+    size_t nodeSize;
+
+    /* allocate node */
+    nodeSize = SIZEOF_NODETYPE + sizeof(conNodeType);
+    if ((p = malloc(nodeSize)) == NULL)
+        yyerror("out of memory");
+
+    /* copy information */
+    p->type = typeStr;
+    p->str.value = value;
+    //strdup?
 
     return p;
 }

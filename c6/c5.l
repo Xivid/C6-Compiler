@@ -19,6 +19,12 @@ void yyerror(char *);
 "while"         return WHILE;
 "if"            return IF;
 "else"          return ELSE;
+"geti"          return GETI;
+"getc"          return GETC;
+"gets"          return GETS;
+"puti"          return PUTI;
+"putc"          return PUTC;
+"puts"          return PUTS;
 "print"         return PRINT;
 "read"          return READ;
 "&&"            return AND;
@@ -51,7 +57,7 @@ void yyerror(char *);
                 return INTEGER;
             }
 
-[-()<>=+*/;{}.%,@] {
+[-()<>=+*/;{}.%,@_] {
                 return *yytext;
              }
 

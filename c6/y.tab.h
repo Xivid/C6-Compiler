@@ -57,15 +57,21 @@ extern int yydebug;
     CONTINUE = 267,
     ARRAY = 268,
     RETURN = 269,
-    IFX = 270,
-    ELSE = 271,
-    AND = 272,
-    OR = 273,
-    GE = 274,
-    LE = 275,
-    EQ = 276,
-    NE = 277,
-    UMINUS = 278
+    GETI = 270,
+    GETC = 271,
+    GETS = 272,
+    PUTI = 273,
+    PUTC = 274,
+    PUTS = 275,
+    IFX = 276,
+    ELSE = 277,
+    AND = 278,
+    OR = 279,
+    GE = 280,
+    LE = 281,
+    EQ = 282,
+    NE = 283,
+    UMINUS = 284
   };
 #endif
 /* Tokens.  */
@@ -81,15 +87,21 @@ extern int yydebug;
 #define CONTINUE 267
 #define ARRAY 268
 #define RETURN 269
-#define IFX 270
-#define ELSE 271
-#define AND 272
-#define OR 273
-#define GE 274
-#define LE 275
-#define EQ 276
-#define NE 277
-#define UMINUS 278
+#define GETI 270
+#define GETC 271
+#define GETS 272
+#define PUTI 273
+#define PUTC 274
+#define PUTS 275
+#define IFX 276
+#define ELSE 277
+#define AND 278
+#define OR 279
+#define GE 280
+#define LE 281
+#define EQ 282
+#define NE 283
+#define UMINUS 284
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
@@ -102,7 +114,7 @@ union YYSTYPE
     char* var;                /* symbol table variable name */
     nodeType *nPtr;             /* node pointer */
 
-#line 106 "y.tab.h" /* yacc.c:1909  */
+#line 118 "y.tab.h" /* yacc.c:1909  */
 };
 # define YYSTYPE_IS_TRIVIAL 1
 # define YYSTYPE_IS_DECLARED 1

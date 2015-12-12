@@ -31,7 +31,7 @@ int* fp = &var;
 
 %token <iValue> INTEGER
 %token <var> VARIABLE
-%token FOR WHILE IF PRINT READ DO BREAK CONTINUE ARRAY RETURN
+%token FOR WHILE IF PRINT READ DO BREAK CONTINUE ARRAY RETURN GETI GETC GETS PUTI PUTC PUTS
 %nonassoc IFX
 %nonassoc ELSE
 
@@ -72,6 +72,12 @@ stmt:
         | PRINT expr ';'                 { $$ = opr(PRINT, 1, $2); }
 	    | READ VARIABLE ';'		         { $$ = opr(READ, 1, id($2)); }
         | READ '@' VARIABLE ';'          { $$ = opr(READ, 2, id($3), NULL);}
+        | GETI '(' VARIABLE ')' ';'      { $$ = opr(GETI, 1, id($3)); }
+        | GETC '(' VARIABLE ')' ';'      { $$ = opr(GETC, 1, id($3)); }
+        | GETS '(' VARIABLE ')' ';'      { $$ = opr(GETS, 1, id($3)); }
+        | PUTI '(' expr ')' ';'          { $$ = opr(PUTI, 1, $3); }
+        | PUTC '(' expr ')' ';'          { $$ = opr(PUTC, 1, $3); }
+        | PUTS '(' expr ')' ';'          { $$ = opr(PUTS, 1, $3); }
         | VARIABLE '=' expr ';'          { $$ = opr('=', 2, id($1), $3); }
         | '@'VARIABLE '=' expr ';'       { $$ = opr('=', 3, id($2), $4, NULL);}
 	    | FOR '(' stmt stmt stmt ')' stmt { $$ = opr(FOR, 4, $3, $4,

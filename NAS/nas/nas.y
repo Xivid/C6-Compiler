@@ -1,4 +1,5 @@
-/* NAS 0.4 */
+/* NAS 0.6 */
+/* Changes: puti/c/s can follow by an optional format string */
 
 %{
   #include <stdlib.h>
@@ -14,6 +15,10 @@
   #define POPRI 6
   #define POPRR 7
 
+  #define PUTIS 8
+  #define PUTSS 9
+  #define PUTCS 10
+
   void yyerror(char *);
   int yylex(void);
 
@@ -25,9 +30,9 @@
   #define IN reg[2]
   #define SP reg[3]
 
-  #define SIZE 3000 // max code size
+  #define SIZE 20000 // max code size
   #define LABELS 1000
-  #define ST_SIZE 5000 // max stack size
+  #define ST_SIZE 20000 // max stack size
 
   // Increment SP and check
   // #define ISP if (++SP >= ST_SIZE) error(1, 0, "Stack overflow!")
@@ -37,7 +42,7 @@
   // max size of string is 500
 
   int pc; // program counter during assembly
-  int in[SIZE], op[SIZE], opx[SIZE]; // instructions and their operands
+  long in[SIZE], op[SIZE], opx[SIZE]; // instructions and their operands
   int lb[LABELS]; // labels[000..999]
 
   char *str;
@@ -108,8 +113,23 @@ instruction:
 	| GETS		{ in[pc++] = GETS; }
 	| GETC		{ in[pc++] = GETC; }
 	| PUTI		{ in[pc++] = PUTI; }
+	| PUTI STRING	{
+		in[pc] = PUTIS;
+		str = (char *) malloc(strlen($2)+1);
+		strcpy(str, $2); op[pc++] = (long) str;
+	}
 	| PUTS		{ in[pc++] = PUTS; }
+	| PUTS STRING	{
+		in[pc] = PUTSS;
+		str = (char *) malloc(strlen($2)+1);
+		strcpy(str, $2); op[pc++] = (long) str;
+	}
 	| PUTC		{ in[pc++] = PUTC; }
+	| PUTC STRING	{
+		in[pc] = PUTCS;
+		str = (char *) malloc(strlen($2)+1);
+		strcpy(str, $2); op[pc++] = (long) str;
+	}
 	| PUTI_		{ in[pc++] = PUTI_; }
 	| PUTS_		{ in[pc++] = PUTS_; }
 	| PUTC_		{ in[pc++] = PUTC_; }
@@ -122,7 +142,8 @@ void yyerror(char *s) {
 }
 
 int main(int argc, char *argv[]) {
-  int st[ST_SIZE];
+  //int st[ST_SIZE];
+  long st[ST_SIZE];
 
   SB = 0;
   FP = 0;
@@ -148,16 +169,16 @@ int main(int argc, char *argv[]) {
       case PUSHR:
 	st[SP] = reg[op[i++]]; ISP; break;
       case PUSHRI:
-	st[SP] = st[reg[op[i]] + opx[i++]]; ISP; break;
+	st[SP] = st[reg[op[i]] + opx[i]]; i++; ISP; break;
 	// check sp pt errors here?
       case PUSHRR:
-	st[SP] = st[reg[op[i]] + reg[opx[i++]]]; ISP; break;
+	st[SP] = st[reg[op[i]] + reg[opx[i]]]; i++; ISP; break;
       case POPR:
 	reg[op[i++]] = st[--SP]; break;
       case POPRI:
-	st[reg[op[i]] + opx[i++]] = st[--SP]; break;
+	st[reg[op[i]] + opx[i]] = st[--SP]; i++; break;
       case POPRR:
-	st[reg[op[i]] + reg[opx[i++]]] = st[--SP]; break;
+	st[reg[op[i]] + reg[opx[i]]] = st[--SP]; i++; break;
 
       case CALL:
 	// save old SP
@@ -212,7 +233,7 @@ int main(int argc, char *argv[]) {
       case JMP:
 	i = lb[op[i]]; break;
       case GETI:
-	scanf("%d", &st[SP]);
+	scanf("%ld", &st[SP]);
 	getchar(); // chew up the newline
 	i++; ISP; break;
       case GETS:
@@ -225,13 +246,19 @@ int main(int argc, char *argv[]) {
       case GETC:
 	st[SP] = getchar(); ISP; i++; break;
       case PUTI:
-	printf("%d\n", st[--SP]); i++; break;
+	printf("%ld\n", st[--SP]); i++; break;
+      case PUTIS:
+	printf((char *) op[i], st[--SP]); i++; break;
       case PUTS:
 	printf("%s\n", (char *) st[--SP]); i++; break;
+      case PUTSS:
+	printf((char *) op[i], st[--SP]); i++; break;
       case PUTC:
 	putchar(st[--SP]); putchar('\n'); i++; break;
+      case PUTCS:
+	printf((char *) op[i], st[--SP]); i++; break;
       case PUTI_:
-	printf("%d", st[--SP]); i++; break;
+	printf("%ld", st[--SP]); i++; break;
       case PUTS_:
 	printf("%s", (char *) st[--SP]); i++; break;
       case PUTC_:

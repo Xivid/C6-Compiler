@@ -6,8 +6,8 @@
 
 //the number of labels
 static int lbl;
-static int local;
-static int sb;
+int local;
+int sb;
 char* name;
 PARAMLIST* pl;
 int i;
@@ -163,6 +163,93 @@ int ex(nodeType *p,int l1,int l2,int* fp) {
             printf("L%03d:\n", lbl1);
         }
         break;
+    case GETI:
+        printf("\tgeti\n");
+        (*fp)++;
+        name = p->opr.op[0]->id.name;
+        if (p->opr.nops ==1 && local == 1){
+            if (local_lookup(name)==NULL){
+                 //redundant push
+                printf("\tpush\tsp[-1]\n");
+                (*fp)++;
+                printf("//variable %s from input, saved at fp[%d]\n",name,(*fp)-2);
+                insert_var(name,(*fp)-2,typeInt);
+            }
+            printf("\tpop\tfp[%d]\n", local_lookup(name)->var.index);
+            (*fp)--;
+        }
+        else{
+            //global variable 
+            if (global_lookup(name) == NULL){
+                if (local ==1) printf("global variable %s not defined!\n",name);
+                else {
+                    printf("//variable %s from input, saved at sb[%d]\n",name,sb);
+                    insert_var(name,sb,typeInt);
+                    sb++;
+                }
+            }
+            printf("\tpop\tsb[%d]\n", global_lookup(name)->var.index);
+            (*fp)--;
+        }
+        break;
+    case GETC:
+        printf("\tgetc\n");
+        (*fp)++;
+        name = p->opr.op[0]->id.name;
+        if (p->opr.nops ==1 && local == 1){
+            if (local_lookup(name)==NULL){
+                 //redundant push
+                printf("\tpush\tsp[-1]\n");
+                (*fp)++;
+                printf("//variable %s from input, saved at fp[%d]\n",name,(*fp)-2);
+                insert_var(name,(*fp)-2,typeChar);
+            }
+            printf("\tpop\tfp[%d]\n", local_lookup(name)->var.index);
+            (*fp)--;
+        }
+        else{
+            //global variable 
+            if (global_lookup(name) == NULL){
+                if (local ==1) printf("global variable %s not defined!\n",name);
+                else {
+                    printf("//variable %s from input, saved at sb[%d]\n",name,sb);
+                    insert_var(name,sb,typeChar);
+                    sb++;
+                }
+            }
+            printf("\tpop\tsb[%d]\n", global_lookup(name)->var.index);
+            (*fp)--;
+        }
+        break;
+    case GETS:
+        printf("\tgets\n");
+        (*fp)++;
+        name = p->opr.op[0]->id.name;
+        if (p->opr.nops ==1 && local == 1){
+            if (local_lookup(name)==NULL){
+                 //redundant push
+                printf("\tpush\tsp[-1]\n");
+                (*fp)++;
+                printf("//variable %s from input, saved at fp[%d]\n",name,(*fp)-2);
+                insert_var(name,(*fp)-2,typeString);
+            }
+            printf("\tpop\tfp[%d]\n", local_lookup(name)->var.index);
+            (*fp)--;
+        }
+        else{
+            //global variable 
+            if (global_lookup(name) == NULL){
+                if (local ==1) printf("global variable %s not defined!\n",name);
+                else {
+                    printf("//variable %s from input, saved at sb[%d]\n",name,sb);
+                    insert_var(name,sb,typeString);
+                    sb++;
+                }
+            }
+            printf("\tpop\tsb[%d]\n", global_lookup(name)->var.index);
+            (*fp)--;
+        }
+        break;
 	case READ:
         printf("\tgeti\n");
         (*fp)++;
@@ -196,6 +283,24 @@ int ex(nodeType *p,int l1,int l2,int* fp) {
         ex(p->opr.op[0],l1,l2,fp);
         //case of the result type
         printf("\tputi\n");
+        (*fp)--;
+        break;
+    case PUTI:
+        ex(p->opr.op[0],l1,l2,fp);
+        //case of the result type
+        printf("\tputi\n");
+        (*fp)--;
+        break;
+    case PUTC:
+        ex(p->opr.op[0],l1,l2,fp);
+        //case of the result type
+        printf("\tputc\n");
+        (*fp)--;
+        break;
+    case PUTS:
+        ex(p->opr.op[0],l1,l2,fp);
+        //case of the result type
+        printf("\tputs\n");
         (*fp)--;
         break;
     case '=':       

@@ -9,6 +9,6 @@ prime (x) {
 	return 1;
 }
 
-read x;
-print prime (x);
+geti (x);
+puti (prime (x));
 

@@ -47,61 +47,65 @@ extern int yydebug;
   {
     INTEGER = 258,
     VARIABLE = 259,
-    FOR = 260,
-    WHILE = 261,
-    IF = 262,
-    PRINT = 263,
-    READ = 264,
-    DO = 265,
-    BREAK = 266,
-    CONTINUE = 267,
-    ARRAY = 268,
-    RETURN = 269,
-    GETI = 270,
-    GETC = 271,
-    GETS = 272,
-    PUTI = 273,
-    PUTC = 274,
-    PUTS = 275,
-    IFX = 276,
-    ELSE = 277,
-    AND = 278,
-    OR = 279,
-    GE = 280,
-    LE = 281,
-    EQ = 282,
-    NE = 283,
-    UMINUS = 284
+    CHAR = 260,
+    STRING = 261,
+    FOR = 262,
+    WHILE = 263,
+    IF = 264,
+    PRINT = 265,
+    READ = 266,
+    DO = 267,
+    BREAK = 268,
+    CONTINUE = 269,
+    ARRAY = 270,
+    RETURN = 271,
+    GETI = 272,
+    GETC = 273,
+    GETS = 274,
+    PUTI = 275,
+    PUTC = 276,
+    PUTS = 277,
+    IFX = 278,
+    ELSE = 279,
+    AND = 280,
+    OR = 281,
+    GE = 282,
+    LE = 283,
+    EQ = 284,
+    NE = 285,
+    UMINUS = 286
   };
 #endif
 /* Tokens.  */
 #define INTEGER 258
 #define VARIABLE 259
-#define FOR 260
-#define WHILE 261
-#define IF 262
-#define PRINT 263
-#define READ 264
-#define DO 265
-#define BREAK 266
-#define CONTINUE 267
-#define ARRAY 268
-#define RETURN 269
-#define GETI 270
-#define GETC 271
-#define GETS 272
-#define PUTI 273
-#define PUTC 274
-#define PUTS 275
-#define IFX 276
-#define ELSE 277
-#define AND 278
-#define OR 279
-#define GE 280
-#define LE 281
-#define EQ 282
-#define NE 283
-#define UMINUS 284
+#define CHAR 260
+#define STRING 261
+#define FOR 262
+#define WHILE 263
+#define IF 264
+#define PRINT 265
+#define READ 266
+#define DO 267
+#define BREAK 268
+#define CONTINUE 269
+#define ARRAY 270
+#define RETURN 271
+#define GETI 272
+#define GETC 273
+#define GETS 274
+#define PUTI 275
+#define PUTC 276
+#define PUTS 277
+#define IFX 278
+#define ELSE 279
+#define AND 280
+#define OR 281
+#define GE 282
+#define LE 283
+#define EQ 284
+#define NE 285
+#define UMINUS 286
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
@@ -113,8 +117,10 @@ union YYSTYPE
     int iValue;                 /* integer value */
     char* var;                /* symbol table variable name */
     nodeType *nPtr;             /* node pointer */
+    char cValue; /* char value*/
+    char* sValue; /*string value*/
 
-#line 118 "y.tab.h" /* yacc.c:1909  */
+#line 124 "y.tab.h" /* yacc.c:1909  */
 };
 # define YYSTYPE_IS_TRIVIAL 1
 # define YYSTYPE_IS_DECLARED 1

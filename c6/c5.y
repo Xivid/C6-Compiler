@@ -27,10 +27,14 @@ int* fp = &var;
     int iValue;                 /* integer value */
     char* var;                /* symbol table variable name */
     nodeType *nPtr;             /* node pointer */
+    char cValue; /* char value*/
+    char* sValue; /*string value*/
 };
 
 %token <iValue> INTEGER
 %token <var> VARIABLE
+%token <cValue> CHAR
+%token <sValue> STRING
 %token FOR WHILE IF PRINT READ DO BREAK CONTINUE ARRAY RETURN GETI GETC GETS PUTI PUTC PUTS
 %nonassoc IFX
 %nonassoc ELSE
@@ -99,6 +103,7 @@ arguments:
 
 expr:
           INTEGER               { $$ = con($1); }
+        | CHAR                  { $$ = con($1); }
         | VARIABLE              { $$ = id($1); }
         | '@' VARIABLE          { $$ = opr('@', 1, id($2)); }
         | '-' expr %prec UMINUS { $$ = opr(UMINUS, 1, $2); }

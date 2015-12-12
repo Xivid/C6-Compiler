@@ -56,7 +56,16 @@ void yyerror(char *);
                 yylval.iValue = atoi(yytext);
                 return INTEGER;
             }
-
+'.'         {
+                yylval.cValue = yytext[1];//any character
+                return CHAR;
+            }
+".*"        {   
+                int len = strlen(yytext);
+                strncpy(yylval.sValue,yytext+1,len-2);
+                yylval.sValue[len-1] = '\0';
+                return STRING;
+            }
 [-()<>=+*/;{}.%,@_] {
                 return *yytext;
              }

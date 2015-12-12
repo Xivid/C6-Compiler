@@ -7,7 +7,7 @@
 //the number of labels
 static int lbl;
 int local;
-int sb;
+//in the global scope sb = fp
 char* name;
 PARAMLIST* pl;
 int i;
@@ -21,12 +21,8 @@ int ex(nodeType *p,int l1,int l2,int* fp) {
         printf("\tpush\t%d\n", p->con.value); 
         (*fp)++;
         break;
-    case typeId: 
-        if (!local) {
-            printf("\tpush\tsb[%d]\n", global_lookup(p->id.name)->var.index); 
-        }
-        //push lookup id.name       
-        else printf("\tpush\tfp[%d]\n", local_lookup(p->id.name)->var.index); 
+    case typeId:    
+        printf("\tpush\tfp[%d]\n", local_lookup(p->id.name)->var.index); 
         (*fp)++;
         break;
     case typeOpr:
@@ -167,7 +163,7 @@ int ex(nodeType *p,int l1,int l2,int* fp) {
         printf("\tgeti\n");
         (*fp)++;
         name = p->opr.op[0]->id.name;
-        if (p->opr.nops ==1 && local == 1){
+        if (p->opr.nops ==1){
             if (local_lookup(name)==NULL){
                  //redundant push
                 printf("\tpush\tsp[-1]\n");
@@ -178,25 +174,12 @@ int ex(nodeType *p,int l1,int l2,int* fp) {
             printf("\tpop\tfp[%d]\n", local_lookup(name)->var.index);
             (*fp)--;
         }
-        else{
-            //global variable 
-            if (global_lookup(name) == NULL){
-                if (local ==1) printf("global variable %s not defined!\n",name);
-                else {
-                    printf("//variable %s from input, saved at sb[%d]\n",name,sb);
-                    insert_var(name,sb,typeInt);
-                    sb++;
-                }
-            }
-            printf("\tpop\tsb[%d]\n", global_lookup(name)->var.index);
-            (*fp)--;
-        }
         break;
     case GETC:
         printf("\tgetc\n");
         (*fp)++;
         name = p->opr.op[0]->id.name;
-        if (p->opr.nops ==1 && local == 1){
+        if (p->opr.nops ==1){
             if (local_lookup(name)==NULL){
                  //redundant push
                 printf("\tpush\tsp[-1]\n");
@@ -207,25 +190,12 @@ int ex(nodeType *p,int l1,int l2,int* fp) {
             printf("\tpop\tfp[%d]\n", local_lookup(name)->var.index);
             (*fp)--;
         }
-        else{
-            //global variable 
-            if (global_lookup(name) == NULL){
-                if (local ==1) printf("global variable %s not defined!\n",name);
-                else {
-                    printf("//variable %s from input, saved at sb[%d]\n",name,sb);
-                    insert_var(name,sb,typeChar);
-                    sb++;
-                }
-            }
-            printf("\tpop\tsb[%d]\n", global_lookup(name)->var.index);
-            (*fp)--;
-        }
         break;
     case GETS:
         printf("\tgets\n");
         (*fp)++;
         name = p->opr.op[0]->id.name;
-        if (p->opr.nops ==1 && local == 1){
+        if (p->opr.nops ==1){
             if (local_lookup(name)==NULL){
                  //redundant push
                 printf("\tpush\tsp[-1]\n");
@@ -236,25 +206,12 @@ int ex(nodeType *p,int l1,int l2,int* fp) {
             printf("\tpop\tfp[%d]\n", local_lookup(name)->var.index);
             (*fp)--;
         }
-        else{
-            //global variable 
-            if (global_lookup(name) == NULL){
-                if (local ==1) printf("global variable %s not defined!\n",name);
-                else {
-                    printf("//variable %s from input, saved at sb[%d]\n",name,sb);
-                    insert_var(name,sb,typeString);
-                    sb++;
-                }
-            }
-            printf("\tpop\tsb[%d]\n", global_lookup(name)->var.index);
-            (*fp)--;
-        }
         break;
 	case READ:
         printf("\tgeti\n");
         (*fp)++;
         name = p->opr.op[0]->id.name;
-        if (p->opr.nops ==1 && local == 1){
+        if (p->opr.nops ==1){
             if (local_lookup(name)==NULL){
                  //redundant push
                 printf("\tpush\tsp[-1]\n");
@@ -265,18 +222,8 @@ int ex(nodeType *p,int l1,int l2,int* fp) {
             printf("\tpop\tfp[%d]\n", local_lookup(name)->var.index);
             (*fp)--;
         }
-        else{
-            //global variable 
-            if (global_lookup(name) == NULL){
-                if (local ==1) printf("global variable %s not defined!\n",name);
-                else {
-                    printf("//variable %s from input, saved at sb[%d]\n",name,sb);
-                    insert_var(name,sb,typeInt);
-                    sb++;
-                }
-            }
-            printf("\tpop\tsb[%d]\n", global_lookup(name)->var.index);
-            (*fp)--;
+        else {
+            //read into a global variable
         }
 	    break;
     case PRINT:     
@@ -306,7 +253,7 @@ int ex(nodeType *p,int l1,int l2,int* fp) {
     case '=':       
         ex(p->opr.op[1],l1,l2,fp);
         name = p->opr.op[0]->id.name;
-        if (p->opr.nops == 2 && local ==1){
+        if (p->opr.nops == 2){
             if (local_lookup(name) ==NULL){
                 //redundant push
                 printf("\tpush\tsp[-1]\n");
@@ -322,9 +269,11 @@ int ex(nodeType *p,int l1,int l2,int* fp) {
             if (global_lookup(name) == NULL){
                 if (local ==1) printf("global variable %s not defined!\n",name);
                 else {
-                    printf("//variable %s from input, saved at sb[%d]\n",name,sb);
-                    insert_var(name,sb,typeInt);
-                    sb++;
+                    //redundant push
+                    printf("\tpush\tsp[-1]\n");
+                    (*fp)++;
+                    printf("//variable %s not defined, saved at fp[%d]\n",name,(*fp)-2);
+                    insert_var(name,(*fp)-2,typeInt);
                 }
             }
             printf("\tpop\tsb[%d]\n", global_lookup(name)->var.index);

@@ -13,6 +13,11 @@ SCOPE_STACK* init_scope()
 	return scope;
 }
 
+HASH_TABLE* global_ht(SCOPE_STACK* s)
+{
+	return s->stack[0];
+}
+
 HASH_TABLE* current_ht(SCOPE_STACK* s)
 {	
 	if (s->count ==0) 
@@ -198,9 +203,10 @@ void insert_array(char* name,int index,int size,typeEnum elementtype)
 	return;
 }
 
+
 //for var,function,array
-ENTRY* lookup(char* name)
-{	HASH_TABLE* ht = current_ht(ss);
+ENTRY* lookup(char* name,HASH_TABLE* ht)
+{	
 	int h = hash(name);
 	int original= h;
 	if ((*ht)[h]==NULL) {return NULL;}//not found 
@@ -215,4 +221,12 @@ ENTRY* lookup(char* name)
 	return (*ht)[h];
 }
 
+ENTRY* global_lookup(char* name)
+{	
+	return lookup(name,global_ht(ss));
+}
+
+ENTRY* local_lookup(char* name){
+	return lookup(name,current_ht(ss));
+}
 

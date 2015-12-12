@@ -66,12 +66,14 @@ function:
 stmt:
           ';'                            { $$ = opr(';', 2, NULL, NULL); }
         | expr ';'                       { $$ = $1; }
-        | RETURN VARIABLE ';'            {$$=opr(RETURN,1,id($2));}
+        | RETURN expr ';'                {$$=opr(RETURN,1,$2);}
         | BREAK ';'                      { $$ = opr(BREAK,0);}
         | CONTINUE ';'                   { $$ = opr(CONTINUE,0);}
         | PRINT expr ';'                 { $$ = opr(PRINT, 1, $2); }
 	    | READ VARIABLE ';'		         { $$ = opr(READ, 1, id($2)); }
+        | READ '@' VARIABLE ';'          { $$ = opr(READ, 2, id($3), NULL);}
         | VARIABLE '=' expr ';'          { $$ = opr('=', 2, id($1), $3); }
+        | '@'VARIABLE '=' expr ';'       { $$ = opr('=', 3, id($2), $4, NULL);}
 	    | FOR '(' stmt stmt stmt ')' stmt { $$ = opr(FOR, 4, $3, $4,
 $5, $7); }
         | WHILE '(' expr ')' stmt        { $$ = opr(WHILE, 2, $3, $5); }
@@ -92,6 +94,7 @@ arguments:
 expr:
           INTEGER               { $$ = con($1); }
         | VARIABLE              { $$ = id($1); }
+        | '@' VARIABLE          { $$ = opr('@', 1, id($2)); }
         | '-' expr %prec UMINUS { $$ = opr(UMINUS, 1, $2); }
         | expr '+' expr         { $$ = opr('+', 2, $1, $3); }
         | expr '-' expr         { $$ = opr('-', 2, $1, $3); }

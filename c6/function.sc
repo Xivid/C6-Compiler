@@ -9,5 +9,6 @@ prime (x) {
 	return 1;
 }
 
-a = prime (7);
-print a;
+read x;
+print prime (x);
+

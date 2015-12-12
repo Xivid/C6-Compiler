@@ -12,13 +12,14 @@ nodeType *id(char* x);
 nodeType *con(int value);
 nodeType* addOperand(nodeType* p1,nodeType* p2);
 void freeNode(nodeType *p);
-int ex(nodeType *p,int l1,int l2);
+int ex(nodeType *p,int l1,int l2,int* fp);
 int yylex(void);
 
-void yyerror(char *s);
 int sym[26];
 
 SCOPE_STACK* ss;
+int var;
+int* fp = &var;
 
 %}
 
@@ -57,8 +58,8 @@ definition:
          ;
 
 function:
-          function stmt         { ex($2,-1,-1); freeNode($2); }
-        | function definition   { ex($2,-1,-1); freeNode($2); }
+          function stmt         { ex($2,-1,-1,fp); freeNode($2); }
+        | function definition   { ex($2,-1,-1,fp); freeNode($2); }
         | /* NULL */
         ;
 
@@ -201,9 +202,7 @@ void freeNode(nodeType *p) {
     free (p);
 }
 
-void yyerror(char *s) {
-    fprintf(stdout, "%s\n", s);
-}
+
 
 int main(int argc, char **argv) {
 extern FILE* yyin;

@@ -1,3 +1,5 @@
+%option yylineno
+
 %{
 #include <stdlib.h>
 #include <ctype.h>
@@ -63,4 +65,8 @@ void yyerror(char *);
 %%
 int yywrap(void) {
     return 1;
+}
+
+void yyerror(char *s) {
+    fprintf(stderr, "line %d: %s\n", yylineno, s);
 }

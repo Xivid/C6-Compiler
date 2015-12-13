@@ -48,7 +48,7 @@ int* fp = &var;
 %left '*' '/' '%'
 %nonassoc UMINUS
 
-%type <nPtr> stmt expr stmt_list definition arguments 
+%type <nPtr> stmt expr stmt_list definition arguments input output
 
 %%
 
@@ -75,18 +75,8 @@ stmt:
         | RETURN expr ';'                {$$=opr(RETURN,1,$2);}
         | BREAK ';'                      { $$ = opr(BREAK,0);}
         | CONTINUE ';'                   { $$ = opr(CONTINUE,0);}
-        | PRINT expr ';'                 { $$ = opr(PRINT, 1, $2); }
-	    | READ VARIABLE ';'		         { $$ = opr(READ, 1, id($2)); }
-        | READ '@' VARIABLE ';'          { $$ = opr(READ, 2, id($3), NULL);}
-        | GETI '(' VARIABLE ')' ';'      { $$ = opr(GETI, 1, id($3)); }
-        | GETC '(' VARIABLE ')' ';'      { $$ = opr(GETC, 1, id($3)); }
-        | GETS '(' VARIABLE ')' ';'      { $$ = opr(GETS, 1, id($3)); }
-        | PUTI '(' expr ')' ';'          { $$ = opr(PUTI, 1, $3); }
-        | PUTC '(' expr ')' ';'          { $$ = opr(PUTC, 1, $3); }
-        | PUTS '(' expr ')' ';'          { $$ = opr(PUTS, 1, $3); }
-        | PUTI'_' '(' expr ')' ';'       { $$ = opr(PUTI, 2, $3, NULL); }
-        | PUTC'_' '(' expr ')' ';'       { $$ = opr(PUTC, 2, $3, NULL); }
-        | PUTS'_' '(' expr ')' ';'       { $$ = opr(PUTS, 2, $3, NULL); }
+        | input ';'                      { $$ = $1; }
+        | output ';'                     { $$ = $1; }
         | VARIABLE '=' expr ';'          { $$ = opr('=', 2, id($1), $3); }
         | '@'VARIABLE '=' expr ';'       { $$ = opr('=', 3, id($2), $4, NULL);}
 	    | FOR '(' stmt stmt stmt ')' stmt { $$ = opr(FOR, 4, $3, $4,
@@ -105,6 +95,23 @@ stmt_list:
 arguments:
          arguments ',' expr     {$$= addOperand($1,$3);}
         | expr                  {$$= opr('|',1,$1);}
+        ;
+input: 
+        READ VARIABLE               { $$ = opr(READ, 1, id($2)); }
+        | READ '@' VARIABLE         { $$ = opr(READ, 2, id($3), NULL);}
+        | GETI '(' VARIABLE ')'      { $$ = opr(GETI, 1, id($3)); }
+        | GETC '(' VARIABLE ')'      { $$ = opr(GETC, 1, id($3)); }
+        | GETS '(' VARIABLE ')'      { $$ = opr(GETS, 1, id($3)); }
+        ;
+output: 
+          PRINT expr                  { $$ = opr(PRINT, 1, $2); }
+        | PUTI '(' expr ')'           { $$ = opr(PUTI, 1, $3); }
+        | PUTC '(' expr ')'           { $$ = opr(PUTC, 1, $3); }
+        | PUTS '(' expr ')'           { $$ = opr(PUTS, 1, $3); }
+        | PUTI'_' '(' expr ')'        { $$ = opr(PUTI, 2, $4, NULL); }
+        | PUTC'_' '(' expr ')'        { $$ = opr(PUTC, 2, $4, NULL); }
+        | PUTS'_' '(' expr ')'        { $$ = opr(PUTS, 2, $4, NULL); }
+        ;
 
 expr:
           INTEGER               { $$ = con($1); }

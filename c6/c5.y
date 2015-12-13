@@ -84,6 +84,9 @@ stmt:
         | PUTI '(' expr ')' ';'          { $$ = opr(PUTI, 1, $3); }
         | PUTC '(' expr ')' ';'          { $$ = opr(PUTC, 1, $3); }
         | PUTS '(' expr ')' ';'          { $$ = opr(PUTS, 1, $3); }
+        | PUTI'_' '(' expr ')' ';'       { $$ = opr(PUTI, 2, $3, NULL); }
+        | PUTC'_' '(' expr ')' ';'       { $$ = opr(PUTC, 2, $3, NULL); }
+        | PUTS'_' '(' expr ')' ';'       { $$ = opr(PUTS, 2, $3, NULL); }
         | VARIABLE '=' expr ';'          { $$ = opr('=', 2, id($1), $3); }
         | '@'VARIABLE '=' expr ';'       { $$ = opr('=', 3, id($2), $4, NULL);}
 	    | FOR '(' stmt stmt stmt ')' stmt { $$ = opr(FOR, 4, $3, $4,

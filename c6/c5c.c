@@ -236,26 +236,25 @@ int ex(nodeType *p,int l1,int l2,int* fp) {
 	    break;
     case PRINT:     
         ex(p->opr.op[0],l1,l2,fp);
-        //case of the result type
         printf("\tputi\n");
         (*fp)--;
         break;
     case PUTI:
         ex(p->opr.op[0],l1,l2,fp);
-        //case of the result type
-        printf("\tputi\n");
+        if (p->opr.nops ==1) printf("\tputi\n");//with newline
+        else printf("\tputi_\n");//without newline
         (*fp)--;
         break;
     case PUTC:
         ex(p->opr.op[0],l1,l2,fp);
-        //case of the result type
-        printf("\tputc\n");
+        if (p->opr.nops == 1) printf("\tputc\n");
+        else printf("\tputc_\n");
         (*fp)--;
         break;
     case PUTS:
         ex(p->opr.op[0],l1,l2,fp);
-        //case of the result type
-        printf("\tputs\n");
+        if (p->opr.nops == 1) printf("\tputs\n");
+        else printf("\tputs_\n");
         (*fp)--;
         break;
     case '=':       

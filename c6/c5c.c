@@ -17,8 +17,16 @@ int ex(nodeType *p,int l1,int l2,int* fp) {
     int lblx, lbly,lblz, lbl1, lbl2;
     if (!p) return 0;
     switch(p->type) {
+    case typeCh:
+        printf("\tpush\t'%c'\n",p->ch.value);
+        (*fp)++;
+        break;
     case typeCon:       
         printf("\tpush\t%d\n", p->con.value); 
+        (*fp)++;
+        break;
+    case typeStr:
+        printf("\tpush\t\"%s\"\n",p->str.value);
         (*fp)++;
         break;
     case typeId:    

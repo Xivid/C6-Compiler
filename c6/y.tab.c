@@ -2023,7 +2023,7 @@ nodeType* ch(char value){
     size_t nodeSize;
 
     /* allocate node */
-    nodeSize = SIZEOF_NODETYPE + sizeof(conNodeType);
+    nodeSize = SIZEOF_NODETYPE + sizeof(charNodeType);
     if ((p = malloc(nodeSize)) == NULL)
         yyerror("out of memory");
 
@@ -2040,7 +2040,7 @@ nodeType* str(char* value){
     size_t nodeSize;
 
     /* allocate node */
-    nodeSize = SIZEOF_NODETYPE + sizeof(conNodeType);
+    nodeSize = SIZEOF_NODETYPE + sizeof(stringNodeType);
     if ((p = malloc(nodeSize)) == NULL)
         yyerror("out of memory");
 

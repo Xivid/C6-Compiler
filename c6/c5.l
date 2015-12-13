@@ -56,14 +56,13 @@ void yyerror(char *);
                 yylval.iValue = atoi(yytext);
                 return INTEGER;
             }
-'.'         {
+\'.\'         {
                 yylval.cValue = yytext[1];//any character
                 return CHAR;
             }
-\".*\"        {   
-                int len = strlen(yytext);
-                strncpy(yylval.sValue,yytext+1,len-2);
-                yylval.sValue[len-1] = '\0';
+\"[^"\n]*\"        {
+                yylval.sValue = strdup(yytext+1);
+                yylval.sValue[yyleng-2] = 0;   //without the quotes
                 return STRING;
             }
 [-()<>=+*/;{}.%,@_] {

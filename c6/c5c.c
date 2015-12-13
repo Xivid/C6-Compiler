@@ -243,21 +243,51 @@ int ex(nodeType *p,int l1,int l2,int* fp) {
         (*fp)--;
         break;
     case PUTI:
-        ex(p->opr.op[0],l1,l2,fp);
-        if (p->opr.nops ==1) printf("\tputi\n");//with newline
-        else printf("\tputi_\n");//without newline
+        argn = p->opr.op[0]->opr.nops;
+        if (p->opr.nops ==1) {
+            for (i=0;i<argn;i++) {
+                ex(p->opr.op[0]->opr.op[i],-1,-1,fp);
+                printf("\tputi\n");//with newline
+            }
+        }
+        else {
+            for (i=0;i<argn;i++) {
+            ex(p->opr.op[0]->opr.op[i],-1,-1,fp);
+            printf("\tputi_\n");//without newline
+            }
+        }
         (*fp)--;
         break;
     case PUTC:
-        ex(p->opr.op[0],l1,l2,fp);
-        if (p->opr.nops == 1) printf("\tputc\n");
-        else printf("\tputc_\n");
+        argn = p->opr.op[0]->opr.nops;
+        if (p->opr.nops ==1) {
+            for (i=0;i<argn;i++) {
+                ex(p->opr.op[0]->opr.op[i],-1,-1,fp);
+                printf("\tputc\n");//with newline
+            }
+        }
+        else {
+            for (i=0;i<argn;i++) {
+            ex(p->opr.op[0]->opr.op[i],-1,-1,fp);
+            printf("\tputc_\n");//without newline
+            }
+        }
         (*fp)--;
         break;
     case PUTS:
-        ex(p->opr.op[0],l1,l2,fp);
-        if (p->opr.nops == 1) printf("\tputs\n");
-        else printf("\tputs_\n");
+        argn = p->opr.op[0]->opr.nops;
+        if (p->opr.nops ==1) {
+            for (i=0;i<argn;i++) {
+                ex(p->opr.op[0]->opr.op[i],-1,-1,fp);
+                printf("\tputs\n");//with newline
+            }
+        }
+        else {
+            for (i=0;i<argn;i++) {
+            ex(p->opr.op[0]->opr.op[i],-1,-1,fp);
+            printf("\tputs_\n");//without newline
+            }
+        }
         (*fp)--;
         break;
     case '=':       

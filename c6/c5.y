@@ -104,12 +104,12 @@ input:
         ;
 output: 
           PRINT expr                  { $$ = opr(PRINT, 1, $2); }
-        | PUTI '(' expr ')'           { $$ = opr(PUTI, 1, $3); }
-        | PUTC '(' expr ')'           { $$ = opr(PUTC, 1, $3); }
-        | PUTS '(' expr ')'           { $$ = opr(PUTS, 1, $3); }
-        | PUTI'_' '(' expr ')'        { $$ = opr(PUTI, 2, $4, NULL); }
-        | PUTC'_' '(' expr ')'        { $$ = opr(PUTC, 2, $4, NULL); }
-        | PUTS'_' '(' expr ')'        { $$ = opr(PUTS, 2, $4, NULL); }
+        | PUTI '(' arguments ')'           { $$ = opr(PUTI, 1, $3); }
+        | PUTC '(' arguments ')'           { $$ = opr(PUTC, 1, $3); }
+        | PUTS '(' arguments ')'           { $$ = opr(PUTS, 1, $3); }
+        | PUTI'_' '(' arguments ')'        { $$ = opr(PUTI, 2, $4, NULL); }
+        | PUTC'_' '(' arguments ')'        { $$ = opr(PUTC, 2, $4, NULL); }
+        | PUTS'_' '(' arguments ')'        { $$ = opr(PUTS, 2, $4, NULL); }
         ;
 
 expr:

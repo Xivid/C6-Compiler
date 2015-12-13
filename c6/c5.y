@@ -37,7 +37,10 @@ int* fp = &var;
 %token <var> VARIABLE
 %token <cValue> CHAR
 %token <sValue> STRING
-%token FOR WHILE IF PRINT READ DO BREAK CONTINUE ARRAY RETURN GETI GETC GETS PUTI PUTC PUTS
+%token FOR WHILE IF PRINT READ DO BREAK CONTINUE ARRAY RETURN 
+%token GETI GETC GETS PUTI PUTC PUTS PUTI_ PUTC_ PUTS_
+%nonassoc STRINGX
+%nonassoc STRING
 %nonassoc IFX
 %nonassoc ELSE
 
@@ -104,12 +107,15 @@ input:
         ;
 output: 
           PRINT expr                  { $$ = opr(PRINT, 1, $2); }
-        | PUTI '(' arguments ')'           { $$ = opr(PUTI, 1, $3); }
-        | PUTC '(' arguments ')'           { $$ = opr(PUTC, 1, $3); }
-        | PUTS '(' arguments ')'           { $$ = opr(PUTS, 1, $3); }
-        | PUTI'_' '(' arguments ')'        { $$ = opr(PUTI, 2, $4, NULL); }
-        | PUTC'_' '(' arguments ')'        { $$ = opr(PUTC, 2, $4, NULL); }
-        | PUTS'_' '(' arguments ')'        { $$ = opr(PUTS, 2, $4, NULL); }
+        | PUTI '('  arguments ')' %prec STRINGX  { $$ = opr(PUTI, 1, $3); }
+        | PUTI '(' STRING ',' arguments')' { $$ = opr(PUTI, 2, $3, $5);}
+        | PUTC '(' arguments ')'  %prec STRINGX  { $$ = opr(PUTC, 1, $3); }
+        | PUTC '(' STRING ',' arguments')' { $$ = opr(PUTC, 2, $3, $5);}
+        | PUTS '('  arguments ')' %prec STRINGX  { $$ = opr(PUTS, 1, $3); }
+        | PUTS '(' STRING ',' arguments')' { $$ = opr(PUTS, 2, $3, $5);} 
+        | PUTI_ '(' arguments ')'        { $$ = opr(PUTI_, 1, $3); }
+        | PUTC_ '(' arguments ')'        { $$ = opr(PUTC_, 1, $3); }
+        | PUTS_ '(' arguments ')'        { $$ = opr(PUTS_, 1, $3); }
         ;
 
 expr:

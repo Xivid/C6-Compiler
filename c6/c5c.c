@@ -250,13 +250,21 @@ int ex(nodeType *p,int l1,int l2,int* fp) {
                 printf("\tputi\n");//with newline
             }
         }
-        else {
+        else {//format string 
             for (i=0;i<argn;i++) {
-            ex(p->opr.op[0]->opr.op[i],-1,-1,fp);
-            printf("\tputi_\n");//without newline
+                ex(p->opr.op[1]->opr.op[i],-1,-1,fp);
+                printf("\tputi %s\n",p->opr.op[0]->str.value);//with newline
             }
         }
         (*fp)--;
+        break;
+    case PUTI_:
+        argn = p->opr.op[0]->opr.nops;
+        for (i=0;i<argn;i++) {
+            ex(p->opr.op[0]->opr.op[i],-1,-1,fp);
+            printf("\tputi_\n");//without newline
+            }
+         (*fp)--;
         break;
     case PUTC:
         argn = p->opr.op[0]->opr.nops;
@@ -267,11 +275,19 @@ int ex(nodeType *p,int l1,int l2,int* fp) {
             }
         }
         else {
-            for (i=0;i<argn;i++) {
+             for (i=0;i<argn;i++) {
+                ex(p->opr.op[1]->opr.op[i],-1,-1,fp);
+                printf("\tputc %s\n",p->opr.op[0]->str.value);//with newline
+            }
+        }
+        (*fp)--;
+        break;
+    case PUTC_:
+        argn = p->opr.op[0]->opr.nops;
+        for (i=0;i<argn;i++) {
             ex(p->opr.op[0]->opr.op[i],-1,-1,fp);
             printf("\tputc_\n");//without newline
             }
-        }
         (*fp)--;
         break;
     case PUTS:
@@ -283,11 +299,19 @@ int ex(nodeType *p,int l1,int l2,int* fp) {
             }
         }
         else {
-            for (i=0;i<argn;i++) {
+             for (i=0;i<argn;i++) {
+                ex(p->opr.op[1]->opr.op[i],-1,-1,fp);
+                printf("\tputs %s\n",p->opr.op[0]->str.value);//with newline
+            }
+        }
+        (*fp)--;
+        break;
+    case PUTS_:
+        argn = p->opr.op[0]->opr.nops;
+        for (i=0;i<argn;i++) {
             ex(p->opr.op[0]->opr.op[i],-1,-1,fp);
             printf("\tputs_\n");//without newline
             }
-        }
         (*fp)--;
         break;
     case '=':       

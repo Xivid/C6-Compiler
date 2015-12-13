@@ -1,0 +1,2731 @@
+Terminals unused in grammar
+
+   ARRAY
+
+
+State 94 conflicts: 1 shift/reduce
+State 96 conflicts: 1 shift/reduce
+State 98 conflicts: 1 shift/reduce
+
+
+Grammar
+
+    0 $accept: program $end
+
+    1 program: function
+
+    2 definition: VARIABLE '(' arguments ')' '{' stmt_list '}'
+    3           | VARIABLE '(' ')' '{' stmt_list '}'
+
+    4 function: function stmt
+    5         | function definition
+    6         | %empty
+
+    7 stmt: ';'
+    8     | expr ';'
+    9     | RETURN expr ';'
+   10     | BREAK ';'
+   11     | CONTINUE ';'
+   12     | input ';'
+   13     | output ';'
+   14     | VARIABLE '=' expr ';'
+   15     | '@' VARIABLE '=' expr ';'
+   16     | FOR '(' stmt stmt stmt ')' stmt
+   17     | WHILE '(' expr ')' stmt
+   18     | DO stmt WHILE '(' expr ')'
+   19     | IF '(' expr ')' stmt
+   20     | IF '(' expr ')' stmt ELSE stmt
+   21     | '{' stmt_list '}'
+
+   22 stmt_list: stmt
+   23          | stmt_list stmt
+
+   24 arguments: arguments ',' expr
+   25          | expr
+
+   26 input: READ VARIABLE
+   27      | GETI '(' arguments ')'
+   28      | GETC '(' arguments ')'
+   29      | GETS '(' arguments ')'
+
+   30 output: PRINT expr
+   31       | PUTI '(' arguments ')'
+   32       | PUTI '(' STRING ',' arguments ')'
+   33       | PUTC '(' arguments ')'
+   34       | PUTC '(' STRING ',' arguments ')'
+   35       | PUTS '(' arguments ')'
+   36       | PUTS '(' STRING ',' arguments ')'
+   37       | PUTI_ '(' arguments ')'
+   38       | PUTC_ '(' arguments ')'
+   39       | PUTS_ '(' arguments ')'
+
+   40 expr: INTEGER
+   41     | CHAR
+   42     | STRING
+   43     | VARIABLE
+   44     | '@' VARIABLE
+   45     | '-' expr
+   46     | expr '+' expr
+   47     | expr '-' expr
+   48     | expr '*' expr
+   49     | expr '%' expr
+   50     | expr '/' expr
+   51     | expr '<' expr
+   52     | expr '>' expr
+   53     | expr GE expr
+   54     | expr LE expr
+   55     | expr NE expr
+   56     | expr EQ expr
+   57     | expr AND expr
+   58     | expr OR expr
+   59     | '(' expr ')'
+   60     | VARIABLE '(' arguments ')'
+
+
+Terminals, with rules where they appear
+
+$end (0) 0
+'%' (37) 49
+'(' (40) 2 3 16 17 18 19 20 27 28 29 31 32 33 34 35 36 37 38 39 59
+    60
+')' (41) 2 3 16 17 18 19 20 27 28 29 31 32 33 34 35 36 37 38 39 59
+    60
+'*' (42) 48
+'+' (43) 46
+',' (44) 24 32 34 36
+'-' (45) 45 47
+'/' (47) 50
+';' (59) 7 8 9 10 11 12 13 14 15
+'<' (60) 51
+'=' (61) 14 15
+'>' (62) 52
+'@' (64) 15 44
+'{' (123) 2 3 21
+'}' (125) 2 3 21
+error (256)
+INTEGER (258) 40
+VARIABLE (259) 2 3 14 15 26 43 44 60
+CHAR (260) 41
+STRING (261) 32 34 36 42
+FOR (262) 16
+WHILE (263) 17 18
+IF (264) 19 20
+PRINT (265) 30
+READ (266) 26
+DO (267) 18
+BREAK (268) 10
+CONTINUE (269) 11
+ARRAY (270)
+RETURN (271) 9
+GETI (272) 27
+GETC (273) 28
+GETS (274) 29
+PUTI (275) 31 32
+PUTC (276) 33 34
+PUTS (277) 35 36
+PUTI_ (278) 37
+PUTC_ (279) 38
+PUTS_ (280) 39
+STRINGX (281)
+IFX (282)
+ELSE (283) 20
+AND (284) 57
+OR (285) 58
+GE (286) 53
+LE (287) 54
+EQ (288) 56
+NE (289) 55
+UMINUS (290)
+
+
+Nonterminals, with rules where they appear
+
+$accept (51)
+    on left: 0
+program (52)
+    on left: 1, on right: 0
+definition (53)
+    on left: 2 3, on right: 5
+function (54)
+    on left: 4 5 6, on right: 1 4 5
+stmt (55)
+    on left: 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21, on right: 4
+    16 17 18 19 20 22 23
+stmt_list (56)
+    on left: 22 23, on right: 2 3 21 23
+arguments (57)
+    on left: 24 25, on right: 2 24 27 28 29 31 32 33 34 35 36 37 38
+    39 60
+input (58)
+    on left: 26 27 28 29, on right: 12
+output (59)
+    on left: 30 31 32 33 34 35 36 37 38 39, on right: 13
+expr (60)
+    on left: 40 41 42 43 44 45 46 47 48 49 50 51 52 53 54 55 56 57
+    58 59 60, on right: 8 9 14 15 17 18 19 20 24 25 30 45 46 47 48
+    49 50 51 52 53 54 55 56 57 58 59
+
+
+State 0
+
+    0 $accept: . program $end
+
+    $default  reduce using rule 6 (function)
+
+    program   go to state 1
+    function  go to state 2
+
+
+State 1
+
+    0 $accept: program . $end
+
+    $end  shift, and go to state 3
+
+
+State 2
+
+    1 program: function .
+    4 function: function . stmt
+    5         | function . definition
+
+    INTEGER   shift, and go to state 4
+    VARIABLE  shift, and go to state 5
+    CHAR      shift, and go to state 6
+    STRING    shift, and go to state 7
+    FOR       shift, and go to state 8
+    WHILE     shift, and go to state 9
+    IF        shift, and go to state 10
+    PRINT     shift, and go to state 11
+    READ      shift, and go to state 12
+    DO        shift, and go to state 13
+    BREAK     shift, and go to state 14
+    CONTINUE  shift, and go to state 15
+    RETURN    shift, and go to state 16
+    GETI      shift, and go to state 17
+    GETC      shift, and go to state 18
+    GETS      shift, and go to state 19
+    PUTI      shift, and go to state 20
+    PUTC      shift, and go to state 21
+    PUTS      shift, and go to state 22
+    PUTI_     shift, and go to state 23
+    PUTC_     shift, and go to state 24
+    PUTS_     shift, and go to state 25
+    '-'       shift, and go to state 26
+    '('       shift, and go to state 27
+    '{'       shift, and go to state 28
+    ';'       shift, and go to state 29
+    '@'       shift, and go to state 30
+
+    $default  reduce using rule 1 (program)
+
+    definition  go to state 31
+    stmt        go to state 32
+    input       go to state 33
+    output      go to state 34
+    expr        go to state 35
+
+
+State 3
+
+    0 $accept: program $end .
+
+    $default  accept
+
+
+State 4
+
+   40 expr: INTEGER .
+
+    $default  reduce using rule 40 (expr)
+
+
+State 5
+
+    2 definition: VARIABLE . '(' arguments ')' '{' stmt_list '}'
+    3           | VARIABLE . '(' ')' '{' stmt_list '}'
+   14 stmt: VARIABLE . '=' expr ';'
+   43 expr: VARIABLE .
+   60     | VARIABLE . '(' arguments ')'
+
+    '('  shift, and go to state 36
+    '='  shift, and go to state 37
+
+    $default  reduce using rule 43 (expr)
+
+
+State 6
+
+   41 expr: CHAR .
+
+    $default  reduce using rule 41 (expr)
+
+
+State 7
+
+   42 expr: STRING .
+
+    $default  reduce using rule 42 (expr)
+
+
+State 8
+
+   16 stmt: FOR . '(' stmt stmt stmt ')' stmt
+
+    '('  shift, and go to state 38
+
+
+State 9
+
+   17 stmt: WHILE . '(' expr ')' stmt
+
+    '('  shift, and go to state 39
+
+
+State 10
+
+   19 stmt: IF . '(' expr ')' stmt
+   20     | IF . '(' expr ')' stmt ELSE stmt
+
+    '('  shift, and go to state 40
+
+
+State 11
+
+   30 output: PRINT . expr
+
+    INTEGER   shift, and go to state 4
+    VARIABLE  shift, and go to state 41
+    CHAR      shift, and go to state 6
+    STRING    shift, and go to state 7
+    '-'       shift, and go to state 26
+    '('       shift, and go to state 27
+    '@'       shift, and go to state 42
+
+    expr  go to state 43
+
+
+State 12
+
+   26 input: READ . VARIABLE
+
+    VARIABLE  shift, and go to state 44
+
+
+State 13
+
+   18 stmt: DO . stmt WHILE '(' expr ')'
+
+    INTEGER   shift, and go to state 4
+    VARIABLE  shift, and go to state 45
+    CHAR      shift, and go to state 6
+    STRING    shift, and go to state 7
+    FOR       shift, and go to state 8
+    WHILE     shift, and go to state 9
+    IF        shift, and go to state 10
+    PRINT     shift, and go to state 11
+    READ      shift, and go to state 12
+    DO        shift, and go to state 13
+    BREAK     shift, and go to state 14
+    CONTINUE  shift, and go to state 15
+    RETURN    shift, and go to state 16
+    GETI      shift, and go to state 17
+    GETC      shift, and go to state 18
+    GETS      shift, and go to state 19
+    PUTI      shift, and go to state 20
+    PUTC      shift, and go to state 21
+    PUTS      shift, and go to state 22
+    PUTI_     shift, and go to state 23
+    PUTC_     shift, and go to state 24
+    PUTS_     shift, and go to state 25
+    '-'       shift, and go to state 26
+    '('       shift, and go to state 27
+    '{'       shift, and go to state 28
+    ';'       shift, and go to state 29
+    '@'       shift, and go to state 30
+
+    stmt    go to state 46
+    input   go to state 33
+    output  go to state 34
+    expr    go to state 35
+
+
+State 14
+
+   10 stmt: BREAK . ';'
+
+    ';'  shift, and go to state 47
+
+
+State 15
+
+   11 stmt: CONTINUE . ';'
+
+    ';'  shift, and go to state 48
+
+
+State 16
+
+    9 stmt: RETURN . expr ';'
+
+    INTEGER   shift, and go to state 4
+    VARIABLE  shift, and go to state 41
+    CHAR      shift, and go to state 6
+    STRING    shift, and go to state 7
+    '-'       shift, and go to state 26
+    '('       shift, and go to state 27
+    '@'       shift, and go to state 42
+
+    expr  go to state 49
+
+
+State 17
+
+   27 input: GETI . '(' arguments ')'
+
+    '('  shift, and go to state 50
+
+
+State 18
+
+   28 input: GETC . '(' arguments ')'
+
+    '('  shift, and go to state 51
+
+
+State 19
+
+   29 input: GETS . '(' arguments ')'
+
+    '('  shift, and go to state 52
+
+
+State 20
+
+   31 output: PUTI . '(' arguments ')'
+   32       | PUTI . '(' STRING ',' arguments ')'
+
+    '('  shift, and go to state 53
+
+
+State 21
+
+   33 output: PUTC . '(' arguments ')'
+   34       | PUTC . '(' STRING ',' arguments ')'
+
+    '('  shift, and go to state 54
+
+
+State 22
+
+   35 output: PUTS . '(' arguments ')'
+   36       | PUTS . '(' STRING ',' arguments ')'
+
+    '('  shift, and go to state 55
+
+
+State 23
+
+   37 output: PUTI_ . '(' arguments ')'
+
+    '('  shift, and go to state 56
+
+
+State 24
+
+   38 output: PUTC_ . '(' arguments ')'
+
+    '('  shift, and go to state 57
+
+
+State 25
+
+   39 output: PUTS_ . '(' arguments ')'
+
+    '('  shift, and go to state 58
+
+
+State 26
+
+   45 expr: '-' . expr
+
+    INTEGER   shift, and go to state 4
+    VARIABLE  shift, and go to state 41
+    CHAR      shift, and go to state 6
+    STRING    shift, and go to state 7
+    '-'       shift, and go to state 26
+    '('       shift, and go to state 27
+    '@'       shift, and go to state 42
+
+    expr  go to state 59
+
+
+State 27
+
+   59 expr: '(' . expr ')'
+
+    INTEGER   shift, and go to state 4
+    VARIABLE  shift, and go to state 41
+    CHAR      shift, and go to state 6
+    STRING    shift, and go to state 7
+    '-'       shift, and go to state 26
+    '('       shift, and go to state 27
+    '@'       shift, and go to state 42
+
+    expr  go to state 60
+
+
+State 28
+
+   21 stmt: '{' . stmt_list '}'
+
+    INTEGER   shift, and go to state 4
+    VARIABLE  shift, and go to state 45
+    CHAR      shift, and go to state 6
+    STRING    shift, and go to state 7
+    FOR       shift, and go to state 8
+    WHILE     shift, and go to state 9
+    IF        shift, and go to state 10
+    PRINT     shift, and go to state 11
+    READ      shift, and go to state 12
+    DO        shift, and go to state 13
+    BREAK     shift, and go to state 14
+    CONTINUE  shift, and go to state 15
+    RETURN    shift, and go to state 16
+    GETI      shift, and go to state 17
+    GETC      shift, and go to state 18
+    GETS      shift, and go to state 19
+    PUTI      shift, and go to state 20
+    PUTC      shift, and go to state 21
+    PUTS      shift, and go to state 22
+    PUTI_     shift, and go to state 23
+    PUTC_     shift, and go to state 24
+    PUTS_     shift, and go to state 25
+    '-'       shift, and go to state 26
+    '('       shift, and go to state 27
+    '{'       shift, and go to state 28
+    ';'       shift, and go to state 29
+    '@'       shift, and go to state 30
+
+    stmt       go to state 61
+    stmt_list  go to state 62
+    input      go to state 33
+    output     go to state 34
+    expr       go to state 35
+
+
+State 29
+
+    7 stmt: ';' .
+
+    $default  reduce using rule 7 (stmt)
+
+
+State 30
+
+   15 stmt: '@' . VARIABLE '=' expr ';'
+   44 expr: '@' . VARIABLE
+
+    VARIABLE  shift, and go to state 63
+
+
+State 31
+
+    5 function: function definition .
+
+    $default  reduce using rule 5 (function)
+
+
+State 32
+
+    4 function: function stmt .
+
+    $default  reduce using rule 4 (function)
+
+
+State 33
+
+   12 stmt: input . ';'
+
+    ';'  shift, and go to state 64
+
+
+State 34
+
+   13 stmt: output . ';'
+
+    ';'  shift, and go to state 65
+
+
+State 35
+
+    8 stmt: expr . ';'
+   46 expr: expr . '+' expr
+   47     | expr . '-' expr
+   48     | expr . '*' expr
+   49     | expr . '%' expr
+   50     | expr . '/' expr
+   51     | expr . '<' expr
+   52     | expr . '>' expr
+   53     | expr . GE expr
+   54     | expr . LE expr
+   55     | expr . NE expr
+   56     | expr . EQ expr
+   57     | expr . AND expr
+   58     | expr . OR expr
+
+    AND  shift, and go to state 66
+    OR   shift, and go to state 67
+    GE   shift, and go to state 68
+    LE   shift, and go to state 69
+    EQ   shift, and go to state 70
+    NE   shift, and go to state 71
+    '>'  shift, and go to state 72
+    '<'  shift, and go to state 73
+    '+'  shift, and go to state 74
+    '-'  shift, and go to state 75
+    '*'  shift, and go to state 76
+    '/'  shift, and go to state 77
+    '%'  shift, and go to state 78
+    ';'  shift, and go to state 79
+
+
+State 36
+
+    2 definition: VARIABLE '(' . arguments ')' '{' stmt_list '}'
+    3           | VARIABLE '(' . ')' '{' stmt_list '}'
+   60 expr: VARIABLE '(' . arguments ')'
+
+    INTEGER   shift, and go to state 4
+    VARIABLE  shift, and go to state 41
+    CHAR      shift, and go to state 6
+    STRING    shift, and go to state 7
+    '-'       shift, and go to state 26
+    '('       shift, and go to state 27
+    ')'       shift, and go to state 80
+    '@'       shift, and go to state 42
+
+    arguments  go to state 81
+    expr       go to state 82
+
+
+State 37
+
+   14 stmt: VARIABLE '=' . expr ';'
+
+    INTEGER   shift, and go to state 4
+    VARIABLE  shift, and go to state 41
+    CHAR      shift, and go to state 6
+    STRING    shift, and go to state 7
+    '-'       shift, and go to state 26
+    '('       shift, and go to state 27
+    '@'       shift, and go to state 42
+
+    expr  go to state 83
+
+
+State 38
+
+   16 stmt: FOR '(' . stmt stmt stmt ')' stmt
+
+    INTEGER   shift, and go to state 4
+    VARIABLE  shift, and go to state 45
+    CHAR      shift, and go to state 6
+    STRING    shift, and go to state 7
+    FOR       shift, and go to state 8
+    WHILE     shift, and go to state 9
+    IF        shift, and go to state 10
+    PRINT     shift, and go to state 11
+    READ      shift, and go to state 12
+    DO        shift, and go to state 13
+    BREAK     shift, and go to state 14
+    CONTINUE  shift, and go to state 15
+    RETURN    shift, and go to state 16
+    GETI      shift, and go to state 17
+    GETC      shift, and go to state 18
+    GETS      shift, and go to state 19
+    PUTI      shift, and go to state 20
+    PUTC      shift, and go to state 21
+    PUTS      shift, and go to state 22
+    PUTI_     shift, and go to state 23
+    PUTC_     shift, and go to state 24
+    PUTS_     shift, and go to state 25
+    '-'       shift, and go to state 26
+    '('       shift, and go to state 27
+    '{'       shift, and go to state 28
+    ';'       shift, and go to state 29
+    '@'       shift, and go to state 30
+
+    stmt    go to state 84
+    input   go to state 33
+    output  go to state 34
+    expr    go to state 35
+
+
+State 39
+
+   17 stmt: WHILE '(' . expr ')' stmt
+
+    INTEGER   shift, and go to state 4
+    VARIABLE  shift, and go to state 41
+    CHAR      shift, and go to state 6
+    STRING    shift, and go to state 7
+    '-'       shift, and go to state 26
+    '('       shift, and go to state 27
+    '@'       shift, and go to state 42
+
+    expr  go to state 85
+
+
+State 40
+
+   19 stmt: IF '(' . expr ')' stmt
+   20     | IF '(' . expr ')' stmt ELSE stmt
+
+    INTEGER   shift, and go to state 4
+    VARIABLE  shift, and go to state 41
+    CHAR      shift, and go to state 6
+    STRING    shift, and go to state 7
+    '-'       shift, and go to state 26
+    '('       shift, and go to state 27
+    '@'       shift, and go to state 42
+
+    expr  go to state 86
+
+
+State 41
+
+   43 expr: VARIABLE .
+   60     | VARIABLE . '(' arguments ')'
+
+    '('  shift, and go to state 87
+
+    $default  reduce using rule 43 (expr)
+
+
+State 42
+
+   44 expr: '@' . VARIABLE
+
+    VARIABLE  shift, and go to state 88
+
+
+State 43
+
+   30 output: PRINT expr .
+   46 expr: expr . '+' expr
+   47     | expr . '-' expr
+   48     | expr . '*' expr
+   49     | expr . '%' expr
+   50     | expr . '/' expr
+   51     | expr . '<' expr
+   52     | expr . '>' expr
+   53     | expr . GE expr
+   54     | expr . LE expr
+   55     | expr . NE expr
+   56     | expr . EQ expr
+   57     | expr . AND expr
+   58     | expr . OR expr
+
+    AND  shift, and go to state 66
+    OR   shift, and go to state 67
+    GE   shift, and go to state 68
+    LE   shift, and go to state 69
+    EQ   shift, and go to state 70
+    NE   shift, and go to state 71
+    '>'  shift, and go to state 72
+    '<'  shift, and go to state 73
+    '+'  shift, and go to state 74
+    '-'  shift, and go to state 75
+    '*'  shift, and go to state 76
+    '/'  shift, and go to state 77
+    '%'  shift, and go to state 78
+
+    $default  reduce using rule 30 (output)
+
+
+State 44
+
+   26 input: READ VARIABLE .
+
+    $default  reduce using rule 26 (input)
+
+
+State 45
+
+   14 stmt: VARIABLE . '=' expr ';'
+   43 expr: VARIABLE .
+   60     | VARIABLE . '(' arguments ')'
+
+    '('  shift, and go to state 87
+    '='  shift, and go to state 37
+
+    $default  reduce using rule 43 (expr)
+
+
+State 46
+
+   18 stmt: DO stmt . WHILE '(' expr ')'
+
+    WHILE  shift, and go to state 89
+
+
+State 47
+
+   10 stmt: BREAK ';' .
+
+    $default  reduce using rule 10 (stmt)
+
+
+State 48
+
+   11 stmt: CONTINUE ';' .
+
+    $default  reduce using rule 11 (stmt)
+
+
+State 49
+
+    9 stmt: RETURN expr . ';'
+   46 expr: expr . '+' expr
+   47     | expr . '-' expr
+   48     | expr . '*' expr
+   49     | expr . '%' expr
+   50     | expr . '/' expr
+   51     | expr . '<' expr
+   52     | expr . '>' expr
+   53     | expr . GE expr
+   54     | expr . LE expr
+   55     | expr . NE expr
+   56     | expr . EQ expr
+   57     | expr . AND expr
+   58     | expr . OR expr
+
+    AND  shift, and go to state 66
+    OR   shift, and go to state 67
+    GE   shift, and go to state 68
+    LE   shift, and go to state 69
+    EQ   shift, and go to state 70
+    NE   shift, and go to state 71
+    '>'  shift, and go to state 72
+    '<'  shift, and go to state 73
+    '+'  shift, and go to state 74
+    '-'  shift, and go to state 75
+    '*'  shift, and go to state 76
+    '/'  shift, and go to state 77
+    '%'  shift, and go to state 78
+    ';'  shift, and go to state 90
+
+
+State 50
+
+   27 input: GETI '(' . arguments ')'
+
+    INTEGER   shift, and go to state 4
+    VARIABLE  shift, and go to state 41
+    CHAR      shift, and go to state 6
+    STRING    shift, and go to state 7
+    '-'       shift, and go to state 26
+    '('       shift, and go to state 27
+    '@'       shift, and go to state 42
+
+    arguments  go to state 91
+    expr       go to state 82
+
+
+State 51
+
+   28 input: GETC '(' . arguments ')'
+
+    INTEGER   shift, and go to state 4
+    VARIABLE  shift, and go to state 41
+    CHAR      shift, and go to state 6
+    STRING    shift, and go to state 7
+    '-'       shift, and go to state 26
+    '('       shift, and go to state 27
+    '@'       shift, and go to state 42
+
+    arguments  go to state 92
+    expr       go to state 82
+
+
+State 52
+
+   29 input: GETS '(' . arguments ')'
+
+    INTEGER   shift, and go to state 4
+    VARIABLE  shift, and go to state 41
+    CHAR      shift, and go to state 6
+    STRING    shift, and go to state 7
+    '-'       shift, and go to state 26
+    '('       shift, and go to state 27
+    '@'       shift, and go to state 42
+
+    arguments  go to state 93
+    expr       go to state 82
+
+
+State 53
+
+   31 output: PUTI '(' . arguments ')'
+   32       | PUTI '(' . STRING ',' arguments ')'
+
+    INTEGER   shift, and go to state 4
+    VARIABLE  shift, and go to state 41
+    CHAR      shift, and go to state 6
+    STRING    shift, and go to state 94
+    '-'       shift, and go to state 26
+    '('       shift, and go to state 27
+    '@'       shift, and go to state 42
+
+    arguments  go to state 95
+    expr       go to state 82
+
+
+State 54
+
+   33 output: PUTC '(' . arguments ')'
+   34       | PUTC '(' . STRING ',' arguments ')'
+
+    INTEGER   shift, and go to state 4
+    VARIABLE  shift, and go to state 41
+    CHAR      shift, and go to state 6
+    STRING    shift, and go to state 96
+    '-'       shift, and go to state 26
+    '('       shift, and go to state 27
+    '@'       shift, and go to state 42
+
+    arguments  go to state 97
+    expr       go to state 82
+
+
+State 55
+
+   35 output: PUTS '(' . arguments ')'
+   36       | PUTS '(' . STRING ',' arguments ')'
+
+    INTEGER   shift, and go to state 4
+    VARIABLE  shift, and go to state 41
+    CHAR      shift, and go to state 6
+    STRING    shift, and go to state 98
+    '-'       shift, and go to state 26
+    '('       shift, and go to state 27
+    '@'       shift, and go to state 42
+
+    arguments  go to state 99
+    expr       go to state 82
+
+
+State 56
+
+   37 output: PUTI_ '(' . arguments ')'
+
+    INTEGER   shift, and go to state 4
+    VARIABLE  shift, and go to state 41
+    CHAR      shift, and go to state 6
+    STRING    shift, and go to state 7
+    '-'       shift, and go to state 26
+    '('       shift, and go to state 27
+    '@'       shift, and go to state 42
+
+    arguments  go to state 100
+    expr       go to state 82
+
+
+State 57
+
+   38 output: PUTC_ '(' . arguments ')'
+
+    INTEGER   shift, and go to state 4
+    VARIABLE  shift, and go to state 41
+    CHAR      shift, and go to state 6
+    STRING    shift, and go to state 7
+    '-'       shift, and go to state 26
+    '('       shift, and go to state 27
+    '@'       shift, and go to state 42
+
+    arguments  go to state 101
+    expr       go to state 82
+
+
+State 58
+
+   39 output: PUTS_ '(' . arguments ')'
+
+    INTEGER   shift, and go to state 4
+    VARIABLE  shift, and go to state 41
+    CHAR      shift, and go to state 6
+    STRING    shift, and go to state 7
+    '-'       shift, and go to state 26
+    '('       shift, and go to state 27
+    '@'       shift, and go to state 42
+
+    arguments  go to state 102
+    expr       go to state 82
+
+
+State 59
+
+   45 expr: '-' expr .
+   46     | expr . '+' expr
+   47     | expr . '-' expr
+   48     | expr . '*' expr
+   49     | expr . '%' expr
+   50     | expr . '/' expr
+   51     | expr . '<' expr
+   52     | expr . '>' expr
+   53     | expr . GE expr
+   54     | expr . LE expr
+   55     | expr . NE expr
+   56     | expr . EQ expr
+   57     | expr . AND expr
+   58     | expr . OR expr
+
+    $default  reduce using rule 45 (expr)
+
+
+State 60
+
+   46 expr: expr . '+' expr
+   47     | expr . '-' expr
+   48     | expr . '*' expr
+   49     | expr . '%' expr
+   50     | expr . '/' expr
+   51     | expr . '<' expr
+   52     | expr . '>' expr
+   53     | expr . GE expr
+   54     | expr . LE expr
+   55     | expr . NE expr
+   56     | expr . EQ expr
+   57     | expr . AND expr
+   58     | expr . OR expr
+   59     | '(' expr . ')'
+
+    AND  shift, and go to state 66
+    OR   shift, and go to state 67
+    GE   shift, and go to state 68
+    LE   shift, and go to state 69
+    EQ   shift, and go to state 70
+    NE   shift, and go to state 71
+    '>'  shift, and go to state 72
+    '<'  shift, and go to state 73
+    '+'  shift, and go to state 74
+    '-'  shift, and go to state 75
+    '*'  shift, and go to state 76
+    '/'  shift, and go to state 77
+    '%'  shift, and go to state 78
+    ')'  shift, and go to state 103
+
+
+State 61
+
+   22 stmt_list: stmt .
+
+    $default  reduce using rule 22 (stmt_list)
+
+
+State 62
+
+   21 stmt: '{' stmt_list . '}'
+   23 stmt_list: stmt_list . stmt
+
+    INTEGER   shift, and go to state 4
+    VARIABLE  shift, and go to state 45
+    CHAR      shift, and go to state 6
+    STRING    shift, and go to state 7
+    FOR       shift, and go to state 8
+    WHILE     shift, and go to state 9
+    IF        shift, and go to state 10
+    PRINT     shift, and go to state 11
+    READ      shift, and go to state 12
+    DO        shift, and go to state 13
+    BREAK     shift, and go to state 14
+    CONTINUE  shift, and go to state 15
+    RETURN    shift, and go to state 16
+    GETI      shift, and go to state 17
+    GETC      shift, and go to state 18
+    GETS      shift, and go to state 19
+    PUTI      shift, and go to state 20
+    PUTC      shift, and go to state 21
+    PUTS      shift, and go to state 22
+    PUTI_     shift, and go to state 23
+    PUTC_     shift, and go to state 24
+    PUTS_     shift, and go to state 25
+    '-'       shift, and go to state 26
+    '('       shift, and go to state 27
+    '{'       shift, and go to state 28
+    '}'       shift, and go to state 104
+    ';'       shift, and go to state 29
+    '@'       shift, and go to state 30
+
+    stmt    go to state 105
+    input   go to state 33
+    output  go to state 34
+    expr    go to state 35
+
+
+State 63
+
+   15 stmt: '@' VARIABLE . '=' expr ';'
+   44 expr: '@' VARIABLE .
+
+    '='  shift, and go to state 106
+
+    $default  reduce using rule 44 (expr)
+
+
+State 64
+
+   12 stmt: input ';' .
+
+    $default  reduce using rule 12 (stmt)
+
+
+State 65
+
+   13 stmt: output ';' .
+
+    $default  reduce using rule 13 (stmt)
+
+
+State 66
+
+   57 expr: expr AND . expr
+
+    INTEGER   shift, and go to state 4
+    VARIABLE  shift, and go to state 41
+    CHAR      shift, and go to state 6
+    STRING    shift, and go to state 7
+    '-'       shift, and go to state 26
+    '('       shift, and go to state 27
+    '@'       shift, and go to state 42
+
+    expr  go to state 107
+
+
+State 67
+
+   58 expr: expr OR . expr
+
+    INTEGER   shift, and go to state 4
+    VARIABLE  shift, and go to state 41
+    CHAR      shift, and go to state 6
+    STRING    shift, and go to state 7
+    '-'       shift, and go to state 26
+    '('       shift, and go to state 27
+    '@'       shift, and go to state 42
+
+    expr  go to state 108
+
+
+State 68
+
+   53 expr: expr GE . expr
+
+    INTEGER   shift, and go to state 4
+    VARIABLE  shift, and go to state 41
+    CHAR      shift, and go to state 6
+    STRING    shift, and go to state 7
+    '-'       shift, and go to state 26
+    '('       shift, and go to state 27
+    '@'       shift, and go to state 42
+
+    expr  go to state 109
+
+
+State 69
+
+   54 expr: expr LE . expr
+
+    INTEGER   shift, and go to state 4
+    VARIABLE  shift, and go to state 41
+    CHAR      shift, and go to state 6
+    STRING    shift, and go to state 7
+    '-'       shift, and go to state 26
+    '('       shift, and go to state 27
+    '@'       shift, and go to state 42
+
+    expr  go to state 110
+
+
+State 70
+
+   56 expr: expr EQ . expr
+
+    INTEGER   shift, and go to state 4
+    VARIABLE  shift, and go to state 41
+    CHAR      shift, and go to state 6
+    STRING    shift, and go to state 7
+    '-'       shift, and go to state 26
+    '('       shift, and go to state 27
+    '@'       shift, and go to state 42
+
+    expr  go to state 111
+
+
+State 71
+
+   55 expr: expr NE . expr
+
+    INTEGER   shift, and go to state 4
+    VARIABLE  shift, and go to state 41
+    CHAR      shift, and go to state 6
+    STRING    shift, and go to state 7
+    '-'       shift, and go to state 26
+    '('       shift, and go to state 27
+    '@'       shift, and go to state 42
+
+    expr  go to state 112
+
+
+State 72
+
+   52 expr: expr '>' . expr
+
+    INTEGER   shift, and go to state 4
+    VARIABLE  shift, and go to state 41
+    CHAR      shift, and go to state 6
+    STRING    shift, and go to state 7
+    '-'       shift, and go to state 26
+    '('       shift, and go to state 27
+    '@'       shift, and go to state 42
+
+    expr  go to state 113
+
+
+State 73
+
+   51 expr: expr '<' . expr
+
+    INTEGER   shift, and go to state 4
+    VARIABLE  shift, and go to state 41
+    CHAR      shift, and go to state 6
+    STRING    shift, and go to state 7
+    '-'       shift, and go to state 26
+    '('       shift, and go to state 27
+    '@'       shift, and go to state 42
+
+    expr  go to state 114
+
+
+State 74
+
+   46 expr: expr '+' . expr
+
+    INTEGER   shift, and go to state 4
+    VARIABLE  shift, and go to state 41
+    CHAR      shift, and go to state 6
+    STRING    shift, and go to state 7
+    '-'       shift, and go to state 26
+    '('       shift, and go to state 27
+    '@'       shift, and go to state 42
+
+    expr  go to state 115
+
+
+State 75
+
+   47 expr: expr '-' . expr
+
+    INTEGER   shift, and go to state 4
+    VARIABLE  shift, and go to state 41
+    CHAR      shift, and go to state 6
+    STRING    shift, and go to state 7
+    '-'       shift, and go to state 26
+    '('       shift, and go to state 27
+    '@'       shift, and go to state 42
+
+    expr  go to state 116
+
+
+State 76
+
+   48 expr: expr '*' . expr
+
+    INTEGER   shift, and go to state 4
+    VARIABLE  shift, and go to state 41
+    CHAR      shift, and go to state 6
+    STRING    shift, and go to state 7
+    '-'       shift, and go to state 26
+    '('       shift, and go to state 27
+    '@'       shift, and go to state 42
+
+    expr  go to state 117
+
+
+State 77
+
+   50 expr: expr '/' . expr
+
+    INTEGER   shift, and go to state 4
+    VARIABLE  shift, and go to state 41
+    CHAR      shift, and go to state 6
+    STRING    shift, and go to state 7
+    '-'       shift, and go to state 26
+    '('       shift, and go to state 27
+    '@'       shift, and go to state 42
+
+    expr  go to state 118
+
+
+State 78
+
+   49 expr: expr '%' . expr
+
+    INTEGER   shift, and go to state 4
+    VARIABLE  shift, and go to state 41
+    CHAR      shift, and go to state 6
+    STRING    shift, and go to state 7
+    '-'       shift, and go to state 26
+    '('       shift, and go to state 27
+    '@'       shift, and go to state 42
+
+    expr  go to state 119
+
+
+State 79
+
+    8 stmt: expr ';' .
+
+    $default  reduce using rule 8 (stmt)
+
+
+State 80
+
+    3 definition: VARIABLE '(' ')' . '{' stmt_list '}'
+
+    '{'  shift, and go to state 120
+
+
+State 81
+
+    2 definition: VARIABLE '(' arguments . ')' '{' stmt_list '}'
+   24 arguments: arguments . ',' expr
+   60 expr: VARIABLE '(' arguments . ')'
+
+    ')'  shift, and go to state 121
+    ','  shift, and go to state 122
+
+
+State 82
+
+   25 arguments: expr .
+   46 expr: expr . '+' expr
+   47     | expr . '-' expr
+   48     | expr . '*' expr
+   49     | expr . '%' expr
+   50     | expr . '/' expr
+   51     | expr . '<' expr
+   52     | expr . '>' expr
+   53     | expr . GE expr
+   54     | expr . LE expr
+   55     | expr . NE expr
+   56     | expr . EQ expr
+   57     | expr . AND expr
+   58     | expr . OR expr
+
+    AND  shift, and go to state 66
+    OR   shift, and go to state 67
+    GE   shift, and go to state 68
+    LE   shift, and go to state 69
+    EQ   shift, and go to state 70
+    NE   shift, and go to state 71
+    '>'  shift, and go to state 72
+    '<'  shift, and go to state 73
+    '+'  shift, and go to state 74
+    '-'  shift, and go to state 75
+    '*'  shift, and go to state 76
+    '/'  shift, and go to state 77
+    '%'  shift, and go to state 78
+
+    $default  reduce using rule 25 (arguments)
+
+
+State 83
+
+   14 stmt: VARIABLE '=' expr . ';'
+   46 expr: expr . '+' expr
+   47     | expr . '-' expr
+   48     | expr . '*' expr
+   49     | expr . '%' expr
+   50     | expr . '/' expr
+   51     | expr . '<' expr
+   52     | expr . '>' expr
+   53     | expr . GE expr
+   54     | expr . LE expr
+   55     | expr . NE expr
+   56     | expr . EQ expr
+   57     | expr . AND expr
+   58     | expr . OR expr
+
+    AND  shift, and go to state 66
+    OR   shift, and go to state 67
+    GE   shift, and go to state 68
+    LE   shift, and go to state 69
+    EQ   shift, and go to state 70
+    NE   shift, and go to state 71
+    '>'  shift, and go to state 72
+    '<'  shift, and go to state 73
+    '+'  shift, and go to state 74
+    '-'  shift, and go to state 75
+    '*'  shift, and go to state 76
+    '/'  shift, and go to state 77
+    '%'  shift, and go to state 78
+    ';'  shift, and go to state 123
+
+
+State 84
+
+   16 stmt: FOR '(' stmt . stmt stmt ')' stmt
+
+    INTEGER   shift, and go to state 4
+    VARIABLE  shift, and go to state 45
+    CHAR      shift, and go to state 6
+    STRING    shift, and go to state 7
+    FOR       shift, and go to state 8
+    WHILE     shift, and go to state 9
+    IF        shift, and go to state 10
+    PRINT     shift, and go to state 11
+    READ      shift, and go to state 12
+    DO        shift, and go to state 13
+    BREAK     shift, and go to state 14
+    CONTINUE  shift, and go to state 15
+    RETURN    shift, and go to state 16
+    GETI      shift, and go to state 17
+    GETC      shift, and go to state 18
+    GETS      shift, and go to state 19
+    PUTI      shift, and go to state 20
+    PUTC      shift, and go to state 21
+    PUTS      shift, and go to state 22
+    PUTI_     shift, and go to state 23
+    PUTC_     shift, and go to state 24
+    PUTS_     shift, and go to state 25
+    '-'       shift, and go to state 26
+    '('       shift, and go to state 27
+    '{'       shift, and go to state 28
+    ';'       shift, and go to state 29
+    '@'       shift, and go to state 30
+
+    stmt    go to state 124
+    input   go to state 33
+    output  go to state 34
+    expr    go to state 35
+
+
+State 85
+
+   17 stmt: WHILE '(' expr . ')' stmt
+   46 expr: expr . '+' expr
+   47     | expr . '-' expr
+   48     | expr . '*' expr
+   49     | expr . '%' expr
+   50     | expr . '/' expr
+   51     | expr . '<' expr
+   52     | expr . '>' expr
+   53     | expr . GE expr
+   54     | expr . LE expr
+   55     | expr . NE expr
+   56     | expr . EQ expr
+   57     | expr . AND expr
+   58     | expr . OR expr
+
+    AND  shift, and go to state 66
+    OR   shift, and go to state 67
+    GE   shift, and go to state 68
+    LE   shift, and go to state 69
+    EQ   shift, and go to state 70
+    NE   shift, and go to state 71
+    '>'  shift, and go to state 72
+    '<'  shift, and go to state 73
+    '+'  shift, and go to state 74
+    '-'  shift, and go to state 75
+    '*'  shift, and go to state 76
+    '/'  shift, and go to state 77
+    '%'  shift, and go to state 78
+    ')'  shift, and go to state 125
+
+
+State 86
+
+   19 stmt: IF '(' expr . ')' stmt
+   20     | IF '(' expr . ')' stmt ELSE stmt
+   46 expr: expr . '+' expr
+   47     | expr . '-' expr
+   48     | expr . '*' expr
+   49     | expr . '%' expr
+   50     | expr . '/' expr
+   51     | expr . '<' expr
+   52     | expr . '>' expr
+   53     | expr . GE expr
+   54     | expr . LE expr
+   55     | expr . NE expr
+   56     | expr . EQ expr
+   57     | expr . AND expr
+   58     | expr . OR expr
+
+    AND  shift, and go to state 66
+    OR   shift, and go to state 67
+    GE   shift, and go to state 68
+    LE   shift, and go to state 69
+    EQ   shift, and go to state 70
+    NE   shift, and go to state 71
+    '>'  shift, and go to state 72
+    '<'  shift, and go to state 73
+    '+'  shift, and go to state 74
+    '-'  shift, and go to state 75
+    '*'  shift, and go to state 76
+    '/'  shift, and go to state 77
+    '%'  shift, and go to state 78
+    ')'  shift, and go to state 126
+
+
+State 87
+
+   60 expr: VARIABLE '(' . arguments ')'
+
+    INTEGER   shift, and go to state 4
+    VARIABLE  shift, and go to state 41
+    CHAR      shift, and go to state 6
+    STRING    shift, and go to state 7
+    '-'       shift, and go to state 26
+    '('       shift, and go to state 27
+    '@'       shift, and go to state 42
+
+    arguments  go to state 127
+    expr       go to state 82
+
+
+State 88
+
+   44 expr: '@' VARIABLE .
+
+    $default  reduce using rule 44 (expr)
+
+
+State 89
+
+   18 stmt: DO stmt WHILE . '(' expr ')'
+
+    '('  shift, and go to state 128
+
+
+State 90
+
+    9 stmt: RETURN expr ';' .
+
+    $default  reduce using rule 9 (stmt)
+
+
+State 91
+
+   24 arguments: arguments . ',' expr
+   27 input: GETI '(' arguments . ')'
+
+    ')'  shift, and go to state 129
+    ','  shift, and go to state 122
+
+
+State 92
+
+   24 arguments: arguments . ',' expr
+   28 input: GETC '(' arguments . ')'
+
+    ')'  shift, and go to state 130
+    ','  shift, and go to state 122
+
+
+State 93
+
+   24 arguments: arguments . ',' expr
+   29 input: GETS '(' arguments . ')'
+
+    ')'  shift, and go to state 131
+    ','  shift, and go to state 122
+
+
+State 94
+
+   32 output: PUTI '(' STRING . ',' arguments ')'
+   42 expr: STRING .
+
+    ','  shift, and go to state 132
+
+    ','       [reduce using rule 42 (expr)]
+    $default  reduce using rule 42 (expr)
+
+
+State 95
+
+   24 arguments: arguments . ',' expr
+   31 output: PUTI '(' arguments . ')'
+
+    ')'  shift, and go to state 133
+    ','  shift, and go to state 122
+
+
+State 96
+
+   34 output: PUTC '(' STRING . ',' arguments ')'
+   42 expr: STRING .
+
+    ','  shift, and go to state 134
+
+    ','       [reduce using rule 42 (expr)]
+    $default  reduce using rule 42 (expr)
+
+
+State 97
+
+   24 arguments: arguments . ',' expr
+   33 output: PUTC '(' arguments . ')'
+
+    ')'  shift, and go to state 135
+    ','  shift, and go to state 122
+
+
+State 98
+
+   36 output: PUTS '(' STRING . ',' arguments ')'
+   42 expr: STRING .
+
+    ','  shift, and go to state 136
+
+    ','       [reduce using rule 42 (expr)]
+    $default  reduce using rule 42 (expr)
+
+
+State 99
+
+   24 arguments: arguments . ',' expr
+   35 output: PUTS '(' arguments . ')'
+
+    ')'  shift, and go to state 137
+    ','  shift, and go to state 122
+
+
+State 100
+
+   24 arguments: arguments . ',' expr
+   37 output: PUTI_ '(' arguments . ')'
+
+    ')'  shift, and go to state 138
+    ','  shift, and go to state 122
+
+
+State 101
+
+   24 arguments: arguments . ',' expr
+   38 output: PUTC_ '(' arguments . ')'
+
+    ')'  shift, and go to state 139
+    ','  shift, and go to state 122
+
+
+State 102
+
+   24 arguments: arguments . ',' expr
+   39 output: PUTS_ '(' arguments . ')'
+
+    ')'  shift, and go to state 140
+    ','  shift, and go to state 122
+
+
+State 103
+
+   59 expr: '(' expr ')' .
+
+    $default  reduce using rule 59 (expr)
+
+
+State 104
+
+   21 stmt: '{' stmt_list '}' .
+
+    $default  reduce using rule 21 (stmt)
+
+
+State 105
+
+   23 stmt_list: stmt_list stmt .
+
+    $default  reduce using rule 23 (stmt_list)
+
+
+State 106
+
+   15 stmt: '@' VARIABLE '=' . expr ';'
+
+    INTEGER   shift, and go to state 4
+    VARIABLE  shift, and go to state 41
+    CHAR      shift, and go to state 6
+    STRING    shift, and go to state 7
+    '-'       shift, and go to state 26
+    '('       shift, and go to state 27
+    '@'       shift, and go to state 42
+
+    expr  go to state 141
+
+
+State 107
+
+   46 expr: expr . '+' expr
+   47     | expr . '-' expr
+   48     | expr . '*' expr
+   49     | expr . '%' expr
+   50     | expr . '/' expr
+   51     | expr . '<' expr
+   52     | expr . '>' expr
+   53     | expr . GE expr
+   54     | expr . LE expr
+   55     | expr . NE expr
+   56     | expr . EQ expr
+   57     | expr . AND expr
+   57     | expr AND expr .
+   58     | expr . OR expr
+
+    GE   shift, and go to state 68
+    LE   shift, and go to state 69
+    EQ   shift, and go to state 70
+    NE   shift, and go to state 71
+    '>'  shift, and go to state 72
+    '<'  shift, and go to state 73
+    '+'  shift, and go to state 74
+    '-'  shift, and go to state 75
+    '*'  shift, and go to state 76
+    '/'  shift, and go to state 77
+    '%'  shift, and go to state 78
+
+    $default  reduce using rule 57 (expr)
+
+
+State 108
+
+   46 expr: expr . '+' expr
+   47     | expr . '-' expr
+   48     | expr . '*' expr
+   49     | expr . '%' expr
+   50     | expr . '/' expr
+   51     | expr . '<' expr
+   52     | expr . '>' expr
+   53     | expr . GE expr
+   54     | expr . LE expr
+   55     | expr . NE expr
+   56     | expr . EQ expr
+   57     | expr . AND expr
+   58     | expr . OR expr
+   58     | expr OR expr .
+
+    GE   shift, and go to state 68
+    LE   shift, and go to state 69
+    EQ   shift, and go to state 70
+    NE   shift, and go to state 71
+    '>'  shift, and go to state 72
+    '<'  shift, and go to state 73
+    '+'  shift, and go to state 74
+    '-'  shift, and go to state 75
+    '*'  shift, and go to state 76
+    '/'  shift, and go to state 77
+    '%'  shift, and go to state 78
+
+    $default  reduce using rule 58 (expr)
+
+
+State 109
+
+   46 expr: expr . '+' expr
+   47     | expr . '-' expr
+   48     | expr . '*' expr
+   49     | expr . '%' expr
+   50     | expr . '/' expr
+   51     | expr . '<' expr
+   52     | expr . '>' expr
+   53     | expr . GE expr
+   53     | expr GE expr .
+   54     | expr . LE expr
+   55     | expr . NE expr
+   56     | expr . EQ expr
+   57     | expr . AND expr
+   58     | expr . OR expr
+
+    '+'  shift, and go to state 74
+    '-'  shift, and go to state 75
+    '*'  shift, and go to state 76
+    '/'  shift, and go to state 77
+    '%'  shift, and go to state 78
+
+    $default  reduce using rule 53 (expr)
+
+
+State 110
+
+   46 expr: expr . '+' expr
+   47     | expr . '-' expr
+   48     | expr . '*' expr
+   49     | expr . '%' expr
+   50     | expr . '/' expr
+   51     | expr . '<' expr
+   52     | expr . '>' expr
+   53     | expr . GE expr
+   54     | expr . LE expr
+   54     | expr LE expr .
+   55     | expr . NE expr
+   56     | expr . EQ expr
+   57     | expr . AND expr
+   58     | expr . OR expr
+
+    '+'  shift, and go to state 74
+    '-'  shift, and go to state 75
+    '*'  shift, and go to state 76
+    '/'  shift, and go to state 77
+    '%'  shift, and go to state 78
+
+    $default  reduce using rule 54 (expr)
+
+
+State 111
+
+   46 expr: expr . '+' expr
+   47     | expr . '-' expr
+   48     | expr . '*' expr
+   49     | expr . '%' expr
+   50     | expr . '/' expr
+   51     | expr . '<' expr
+   52     | expr . '>' expr
+   53     | expr . GE expr
+   54     | expr . LE expr
+   55     | expr . NE expr
+   56     | expr . EQ expr
+   56     | expr EQ expr .
+   57     | expr . AND expr
+   58     | expr . OR expr
+
+    '+'  shift, and go to state 74
+    '-'  shift, and go to state 75
+    '*'  shift, and go to state 76
+    '/'  shift, and go to state 77
+    '%'  shift, and go to state 78
+
+    $default  reduce using rule 56 (expr)
+
+
+State 112
+
+   46 expr: expr . '+' expr
+   47     | expr . '-' expr
+   48     | expr . '*' expr
+   49     | expr . '%' expr
+   50     | expr . '/' expr
+   51     | expr . '<' expr
+   52     | expr . '>' expr
+   53     | expr . GE expr
+   54     | expr . LE expr
+   55     | expr . NE expr
+   55     | expr NE expr .
+   56     | expr . EQ expr
+   57     | expr . AND expr
+   58     | expr . OR expr
+
+    '+'  shift, and go to state 74
+    '-'  shift, and go to state 75
+    '*'  shift, and go to state 76
+    '/'  shift, and go to state 77
+    '%'  shift, and go to state 78
+
+    $default  reduce using rule 55 (expr)
+
+
+State 113
+
+   46 expr: expr . '+' expr
+   47     | expr . '-' expr
+   48     | expr . '*' expr
+   49     | expr . '%' expr
+   50     | expr . '/' expr
+   51     | expr . '<' expr
+   52     | expr . '>' expr
+   52     | expr '>' expr .
+   53     | expr . GE expr
+   54     | expr . LE expr
+   55     | expr . NE expr
+   56     | expr . EQ expr
+   57     | expr . AND expr
+   58     | expr . OR expr
+
+    '+'  shift, and go to state 74
+    '-'  shift, and go to state 75
+    '*'  shift, and go to state 76
+    '/'  shift, and go to state 77
+    '%'  shift, and go to state 78
+
+    $default  reduce using rule 52 (expr)
+
+
+State 114
+
+   46 expr: expr . '+' expr
+   47     | expr . '-' expr
+   48     | expr . '*' expr
+   49     | expr . '%' expr
+   50     | expr . '/' expr
+   51     | expr . '<' expr
+   51     | expr '<' expr .
+   52     | expr . '>' expr
+   53     | expr . GE expr
+   54     | expr . LE expr
+   55     | expr . NE expr
+   56     | expr . EQ expr
+   57     | expr . AND expr
+   58     | expr . OR expr
+
+    '+'  shift, and go to state 74
+    '-'  shift, and go to state 75
+    '*'  shift, and go to state 76
+    '/'  shift, and go to state 77
+    '%'  shift, and go to state 78
+
+    $default  reduce using rule 51 (expr)
+
+
+State 115
+
+   46 expr: expr . '+' expr
+   46     | expr '+' expr .
+   47     | expr . '-' expr
+   48     | expr . '*' expr
+   49     | expr . '%' expr
+   50     | expr . '/' expr
+   51     | expr . '<' expr
+   52     | expr . '>' expr
+   53     | expr . GE expr
+   54     | expr . LE expr
+   55     | expr . NE expr
+   56     | expr . EQ expr
+   57     | expr . AND expr
+   58     | expr . OR expr
+
+    '*'  shift, and go to state 76
+    '/'  shift, and go to state 77
+    '%'  shift, and go to state 78
+
+    $default  reduce using rule 46 (expr)
+
+
+State 116
+
+   46 expr: expr . '+' expr
+   47     | expr . '-' expr
+   47     | expr '-' expr .
+   48     | expr . '*' expr
+   49     | expr . '%' expr
+   50     | expr . '/' expr
+   51     | expr . '<' expr
+   52     | expr . '>' expr
+   53     | expr . GE expr
+   54     | expr . LE expr
+   55     | expr . NE expr
+   56     | expr . EQ expr
+   57     | expr . AND expr
+   58     | expr . OR expr
+
+    '*'  shift, and go to state 76
+    '/'  shift, and go to state 77
+    '%'  shift, and go to state 78
+
+    $default  reduce using rule 47 (expr)
+
+
+State 117
+
+   46 expr: expr . '+' expr
+   47     | expr . '-' expr
+   48     | expr . '*' expr
+   48     | expr '*' expr .
+   49     | expr . '%' expr
+   50     | expr . '/' expr
+   51     | expr . '<' expr
+   52     | expr . '>' expr
+   53     | expr . GE expr
+   54     | expr . LE expr
+   55     | expr . NE expr
+   56     | expr . EQ expr
+   57     | expr . AND expr
+   58     | expr . OR expr
+
+    $default  reduce using rule 48 (expr)
+
+
+State 118
+
+   46 expr: expr . '+' expr
+   47     | expr . '-' expr
+   48     | expr . '*' expr
+   49     | expr . '%' expr
+   50     | expr . '/' expr
+   50     | expr '/' expr .
+   51     | expr . '<' expr
+   52     | expr . '>' expr
+   53     | expr . GE expr
+   54     | expr . LE expr
+   55     | expr . NE expr
+   56     | expr . EQ expr
+   57     | expr . AND expr
+   58     | expr . OR expr
+
+    $default  reduce using rule 50 (expr)
+
+
+State 119
+
+   46 expr: expr . '+' expr
+   47     | expr . '-' expr
+   48     | expr . '*' expr
+   49     | expr . '%' expr
+   49     | expr '%' expr .
+   50     | expr . '/' expr
+   51     | expr . '<' expr
+   52     | expr . '>' expr
+   53     | expr . GE expr
+   54     | expr . LE expr
+   55     | expr . NE expr
+   56     | expr . EQ expr
+   57     | expr . AND expr
+   58     | expr . OR expr
+
+    $default  reduce using rule 49 (expr)
+
+
+State 120
+
+    3 definition: VARIABLE '(' ')' '{' . stmt_list '}'
+
+    INTEGER   shift, and go to state 4
+    VARIABLE  shift, and go to state 45
+    CHAR      shift, and go to state 6
+    STRING    shift, and go to state 7
+    FOR       shift, and go to state 8
+    WHILE     shift, and go to state 9
+    IF        shift, and go to state 10
+    PRINT     shift, and go to state 11
+    READ      shift, and go to state 12
+    DO        shift, and go to state 13
+    BREAK     shift, and go to state 14
+    CONTINUE  shift, and go to state 15
+    RETURN    shift, and go to state 16
+    GETI      shift, and go to state 17
+    GETC      shift, and go to state 18
+    GETS      shift, and go to state 19
+    PUTI      shift, and go to state 20
+    PUTC      shift, and go to state 21
+    PUTS      shift, and go to state 22
+    PUTI_     shift, and go to state 23
+    PUTC_     shift, and go to state 24
+    PUTS_     shift, and go to state 25
+    '-'       shift, and go to state 26
+    '('       shift, and go to state 27
+    '{'       shift, and go to state 28
+    ';'       shift, and go to state 29
+    '@'       shift, and go to state 30
+
+    stmt       go to state 61
+    stmt_list  go to state 142
+    input      go to state 33
+    output     go to state 34
+    expr       go to state 35
+
+
+State 121
+
+    2 definition: VARIABLE '(' arguments ')' . '{' stmt_list '}'
+   60 expr: VARIABLE '(' arguments ')' .
+
+    '{'  shift, and go to state 143
+
+    $default  reduce using rule 60 (expr)
+
+
+State 122
+
+   24 arguments: arguments ',' . expr
+
+    INTEGER   shift, and go to state 4
+    VARIABLE  shift, and go to state 41
+    CHAR      shift, and go to state 6
+    STRING    shift, and go to state 7
+    '-'       shift, and go to state 26
+    '('       shift, and go to state 27
+    '@'       shift, and go to state 42
+
+    expr  go to state 144
+
+
+State 123
+
+   14 stmt: VARIABLE '=' expr ';' .
+
+    $default  reduce using rule 14 (stmt)
+
+
+State 124
+
+   16 stmt: FOR '(' stmt stmt . stmt ')' stmt
+
+    INTEGER   shift, and go to state 4
+    VARIABLE  shift, and go to state 45
+    CHAR      shift, and go to state 6
+    STRING    shift, and go to state 7
+    FOR       shift, and go to state 8
+    WHILE     shift, and go to state 9
+    IF        shift, and go to state 10
+    PRINT     shift, and go to state 11
+    READ      shift, and go to state 12
+    DO        shift, and go to state 13
+    BREAK     shift, and go to state 14
+    CONTINUE  shift, and go to state 15
+    RETURN    shift, and go to state 16
+    GETI      shift, and go to state 17
+    GETC      shift, and go to state 18
+    GETS      shift, and go to state 19
+    PUTI      shift, and go to state 20
+    PUTC      shift, and go to state 21
+    PUTS      shift, and go to state 22
+    PUTI_     shift, and go to state 23
+    PUTC_     shift, and go to state 24
+    PUTS_     shift, and go to state 25
+    '-'       shift, and go to state 26
+    '('       shift, and go to state 27
+    '{'       shift, and go to state 28
+    ';'       shift, and go to state 29
+    '@'       shift, and go to state 30
+
+    stmt    go to state 145
+    input   go to state 33
+    output  go to state 34
+    expr    go to state 35
+
+
+State 125
+
+   17 stmt: WHILE '(' expr ')' . stmt
+
+    INTEGER   shift, and go to state 4
+    VARIABLE  shift, and go to state 45
+    CHAR      shift, and go to state 6
+    STRING    shift, and go to state 7
+    FOR       shift, and go to state 8
+    WHILE     shift, and go to state 9
+    IF        shift, and go to state 10
+    PRINT     shift, and go to state 11
+    READ      shift, and go to state 12
+    DO        shift, and go to state 13
+    BREAK     shift, and go to state 14
+    CONTINUE  shift, and go to state 15
+    RETURN    shift, and go to state 16
+    GETI      shift, and go to state 17
+    GETC      shift, and go to state 18
+    GETS      shift, and go to state 19
+    PUTI      shift, and go to state 20
+    PUTC      shift, and go to state 21
+    PUTS      shift, and go to state 22
+    PUTI_     shift, and go to state 23
+    PUTC_     shift, and go to state 24
+    PUTS_     shift, and go to state 25
+    '-'       shift, and go to state 26
+    '('       shift, and go to state 27
+    '{'       shift, and go to state 28
+    ';'       shift, and go to state 29
+    '@'       shift, and go to state 30
+
+    stmt    go to state 146
+    input   go to state 33
+    output  go to state 34
+    expr    go to state 35
+
+
+State 126
+
+   19 stmt: IF '(' expr ')' . stmt
+   20     | IF '(' expr ')' . stmt ELSE stmt
+
+    INTEGER   shift, and go to state 4
+    VARIABLE  shift, and go to state 45
+    CHAR      shift, and go to state 6
+    STRING    shift, and go to state 7
+    FOR       shift, and go to state 8
+    WHILE     shift, and go to state 9
+    IF        shift, and go to state 10
+    PRINT     shift, and go to state 11
+    READ      shift, and go to state 12
+    DO        shift, and go to state 13
+    BREAK     shift, and go to state 14
+    CONTINUE  shift, and go to state 15
+    RETURN    shift, and go to state 16
+    GETI      shift, and go to state 17
+    GETC      shift, and go to state 18
+    GETS      shift, and go to state 19
+    PUTI      shift, and go to state 20
+    PUTC      shift, and go to state 21
+    PUTS      shift, and go to state 22
+    PUTI_     shift, and go to state 23
+    PUTC_     shift, and go to state 24
+    PUTS_     shift, and go to state 25
+    '-'       shift, and go to state 26
+    '('       shift, and go to state 27
+    '{'       shift, and go to state 28
+    ';'       shift, and go to state 29
+    '@'       shift, and go to state 30
+
+    stmt    go to state 147
+    input   go to state 33
+    output  go to state 34
+    expr    go to state 35
+
+
+State 127
+
+   24 arguments: arguments . ',' expr
+   60 expr: VARIABLE '(' arguments . ')'
+
+    ')'  shift, and go to state 148
+    ','  shift, and go to state 122
+
+
+State 128
+
+   18 stmt: DO stmt WHILE '(' . expr ')'
+
+    INTEGER   shift, and go to state 4
+    VARIABLE  shift, and go to state 41
+    CHAR      shift, and go to state 6
+    STRING    shift, and go to state 7
+    '-'       shift, and go to state 26
+    '('       shift, and go to state 27
+    '@'       shift, and go to state 42
+
+    expr  go to state 149
+
+
+State 129
+
+   27 input: GETI '(' arguments ')' .
+
+    $default  reduce using rule 27 (input)
+
+
+State 130
+
+   28 input: GETC '(' arguments ')' .
+
+    $default  reduce using rule 28 (input)
+
+
+State 131
+
+   29 input: GETS '(' arguments ')' .
+
+    $default  reduce using rule 29 (input)
+
+
+State 132
+
+   32 output: PUTI '(' STRING ',' . arguments ')'
+
+    INTEGER   shift, and go to state 4
+    VARIABLE  shift, and go to state 41
+    CHAR      shift, and go to state 6
+    STRING    shift, and go to state 7
+    '-'       shift, and go to state 26
+    '('       shift, and go to state 27
+    '@'       shift, and go to state 42
+
+    arguments  go to state 150
+    expr       go to state 82
+
+
+State 133
+
+   31 output: PUTI '(' arguments ')' .
+
+    $default  reduce using rule 31 (output)
+
+
+State 134
+
+   34 output: PUTC '(' STRING ',' . arguments ')'
+
+    INTEGER   shift, and go to state 4
+    VARIABLE  shift, and go to state 41
+    CHAR      shift, and go to state 6
+    STRING    shift, and go to state 7
+    '-'       shift, and go to state 26
+    '('       shift, and go to state 27
+    '@'       shift, and go to state 42
+
+    arguments  go to state 151
+    expr       go to state 82
+
+
+State 135
+
+   33 output: PUTC '(' arguments ')' .
+
+    $default  reduce using rule 33 (output)
+
+
+State 136
+
+   36 output: PUTS '(' STRING ',' . arguments ')'
+
+    INTEGER   shift, and go to state 4
+    VARIABLE  shift, and go to state 41
+    CHAR      shift, and go to state 6
+    STRING    shift, and go to state 7
+    '-'       shift, and go to state 26
+    '('       shift, and go to state 27
+    '@'       shift, and go to state 42
+
+    arguments  go to state 152
+    expr       go to state 82
+
+
+State 137
+
+   35 output: PUTS '(' arguments ')' .
+
+    $default  reduce using rule 35 (output)
+
+
+State 138
+
+   37 output: PUTI_ '(' arguments ')' .
+
+    $default  reduce using rule 37 (output)
+
+
+State 139
+
+   38 output: PUTC_ '(' arguments ')' .
+
+    $default  reduce using rule 38 (output)
+
+
+State 140
+
+   39 output: PUTS_ '(' arguments ')' .
+
+    $default  reduce using rule 39 (output)
+
+
+State 141
+
+   15 stmt: '@' VARIABLE '=' expr . ';'
+   46 expr: expr . '+' expr
+   47     | expr . '-' expr
+   48     | expr . '*' expr
+   49     | expr . '%' expr
+   50     | expr . '/' expr
+   51     | expr . '<' expr
+   52     | expr . '>' expr
+   53     | expr . GE expr
+   54     | expr . LE expr
+   55     | expr . NE expr
+   56     | expr . EQ expr
+   57     | expr . AND expr
+   58     | expr . OR expr
+
+    AND  shift, and go to state 66
+    OR   shift, and go to state 67
+    GE   shift, and go to state 68
+    LE   shift, and go to state 69
+    EQ   shift, and go to state 70
+    NE   shift, and go to state 71
+    '>'  shift, and go to state 72
+    '<'  shift, and go to state 73
+    '+'  shift, and go to state 74
+    '-'  shift, and go to state 75
+    '*'  shift, and go to state 76
+    '/'  shift, and go to state 77
+    '%'  shift, and go to state 78
+    ';'  shift, and go to state 153
+
+
+State 142
+
+    3 definition: VARIABLE '(' ')' '{' stmt_list . '}'
+   23 stmt_list: stmt_list . stmt
+
+    INTEGER   shift, and go to state 4
+    VARIABLE  shift, and go to state 45
+    CHAR      shift, and go to state 6
+    STRING    shift, and go to state 7
+    FOR       shift, and go to state 8
+    WHILE     shift, and go to state 9
+    IF        shift, and go to state 10
+    PRINT     shift, and go to state 11
+    READ      shift, and go to state 12
+    DO        shift, and go to state 13
+    BREAK     shift, and go to state 14
+    CONTINUE  shift, and go to state 15
+    RETURN    shift, and go to state 16
+    GETI      shift, and go to state 17
+    GETC      shift, and go to state 18
+    GETS      shift, and go to state 19
+    PUTI      shift, and go to state 20
+    PUTC      shift, and go to state 21
+    PUTS      shift, and go to state 22
+    PUTI_     shift, and go to state 23
+    PUTC_     shift, and go to state 24
+    PUTS_     shift, and go to state 25
+    '-'       shift, and go to state 26
+    '('       shift, and go to state 27
+    '{'       shift, and go to state 28
+    '}'       shift, and go to state 154
+    ';'       shift, and go to state 29
+    '@'       shift, and go to state 30
+
+    stmt    go to state 105
+    input   go to state 33
+    output  go to state 34
+    expr    go to state 35
+
+
+State 143
+
+    2 definition: VARIABLE '(' arguments ')' '{' . stmt_list '}'
+
+    INTEGER   shift, and go to state 4
+    VARIABLE  shift, and go to state 45
+    CHAR      shift, and go to state 6
+    STRING    shift, and go to state 7
+    FOR       shift, and go to state 8
+    WHILE     shift, and go to state 9
+    IF        shift, and go to state 10
+    PRINT     shift, and go to state 11
+    READ      shift, and go to state 12
+    DO        shift, and go to state 13
+    BREAK     shift, and go to state 14
+    CONTINUE  shift, and go to state 15
+    RETURN    shift, and go to state 16
+    GETI      shift, and go to state 17
+    GETC      shift, and go to state 18
+    GETS      shift, and go to state 19
+    PUTI      shift, and go to state 20
+    PUTC      shift, and go to state 21
+    PUTS      shift, and go to state 22
+    PUTI_     shift, and go to state 23
+    PUTC_     shift, and go to state 24
+    PUTS_     shift, and go to state 25
+    '-'       shift, and go to state 26
+    '('       shift, and go to state 27
+    '{'       shift, and go to state 28
+    ';'       shift, and go to state 29
+    '@'       shift, and go to state 30
+
+    stmt       go to state 61
+    stmt_list  go to state 155
+    input      go to state 33
+    output     go to state 34
+    expr       go to state 35
+
+
+State 144
+
+   24 arguments: arguments ',' expr .
+   46 expr: expr . '+' expr
+   47     | expr . '-' expr
+   48     | expr . '*' expr
+   49     | expr . '%' expr
+   50     | expr . '/' expr
+   51     | expr . '<' expr
+   52     | expr . '>' expr
+   53     | expr . GE expr
+   54     | expr . LE expr
+   55     | expr . NE expr
+   56     | expr . EQ expr
+   57     | expr . AND expr
+   58     | expr . OR expr
+
+    AND  shift, and go to state 66
+    OR   shift, and go to state 67
+    GE   shift, and go to state 68
+    LE   shift, and go to state 69
+    EQ   shift, and go to state 70
+    NE   shift, and go to state 71
+    '>'  shift, and go to state 72
+    '<'  shift, and go to state 73
+    '+'  shift, and go to state 74
+    '-'  shift, and go to state 75
+    '*'  shift, and go to state 76
+    '/'  shift, and go to state 77
+    '%'  shift, and go to state 78
+
+    $default  reduce using rule 24 (arguments)
+
+
+State 145
+
+   16 stmt: FOR '(' stmt stmt stmt . ')' stmt
+
+    ')'  shift, and go to state 156
+
+
+State 146
+
+   17 stmt: WHILE '(' expr ')' stmt .
+
+    $default  reduce using rule 17 (stmt)
+
+
+State 147
+
+   19 stmt: IF '(' expr ')' stmt .
+   20     | IF '(' expr ')' stmt . ELSE stmt
+
+    ELSE  shift, and go to state 157
+
+    $default  reduce using rule 19 (stmt)
+
+
+State 148
+
+   60 expr: VARIABLE '(' arguments ')' .
+
+    $default  reduce using rule 60 (expr)
+
+
+State 149
+
+   18 stmt: DO stmt WHILE '(' expr . ')'
+   46 expr: expr . '+' expr
+   47     | expr . '-' expr
+   48     | expr . '*' expr
+   49     | expr . '%' expr
+   50     | expr . '/' expr
+   51     | expr . '<' expr
+   52     | expr . '>' expr
+   53     | expr . GE expr
+   54     | expr . LE expr
+   55     | expr . NE expr
+   56     | expr . EQ expr
+   57     | expr . AND expr
+   58     | expr . OR expr
+
+    AND  shift, and go to state 66
+    OR   shift, and go to state 67
+    GE   shift, and go to state 68
+    LE   shift, and go to state 69
+    EQ   shift, and go to state 70
+    NE   shift, and go to state 71
+    '>'  shift, and go to state 72
+    '<'  shift, and go to state 73
+    '+'  shift, and go to state 74
+    '-'  shift, and go to state 75
+    '*'  shift, and go to state 76
+    '/'  shift, and go to state 77
+    '%'  shift, and go to state 78
+    ')'  shift, and go to state 158
+
+
+State 150
+
+   24 arguments: arguments . ',' expr
+   32 output: PUTI '(' STRING ',' arguments . ')'
+
+    ')'  shift, and go to state 159
+    ','  shift, and go to state 122
+
+
+State 151
+
+   24 arguments: arguments . ',' expr
+   34 output: PUTC '(' STRING ',' arguments . ')'
+
+    ')'  shift, and go to state 160
+    ','  shift, and go to state 122
+
+
+State 152
+
+   24 arguments: arguments . ',' expr
+   36 output: PUTS '(' STRING ',' arguments . ')'
+
+    ')'  shift, and go to state 161
+    ','  shift, and go to state 122
+
+
+State 153
+
+   15 stmt: '@' VARIABLE '=' expr ';' .
+
+    $default  reduce using rule 15 (stmt)
+
+
+State 154
+
+    3 definition: VARIABLE '(' ')' '{' stmt_list '}' .
+
+    $default  reduce using rule 3 (definition)
+
+
+State 155
+
+    2 definition: VARIABLE '(' arguments ')' '{' stmt_list . '}'
+   23 stmt_list: stmt_list . stmt
+
+    INTEGER   shift, and go to state 4
+    VARIABLE  shift, and go to state 45
+    CHAR      shift, and go to state 6
+    STRING    shift, and go to state 7
+    FOR       shift, and go to state 8
+    WHILE     shift, and go to state 9
+    IF        shift, and go to state 10
+    PRINT     shift, and go to state 11
+    READ      shift, and go to state 12
+    DO        shift, and go to state 13
+    BREAK     shift, and go to state 14
+    CONTINUE  shift, and go to state 15
+    RETURN    shift, and go to state 16
+    GETI      shift, and go to state 17
+    GETC      shift, and go to state 18
+    GETS      shift, and go to state 19
+    PUTI      shift, and go to state 20
+    PUTC      shift, and go to state 21
+    PUTS      shift, and go to state 22
+    PUTI_     shift, and go to state 23
+    PUTC_     shift, and go to state 24
+    PUTS_     shift, and go to state 25
+    '-'       shift, and go to state 26
+    '('       shift, and go to state 27
+    '{'       shift, and go to state 28
+    '}'       shift, and go to state 162
+    ';'       shift, and go to state 29
+    '@'       shift, and go to state 30
+
+    stmt    go to state 105
+    input   go to state 33
+    output  go to state 34
+    expr    go to state 35
+
+
+State 156
+
+   16 stmt: FOR '(' stmt stmt stmt ')' . stmt
+
+    INTEGER   shift, and go to state 4
+    VARIABLE  shift, and go to state 45
+    CHAR      shift, and go to state 6
+    STRING    shift, and go to state 7
+    FOR       shift, and go to state 8
+    WHILE     shift, and go to state 9
+    IF        shift, and go to state 10
+    PRINT     shift, and go to state 11
+    READ      shift, and go to state 12
+    DO        shift, and go to state 13
+    BREAK     shift, and go to state 14
+    CONTINUE  shift, and go to state 15
+    RETURN    shift, and go to state 16
+    GETI      shift, and go to state 17
+    GETC      shift, and go to state 18
+    GETS      shift, and go to state 19
+    PUTI      shift, and go to state 20
+    PUTC      shift, and go to state 21
+    PUTS      shift, and go to state 22
+    PUTI_     shift, and go to state 23
+    PUTC_     shift, and go to state 24
+    PUTS_     shift, and go to state 25
+    '-'       shift, and go to state 26
+    '('       shift, and go to state 27
+    '{'       shift, and go to state 28
+    ';'       shift, and go to state 29
+    '@'       shift, and go to state 30
+
+    stmt    go to state 163
+    input   go to state 33
+    output  go to state 34
+    expr    go to state 35
+
+
+State 157
+
+   20 stmt: IF '(' expr ')' stmt ELSE . stmt
+
+    INTEGER   shift, and go to state 4
+    VARIABLE  shift, and go to state 45
+    CHAR      shift, and go to state 6
+    STRING    shift, and go to state 7
+    FOR       shift, and go to state 8
+    WHILE     shift, and go to state 9
+    IF        shift, and go to state 10
+    PRINT     shift, and go to state 11
+    READ      shift, and go to state 12
+    DO        shift, and go to state 13
+    BREAK     shift, and go to state 14
+    CONTINUE  shift, and go to state 15
+    RETURN    shift, and go to state 16
+    GETI      shift, and go to state 17
+    GETC      shift, and go to state 18
+    GETS      shift, and go to state 19
+    PUTI      shift, and go to state 20
+    PUTC      shift, and go to state 21
+    PUTS      shift, and go to state 22
+    PUTI_     shift, and go to state 23
+    PUTC_     shift, and go to state 24
+    PUTS_     shift, and go to state 25
+    '-'       shift, and go to state 26
+    '('       shift, and go to state 27
+    '{'       shift, and go to state 28
+    ';'       shift, and go to state 29
+    '@'       shift, and go to state 30
+
+    stmt    go to state 164
+    input   go to state 33
+    output  go to state 34
+    expr    go to state 35
+
+
+State 158
+
+   18 stmt: DO stmt WHILE '(' expr ')' .
+
+    $default  reduce using rule 18 (stmt)
+
+
+State 159
+
+   32 output: PUTI '(' STRING ',' arguments ')' .
+
+    $default  reduce using rule 32 (output)
+
+
+State 160
+
+   34 output: PUTC '(' STRING ',' arguments ')' .
+
+    $default  reduce using rule 34 (output)
+
+
+State 161
+
+   36 output: PUTS '(' STRING ',' arguments ')' .
+
+    $default  reduce using rule 36 (output)
+
+
+State 162
+
+    2 definition: VARIABLE '(' arguments ')' '{' stmt_list '}' .
+
+    $default  reduce using rule 2 (definition)
+
+
+State 163
+
+   16 stmt: FOR '(' stmt stmt stmt ')' stmt .
+
+    $default  reduce using rule 16 (stmt)
+
+
+State 164
+
+   20 stmt: IF '(' expr ')' stmt ELSE stmt .
+
+    $default  reduce using rule 20 (stmt)

@@ -97,11 +97,10 @@ arguments:
         | expr                  {$$= opr('|',1,$1);}
         ;
 input: 
-        READ VARIABLE               { $$ = opr(READ, 1, id($2)); }
-        | READ '@' VARIABLE         { $$ = opr(READ, 2, id($3), NULL);}
-        | GETI '(' VARIABLE ')'      { $$ = opr(GETI, 1, id($3)); }
-        | GETC '(' VARIABLE ')'      { $$ = opr(GETC, 1, id($3)); }
-        | GETS '(' VARIABLE ')'      { $$ = opr(GETS, 1, id($3)); }
+        READ VARIABLE                   { $$ = opr(READ, 1, id($2)); }
+        | GETI '(' arguments ')'        { $$ = opr(GETI, 1, $3); }
+        | GETC '(' arguments ')'        { $$ = opr(GETC, 1, $3); }
+        | GETS '(' arguments ')'        { $$ = opr(GETS, 1, $3); }
         ;
 output: 
           PRINT expr                  { $$ = opr(PRINT, 1, $2); }

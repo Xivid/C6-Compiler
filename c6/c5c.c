@@ -11,6 +11,7 @@ int local;
 char* name;
 PARAMLIST* pl;
 int i;
+int argn;
 //l1 for continue 
 //l2 for break
 int ex(nodeType *p,int l1,int l2,int* fp) {
@@ -168,10 +169,13 @@ int ex(nodeType *p,int l1,int l2,int* fp) {
         }
         break;
     case GETI:
-        printf("\tgeti\n");
-        (*fp)++;
-        name = p->opr.op[0]->id.name;
-        if (p->opr.nops ==1){
+    // | GETI '(' arguments ')'     { $$ = opr(GETI, 1, $3); }
+        argn = p->opr.op[0]->opr.nops;
+        for (i=0;i<argn;i++){
+            printf("\tgeti\n");
+            (*fp)++;
+            name = p->opr.op[0]->opr.op[i]->id.name;
+            
             if (local_lookup(name)==NULL){
                  //redundant push
                 printf("\tpush\tsp[-1]\n");
@@ -182,12 +186,15 @@ int ex(nodeType *p,int l1,int l2,int* fp) {
             printf("\tpop\tfp[%d]\n", local_lookup(name)->var.index);
             (*fp)--;
         }
+        
         break;
     case GETC:
-        printf("\tgetc\n");
-        (*fp)++;
-        name = p->opr.op[0]->id.name;
-        if (p->opr.nops ==1){
+        argn=p->opr.op[0]->opr.nops;
+        for (i=0;i<argn;i++){
+            printf("\tgetc\n");
+            (*fp)++;
+            name = p->opr.op[0]->id.name;
+        
             if (local_lookup(name)==NULL){
                  //redundant push
                 printf("\tpush\tsp[-1]\n");
@@ -200,10 +207,11 @@ int ex(nodeType *p,int l1,int l2,int* fp) {
         }
         break;
     case GETS:
-        printf("\tgets\n");
-        (*fp)++;
-        name = p->opr.op[0]->id.name;
-        if (p->opr.nops ==1){
+        argn=p->opr.op[0]->opr.nops;
+        for (i=0;i<argn;i++){
+             printf("\tgets\n");
+            (*fp)++;
+            name = p->opr.op[0]->id.name;
             if (local_lookup(name)==NULL){
                  //redundant push
                 printf("\tpush\tsp[-1]\n");
@@ -219,20 +227,15 @@ int ex(nodeType *p,int l1,int l2,int* fp) {
         printf("\tgeti\n");
         (*fp)++;
         name = p->opr.op[0]->id.name;
-        if (p->opr.nops ==1){
-            if (local_lookup(name)==NULL){
+        if (local_lookup(name)==NULL){
                  //redundant push
                 printf("\tpush\tsp[-1]\n");
                 (*fp)++;
                 printf("//variable %s from input, saved at fp[%d]\n",name,(*fp)-2);
                 insert_var(name,(*fp)-2,typeInt);
             }
-            printf("\tpop\tfp[%d]\n", local_lookup(name)->var.index);
-            (*fp)--;
-        }
-        else {
-            //read into a global variable
-        }
+        printf("\tpop\tfp[%d]\n", local_lookup(name)->var.index);
+        (*fp)--;
 	    break;
     case PRINT:     
         ex(p->opr.op[0],l1,l2,fp);

@@ -1,3 +1,5 @@
+all: c6c nas
+
 c6c: lex.yy.c y.tab.c c6c.c
 	gcc -o c6c lex.yy.c y.tab.c c6c.c
 

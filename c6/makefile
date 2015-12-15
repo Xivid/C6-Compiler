@@ -1,4 +1,4 @@
-c5c: lex.yy.c y.tab.c c5c.c
+c6c: lex.yy.c y.tab.c c6c.c
 	gcc -o c6c lex.yy.c y.tab.c c6c.c
 
 lex.yy.c: c6.l

@@ -68,7 +68,7 @@ void yyerror(char *);
                 yylval.sValue[yyleng-2] = 0;   //without the quotes
                 return STRING;
             }
-[-()<>=+*/;{}.%,@_] {
+[-()<>=+*/;{}.%,@_\[\]] {
                 return *yytext;
              }
 

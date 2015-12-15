@@ -13,6 +13,8 @@
 
 #test programs 
 *.as
+#assembly machine 
+/nas/
 
 #binary
 NAS/nas/nas

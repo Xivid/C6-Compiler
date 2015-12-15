@@ -121,14 +121,15 @@ ENTRY* func_entry(char* name,int label,PARAMLIST* params){
 
 }
 
-ENTRY* array_entry(char* name,int index,int size,typeEnum elementtype){
+ENTRY* array_entry(char* name,int base,int ndim, int* size,typeEnum elementtype){
 	ENTRY* e;
 	e= malloc(sizeof(ENTRY));
 	e->name = strdup(name);
 	e->type = typeArray;
 	e->array.type= elementtype;
+	e->array.base = base;
+	e->array.ndim = ndim;
 	e->array.size = size;
-	e->array.index = index;
 	return e;
 }
 
@@ -186,7 +187,7 @@ void insert_func(char* name,int label,PARAMLIST* params){
 	return;
 }
 
-void insert_array(char* name,int index,int size,typeEnum elementtype)
+void insert_array(char* name,int base,int ndim,int* size,typeEnum elementtype)
 {
 	if (strlen(name)>=NAME_MAX) {
 		printf("Error:%s name too long\n",name);return;
@@ -199,7 +200,7 @@ void insert_array(char* name,int index,int size,typeEnum elementtype)
 		if (h == original) printf("Error: sym table full!\n");
 	}
 	 
-	(*ht)[h] = array_entry(name,index,size,elementtype);
+	(*ht)[h] = array_entry(name,base,ndim,size,elementtype);
 	return;
 }
 

@@ -24,8 +24,9 @@ typedef struct {
 
 typedef struct {
 	typeEnum type;
-	int size;
-	int index;//base index
+	int* size;
+	int base;
+	int ndim;
 }arrayType;
 typedef struct{
 	char* name;

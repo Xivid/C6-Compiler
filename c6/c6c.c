@@ -10,12 +10,14 @@ int local;
 //in the global scope sb = fp
 char* name;
 PARAMLIST* pl;
-int i;
 int argn;
+ENTRY* ep;
 //l1 for continue 
 //l2 for break
 int ex(nodeType *p,int l1,int l2,int* fp) {
-    int lblx, lbly,lblz, lbl1, lbl2;
+    int lblx, lbly,lblz, lbl1, lbl2,i;
+    int* size;
+    int arrlength, initval, arrbase;
     if (!p) return 0;
     switch(p->type) {
     case typeCh:
@@ -30,12 +32,105 @@ int ex(nodeType *p,int l1,int l2,int* fp) {
         printf("\tpush\t\"%s\"\n",p->str.value);
         (*fp)++;
         break;
-    case typeId:    
+    case typeId:
+        if (local_lookup(p->id.name) == NULL)
+        {
+            printf("Variable %s not defined!\n",p->id.name);
+            return 1;
+        }
+        else{     
         printf("\tpush\tfp[%d]\n", local_lookup(p->id.name)->var.index); 
         (*fp)++;
+        }
         break;
     case typeOpr:
         switch(p->opr.oper) {
+    case '!': //array definition list
+        //printf("//execute %d array definitions\n", p->opr.nops);
+        for (i = 0; i < p->opr.nops; ++i) {
+            ex(p->opr.op[i], l1, l2,fp);
+        }
+        break;
+     case ']': //array definition
+        //printf("//nops = %d\n", p->opr.nops);
+        if (p->opr.nops == 1) {
+            //printf("//uninitialized definition\n");
+            arrlength = 1;
+            p = p->opr.op[0]; // the '[' node (array)
+            name = p->opr.op[0]->id.name;
+            if (local_lookup(name) == NULL) {
+                p = p->opr.op[1]; // the '|' node (arguments)
+                size = (int*) malloc(sizeof(int) * p->opr.nops);
+                for (i = 0; i < p->opr.nops; ++i) {
+                    if (p->opr.op[i]->type != typeCon) {
+                        printf("error: array size not a constant\n");
+                        return 1;
+                    }
+                    else {
+                        if (p->opr.op[i]->con.value < 1) {
+                            printf("error: array size not positive\n");
+                            return 1;
+                        }
+                        size[i] = p->opr.op[i]->con.value;
+                        //printf("//size[%d] = %d\n", i, size[i]);
+                        arrlength *= size[i];
+                    }
+                }
+                //printf("//insert_array(%s, %d, %d, %p, Int)\n", name, var, p->opr.nops, size);
+                insert_array(name, *fp, p->opr.nops, size, typeInt);
+                printf("\tpush\tsp; push\t%d; add; pop\tsp\n", arrlength);
+                (*fp) += arrlength;
+            } else {
+                printf("error: identifier %s has been used.\n", name);
+                return 1;
+            }
+        } else {
+                        //printf("//initialized definition: %s\n", (p->opr.op[0])->opr.op[0]->id.name);
+                        arrlength = 1;
+                        if (p->opr.op[1]->type != typeCon) {
+                            printf("error: initializer not a constant\n");
+                            return 1;
+                        } else {
+                            initval = p->opr.op[1]->con.value;
+                        }
+                        p = p->opr.op[0];
+                        name = p->opr.op[0]->id.name;
+                        if (local_lookup(name) == NULL) {
+                            p = p->opr.op[1]; // the '|' node (arguments)
+                            size = (int*) malloc(sizeof(int) * p->opr.nops);
+                            for (i = 0; i < p->opr.nops; ++i) {
+                                if (p->opr.op[i]->type != typeCon) {
+                                    printf("error: array size not a constant\n");
+                                    return 1;
+                                }
+                                else {
+                                    if (p->opr.op[i]->con.value < 1) {
+                                        printf("error: array size not positive\n");
+                                        return 1;
+                                    }
+                                    size[i] = p->opr.op[i]->con.value;
+                                    //printf("//size[%d] = %d\n", i, size[i]);
+                                    arrlength *= size[i];
+                                }
+                            }
+                            //printf("//insert_array(%s, %d, %d, %p, Int)\n", name, var, p->opr.nops, size);
+                            insert_array(name, *fp, p->opr.nops, size, typeInt);
+                            printf("\tpush\t%d\n", arrlength - 1);
+                            printf("L%03d:\n", lblx = lbl++);
+                            printf("\tpush\tfp[%d]\n", *fp);
+                            printf("\tj0\tL%03d\n", lbly = lbl++);
+                            printf("\tpush\t%d\n", initval);
+                            printf("\tpush\tfp[%d]; push\t1; sub; pop\tfp[%d]\n", *fp, *fp);
+                            printf("\tjmp\tL%03d\n", lblx);
+                            printf("L%03d:\n", lbly);
+                            printf("\tpush\t%d; pop\tfp[%d]\n", initval, *fp);
+                            (*fp) += arrlength;
+                        } else {
+                            printf("error: identifier %s has been used.\n", name);
+                            return 1;
+                        }
+                    }
+                    break;
     case '@'://global variable
         name = (p->opr.op[0])->id.name;
         printf("\tpush\tsb[%d]\n", global_lookup(p->id.name)->var.index); 
@@ -317,35 +412,99 @@ int ex(nodeType *p,int l1,int l2,int* fp) {
             }
         (*fp)--;
         break;
+    case '[': // array element
+                    name = p->opr.op[0]->id.name;
+                    if ((ep = local_lookup(name)) == NULL) {
+                        printf("error: array %s undeclared.\n", name);
+                    } else if (ep->type != typeArray) {
+                        printf("error: %s is not an array\n", name);
+                    } else {
+                        p = p->opr.op[1]; // the '|' node (arguments)
+                        if (p->opr.nops != ep->array.ndim) {
+                            printf("error: array %s dimensions do not match!\n", name);
+                            return 1;
+                        }
+                        size = ep->array.size;
+                        arrbase = ep->array.base;
+                        ex(p->opr.op[0], l1, l2,fp); //push index(0)
+                        if (p->opr.nops > 1) {
+                            printf("\tpush\t%d; mul\n", size[1]);
+                            for (i = 1; i < p->opr.nops - 1; ++i) {
+                                ex(p->opr.op[i], l1, l2,fp); // push index(i)
+                                printf("\tadd; push\t%d; mul\n", size[i+1]);
+                                (*fp)--;
+                            }
+                            ex(p->opr.op[p->opr.nops - 1], l1, l2,fp);
+                            printf("\tadd\n");
+                            (*fp)--;
+                        }
+                        printf("\tpush\t%d; add\n", arrbase);
+                        printf("\tpop\tin; push\tfp[in]\n");
+                    }
+                    break;
     case '=':       
         ex(p->opr.op[1],l1,l2,fp);
-        name = p->opr.op[0]->id.name;
-        if (p->opr.nops == 2){
-            if (local_lookup(name) ==NULL){
-                //redundant push
-                printf("\tpush\tsp[-1]\n");
-                (*fp)++;
-                printf("//variable %s not defined, saved at fp[%d]\n",name,(*fp)-2);
-                insert_var(name,(*fp)-2,typeInt);
-            } 
-            printf("\tpop\tfp[%d]\n", local_lookup(name)->var.index);
-            (*fp)--;
-        }
-        else{
-            //global variable 
-            if (global_lookup(name) == NULL){
-                if (local ==1) printf("global variable %s not defined!\n",name);
-                else {
+        if (p->opr.op[0]->type == typeId){
+            name = p->opr.op[0]->id.name;
+            if (p->opr.nops == 2){
+                if (local_lookup(name) ==NULL){
                     //redundant push
                     printf("\tpush\tsp[-1]\n");
                     (*fp)++;
                     printf("//variable %s not defined, saved at fp[%d]\n",name,(*fp)-2);
                     insert_var(name,(*fp)-2,typeInt);
-                }
+                } 
+                printf("\tpop\tfp[%d]\n", local_lookup(name)->var.index);
+                (*fp)--;
             }
-            printf("\tpop\tsb[%d]\n", global_lookup(name)->var.index);
-            (*fp)--;
+            else{
+                //global variable 
+                if (global_lookup(name) == NULL){
+                    if (local ==1) printf("global variable %s not defined!\n",name);
+                    else {
+                        //redundant push
+                        printf("\tpush\tsp[-1]\n");
+                        (*fp)++;
+                        printf("//variable %s not defined, saved at fp[%d]\n",name,(*fp)-2);
+                        insert_var(name,(*fp)-2,typeInt);
+                    }
+                }
+                printf("\tpop\tsb[%d]\n", global_lookup(name)->var.index);
+                (*fp)--;
 
+            }
+        }
+        else {
+            //array element 
+            name = p->opr.op[0]->opr.op[0]->id.name;
+            if ((ep = local_lookup(name)) == NULL) {
+                printf("error: array %s undeclared.\n", name);
+            } else if (ep->type != typeArray) {
+                printf("error: %s is not an array\n", name);
+            } else {
+                p = p->opr.op[0]->opr.op[1]; // the '|' node (arguments)
+                if (p->opr.nops != ep->array.ndim) {
+                    printf("error: array %s dimensions do not match!\n", name);
+                    return 1;
+                }
+                size = ep->array.size;
+                arrbase = ep->array.base;
+                ex(p->opr.op[0], l1, l2,fp); //push index(0)
+                if (p->opr.nops > 1) {
+                    printf("\tpush\t%d; mul\n", size[1]);
+                    for (i = 1; i < p->opr.nops - 1; ++i) {
+                        ex(p->opr.op[i], l1, l2,fp); // push index(i)
+                        printf("\tadd; push\t%d; mul\n", size[i+1]);
+                        (*fp)--;
+                    }
+                    ex(p->opr.op[p->opr.nops - 1], l1, l2,fp);
+                    printf("\tadd\n");
+                    (*fp)--;
+                }
+                printf("\tpush\t%d; add\n", arrbase);
+                printf("\tpop\tin; pop\tfp[in]\n");
+                (*fp) -=2;
+            }
         }
         break;
     case UMINUS:    

@@ -48,4 +48,9 @@ typedef struct{
 
 extern SCOPE_STACK* ss;
 
+//function prototypes
+SCOPE_STACK* init_scope();
+void allocate_ht();
+void free_ht();
+
 #endif 

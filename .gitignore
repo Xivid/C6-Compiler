@@ -19,6 +19,7 @@
 #binary
 NAS/nas/nas
 c6/c6c
+c6/nas
 
 #flex/bison generated files
 NAS/nas/nas.tab.c

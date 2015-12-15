@@ -8,5 +8,13 @@ y.tab.c: c6.y
 	bison -y -d c6.y
 
 clean:
-	$(RM) lex.yy.c y.tab.c y.tab.h c6c
+	$(RM) *.yy.c *.tab.c *.tab.h nas.c nas c6c *.as
 
+nas: nas.c nas.tab.c
+	gcc -o nas nas.c nas.tab.c
+
+nas.c: nas.l
+	flex -o nas.c nas.l
+
+nas.tab.c: nas.y
+	bison -d nas.y

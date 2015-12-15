@@ -12,5 +12,16 @@
 /.vagrant
 
 #test programs 
-*.sc
 *.as
+
+#binary
+NAS/nas/nas
+c6/c6c
+
+#flex/bison generated files
+NAS/nas/nas.tab.c
+NAS/nas/nas.tab.h
+NAS/nas/lex.yy.c
+c6/y.tab.c
+c6/y.tab.h
+c6/lex.yy.c

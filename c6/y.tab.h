@@ -68,16 +68,15 @@ extern int yydebug;
     PUTI_ = 278,
     PUTC_ = 279,
     PUTS_ = 280,
-    STRINGX = 281,
-    IFX = 282,
-    ELSE = 283,
-    AND = 284,
-    OR = 285,
-    GE = 286,
-    LE = 287,
-    EQ = 288,
-    NE = 289,
-    UMINUS = 290
+    IFX = 281,
+    ELSE = 282,
+    AND = 283,
+    OR = 284,
+    GE = 285,
+    LE = 286,
+    EQ = 287,
+    NE = 288,
+    UMINUS = 289
   };
 #endif
 /* Tokens.  */
@@ -104,16 +103,15 @@ extern int yydebug;
 #define PUTI_ 278
 #define PUTC_ 279
 #define PUTS_ 280
-#define STRINGX 281
-#define IFX 282
-#define ELSE 283
-#define AND 284
-#define OR 285
-#define GE 286
-#define LE 287
-#define EQ 288
-#define NE 289
-#define UMINUS 290
+#define IFX 281
+#define ELSE 282
+#define AND 283
+#define OR 284
+#define GE 285
+#define LE 286
+#define EQ 287
+#define NE 288
+#define UMINUS 289
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
@@ -128,7 +126,7 @@ union YYSTYPE
     char cValue; /* char value*/
     char* sValue; /*string value*/
 
-#line 132 "y.tab.h" /* yacc.c:1909  */
+#line 130 "y.tab.h" /* yacc.c:1909  */
 };
 # define YYSTYPE_IS_TRIVIAL 1
 # define YYSTYPE_IS_DECLARED 1

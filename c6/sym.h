@@ -6,7 +6,7 @@
 #define STACK_SIZE 10
 #define NAME_MAX 13
 #define PARAM_MAX 10
-typedef enum {typeInt,typeChar,typeString,typeFunc,typeArray} typeEnum;
+typedef enum {typeVar,typeFunc,typeArray} typeEnum;
 
 typedef struct{
 	int no;

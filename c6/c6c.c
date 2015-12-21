@@ -77,7 +77,7 @@ int ex(nodeType *p,int l1,int l2,int* fp) {
                                 }
                             }
                             //printf("//insert_array(%s, %d, %d, %p, Int)\n", name, var, p->opr.nops, size);
-                            insert_array(name, *fp, p->opr.nops, size, typeInt);
+                            insert_array(name, *fp, p->opr.nops, size, typeVar);
                             printf("\tpush\tsp; push\t%d; add; pop\tsp\n", arrlength);
                             (*fp) += arrlength;
                         } else {
@@ -114,7 +114,7 @@ int ex(nodeType *p,int l1,int l2,int* fp) {
                                 }
                             }
                             //printf("//insert_array(%s, %d, %d, %p, Int)\n", name, var, p->opr.nops, size);
-                            insert_array(name, *fp, p->opr.nops, size, typeInt);
+                            insert_array(name, *fp, p->opr.nops, size, typeVar);
                             printf("\tpush\t%d\n", arrlength - 1);
                             printf("L%03d:\n", lblx = lbl++);
                             printf("\tpush\tfp[%d]\n", *fp);
@@ -159,7 +159,7 @@ int ex(nodeType *p,int l1,int l2,int* fp) {
                     char** varl = pl->paramlist;
                     i= pl->no;
                     while (1){
-                        insert_var(*varl,-(3+i),typeInt);
+                        insert_var(*varl,-(3+i),typeVar);
                         printf("//inserted %s at fp[%d]\n",*varl,-(3+i));
                         i--;
                         if (i==0) break;
@@ -200,7 +200,7 @@ int ex(nodeType *p,int l1,int l2,int* fp) {
                     //end of function
                     //add return value to scope
                     (*fp)++;
-                    insert_var(name,(*fp)-1,typeInt);
+                    insert_var(name,(*fp)-1,typeVar);
                     printf("//inserted return value at fp[%d]\n",(*fp)-1);
                     break;
                 case CONTINUE:
@@ -276,7 +276,7 @@ int ex(nodeType *p,int l1,int l2,int* fp) {
                             printf("\tpush\tsp[-1]\n");
                             (*fp)++;
                             printf("//variable %s from input, saved at fp[%d]\n",name,(*fp)-2);
-                            insert_var(name,(*fp)-2,typeInt);
+                            insert_var(name,(*fp)-2,typeVar);
                         }
                         printf("\tpop\tfp[%d]\n", local_lookup(name)->var.index);
                         (*fp)--;
@@ -295,7 +295,7 @@ int ex(nodeType *p,int l1,int l2,int* fp) {
                             printf("\tpush\tsp[-1]\n");
                             (*fp)++;
                             printf("//variable %s from input, saved at fp[%d]\n",name,(*fp)-2);
-                            insert_var(name,(*fp)-2,typeChar);
+                            insert_var(name,(*fp)-2,typeVar);
                         }
                         printf("\tpop\tfp[%d]\n", local_lookup(name)->var.index);
                         (*fp)--;
@@ -312,7 +312,7 @@ int ex(nodeType *p,int l1,int l2,int* fp) {
                             printf("\tpush\tsp[-1]\n");
                             (*fp)++;
                             printf("//variable %s from input, saved at fp[%d]\n",name,(*fp)-2);
-                            insert_var(name,(*fp)-2,typeString);
+                            insert_var(name,(*fp)-2,typeVar);
                         }
                         printf("\tpop\tfp[%d]\n", local_lookup(name)->var.index);
                         (*fp)--;
@@ -327,7 +327,7 @@ int ex(nodeType *p,int l1,int l2,int* fp) {
                             printf("\tpush\tsp[-1]\n");
                             (*fp)++;
                             printf("//variable %s from input, saved at fp[%d]\n",name,(*fp)-2);
-                            insert_var(name,(*fp)-2,typeInt);
+                            insert_var(name,(*fp)-2,typeVar);
                         }
                     printf("\tpop\tfp[%d]\n", local_lookup(name)->var.index);
                     (*fp)--;
@@ -452,7 +452,7 @@ int ex(nodeType *p,int l1,int l2,int* fp) {
                                 printf("\tpush\tsp[-1]\n");
                                 (*fp)++;
                                 printf("//variable %s not defined, saved at fp[%d]\n",name,(*fp)-2);
-                                insert_var(name,(*fp)-2,typeInt);
+                                insert_var(name,(*fp)-2,typeVar);
                             } 
                             printf("\tpop\tfp[%d]\n", local_lookup(name)->var.index);
                             (*fp)--;
@@ -465,7 +465,7 @@ int ex(nodeType *p,int l1,int l2,int* fp) {
                                     printf("\tpush\tsp[-1]\n");
                                     (*fp)++;
                                     printf("//variable %s not defined, saved at fp[%d]\n",name,(*fp)-2);
-                                    insert_var(name,(*fp)-2,typeInt);
+                                    insert_var(name,(*fp)-2,typeVar);
                                 }
                             }
                             printf("\tpop\tsb[%d]\n", global_lookup(name)->var.index);

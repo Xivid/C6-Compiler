@@ -28,6 +28,7 @@ typedef struct {
 	int base;
 	int ndim;
 }arrayType;
+
 typedef struct{
 	char* name;
 	typeEnum type;

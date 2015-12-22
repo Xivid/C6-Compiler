@@ -75,23 +75,23 @@ int ex(nodeType *p,int l1,int l2,int* fp) {
                             }
                         }
                         insert_array(name, *fp, temp->opr.nops, size, typeVar);
-                        } 
+                    }
                     else {
                         printf("error: identifier %s has been used.\n", name);
                         return 1;
-                        }
+                    }
                     if (p->opr.nops == 1) {
                         printf("//uninitialized definition\n");
                         printf("\tpush\tsp; push\t%d; add; pop\tsp\n", arrlength);
                         (*fp) += arrlength;
-                    } 
+                    }
                     else {
                         printf("//initialized definition: %s\n", name);
-                         if (p->opr.op[1]->type == typeCon) {
+                        if (p->opr.op[1]->type == typeCon) {
                             initval = p->opr.op[1]->con.value;
                             printf("\tpush\t%d\n", arrlength - 1);
                             printf("L%03d:\n", lblx = lbl++);
-                            printf("\tpush\tfp[%d]\n", *fp);
+                            printf("\tpush\tfp[%d]\n", *fp); // loop counter
                             printf("\tj0\tL%03d\n", lbly = lbl++);
                             printf("\tpush\t%d\n", initval);
                             printf("\tpush\tfp[%d]; push\t1; sub; pop\tfp[%d]\n", *fp, *fp);
@@ -99,8 +99,7 @@ int ex(nodeType *p,int l1,int l2,int* fp) {
                             printf("L%03d:\n", lbly);
                             printf("\tpush\t%d; pop\tfp[%d]\n", initval, *fp);
                         } 
-                        else { //initialize with char
-                            if(p->opr.op[1]->type == typeCh){
+                        else if(p->opr.op[1]->type == typeCh) { //initialize with char
                                 initval = p->opr.op[1]->ch.value;
                                 printf("\tpush\t%d\n", arrlength - 1);
                                 printf("L%03d:\n", lblx = lbl++);
@@ -112,19 +111,19 @@ int ex(nodeType *p,int l1,int l2,int* fp) {
                                 printf("L%03d:\n", lbly);
                                 printf("\tpush\t'%c'; pop\tfp[%d]\n", initval, *fp);
 
-                            }
-                            else{//initialize with string
-                                initstr = p->opr.op[1]->str.value;
-                                for (i=0;i<strlen(initstr);i++){
-                                    printf("\tpush\t'%c'\n", initstr[i]);
-                                }
-                                for (i=0;i<arrlength-strlen(initstr);i++)
-                                    printf("\tpush\t%d\n", 0);
-                            }
                         }
+                        else {//initialize with string
+                            initstr = p->opr.op[1]->str.value;
+                            for (i=0;i<strlen(initstr);i++){
+                                printf("\tpush\t'%c'\n", initstr[i]);
+                            }
+                            for (i=0;i<arrlength-strlen(initstr);i++)
+                                printf("\tpush\t%d\n", 0);
+                        }
+                        
                         (*fp) += arrlength;
                         printf("//fp now at %d\n",*fp);
-                        } 
+                    } 
                     break;
                 case '@'://global variable
                     name = (p->opr.op[0])->id.name;

@@ -99,13 +99,13 @@ arguments:
         | expr                  { $$ = opr('|',1,$1);}
         ;
 /* '$': function definition, '#': function call, '|': (function) parameter list or (array) index list
-   '!': array definition list, '[': array item, ']': array definition (with/out initialization)
+   ',': array definition list, '[': array item, 'ARRAY': array definition (with/out initialization)
 */
 array_def:
-           ARRAY array           { $$ = opr('!', 1, opr(']', 1, $2)); }
-         | ARRAY array '=' expr  { $$ = opr('!', 1, opr(']', 2, $2, $4)); }
-         | array_def ',' array   { $$ = addOperand($1, opr(']', 1, $3)); }
-         | array_def ',' array '=' expr { $$ = addOperand($1, opr(']', 2, $3, $5)); }
+           ARRAY array           { $$ = opr(',', 1, opr(ARRAY, 1, $2)); }
+         | ARRAY array '=' expr  { $$ = opr(',', 1, opr(ARRAY, 2, $2, $4)); }
+         | array_def ',' array   { $$ = addOperand($1, opr(ARRAY, 1, $3)); }
+         | array_def ',' array '=' expr { $$ = addOperand($1, opr(ARRAY, 2, $3, $5)); }
          ;
  
 array:

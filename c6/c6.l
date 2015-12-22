@@ -59,11 +59,11 @@ void yyerror(char *);
                 yylval.iValue = atoi(yytext);
                 return INTEGER;
             }
-\'.\'         {
+'.'         {
                 yylval.cValue = yytext[1];//any character
                 return CHAR;
             }
-\"[^"\n]*\"        {
+\"[^\n]*\"  {
                 yylval.sValue = strdup(yytext+1);
                 yylval.sValue[yyleng-2] = 0;   //without the quotes
                 return STRING;

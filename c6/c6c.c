@@ -74,7 +74,6 @@ int ex(nodeType *p,int l1,int l2,int* fp) {
                                 arrlength *= size[i];
                             }
                         }
-                        //printf("//insert_array(%s, %d, %d, %p, Int)\n", name, var, p->opr.nops, size);
                         insert_array(name, *fp, temp->opr.nops, size, typeVar);
                         } 
                     else {
@@ -116,11 +115,11 @@ int ex(nodeType *p,int l1,int l2,int* fp) {
                             }
                             else{//initialize with string
                                 initstr = p->opr.op[1]->str.value;
-                                i=0;
-                                for (i;i<strlen(initstr);i++){
+                                for (i=0;i<strlen(initstr);i++){
                                     printf("\tpush\t'%c'\n", initstr[i]);
                                 }
-                                printf("\tpush\t%d\n", 0);
+                                for (i=0;i<arrlength-strlen(initstr);i++)
+                                    printf("\tpush\t%d\n", 0);
                             }
                         }
                         (*fp) += arrlength;
@@ -334,29 +333,43 @@ int ex(nodeType *p,int l1,int l2,int* fp) {
                     (*fp)--;
                     break;
                 case PUTI:
-                    argn = p->opr.op[0]->opr.nops;
-                    if (argn ==1 || p->opr.op[0]->opr.op[0]->type != typeStr) {
+                    temp = p->opr.op[0];
+                    argn = temp->opr.nops;
+                    if (argn ==1 || temp->opr.op[0]->type != typeStr) {
                         for (i=0;i<argn;i++) {
-                            ex(p->opr.op[0]->opr.op[i],-1,-1,fp);
+                            if ((temp->opr.op[i]->type == typeId) && (local_lookup(temp->opr.op[i]->id.name)->type == typeArray))
+                            {   ep = local_lookup(temp->opr.op[i]->id.name);
+                                for (j=0;j<*(ep->array.size)-1;j++){
+                                    printf("\tpush\tfp[%d]\n",ep->array.base+j);
+                                    printf("\tputi_\n");
+                                }
+                                    printf("\tpush\tfp[%d]\n",ep->array.base+j);
+                                    printf("\tputi\n");//newline here
+                            }
+                            else{
+                            ex(temp->opr.op[i],-1,-1,fp);
                             printf("\tputi\n");//with newline
-                        }
+                            (*fp)--;
+                            }
+                    }
                     }
                     else {//format string 
-                        char* format = p->opr.op[0]->opr.op[0]->str.value;
+                        char* format = temp->opr.op[0]->str.value;
                         for (i=1;i<argn;i++) {
-                            ex(p->opr.op[0]->opr.op[i],-1,-1,fp);
+                            ex(temp->opr.op[i],-1,-1,fp);
                             printf("\tputi\t\"%s\"\n",format);//with newline
+                            (*fp)--;
                         }
                     }
-                    (*fp)--;
+                    printf("//fp now at %d \n",*fp );
                     break;
                 case PUTI_:
                     argn = p->opr.op[0]->opr.nops;
                     for (i=0;i<argn;i++) {
                         ex(p->opr.op[0]->opr.op[i],-1,-1,fp);
                         printf("\tputi_\n");//without newline
-                        }
-                     (*fp)--;
+                        (*fp)--;
+                    } 
                     break;
                 case PUTC:
                     argn = p->opr.op[0]->opr.nops;
@@ -364,6 +377,7 @@ int ex(nodeType *p,int l1,int l2,int* fp) {
                         for (i=0;i<argn;i++) {
                             ex(p->opr.op[0]->opr.op[i],-1,-1,fp);
                             printf("\tputc\n");//with newline
+                            (*fp)--;
                         }
                     }
                     else {
@@ -371,17 +385,17 @@ int ex(nodeType *p,int l1,int l2,int* fp) {
                          for (i=1;i<argn;i++) {
                             ex(p->opr.op[0]->opr.op[i],-1,-1,fp);
                             printf("\tputc\t\"%s\"\n",format);//with newline
+                            (*fp)--;
                         }
                     }
-                    (*fp)--;
                     break;
                 case PUTC_:
                     argn = p->opr.op[0]->opr.nops;
                     for (i=0;i<argn;i++) {
                         ex(p->opr.op[0]->opr.op[i],-1,-1,fp);
                         printf("\tputc_\n");//without newline
-                        }
-                    (*fp)--;
+                        (*fp)--;
+                    }
                     break;
                 case PUTS:
                     temp = p->opr.op[0];
@@ -389,8 +403,8 @@ int ex(nodeType *p,int l1,int l2,int* fp) {
                     if (argn ==1 || temp->opr.op[0]->type != typeStr) {
                         //without format string
                         for (i=0;i<argn;i++) {
-                            ep = local_lookup(temp->opr.op[i]->id.name);
-                            if (ep->type ==typeArray){
+                            if (temp->opr.op[i]->type == typeId && local_lookup(temp->opr.op[i]->id.name)->type == typeArray){
+                                ep = local_lookup(temp->opr.op[i]->id.name);
                                 for (j=0;j<*(ep->array.size)-1;j++){
                                     printf("\tpush\tfp[%d]\n",ep->array.base+j);
                                     printf("\tputc_\n");
@@ -401,6 +415,7 @@ int ex(nodeType *p,int l1,int l2,int* fp) {
                             else {
                                 ex(temp->opr.op[i],-1,-1,fp);
                                 printf("\tputs\n");//with newline
+                                (*fp)--;
                             }
                             
                         }
@@ -410,17 +425,19 @@ int ex(nodeType *p,int l1,int l2,int* fp) {
                          for (i=1;i<argn;i++) {
                             ex(temp->opr.op[i],-1,-1,fp);
                             printf("\tputs\t\"%s\"\n",format);//with newline
+                            (*fp)--;
                         }
                     }
-                    (*fp)--;
+                    printf("//fp now at %d \n",*fp );
                     break;
                 case PUTS_:
                     argn = p->opr.op[0]->opr.nops;
                     for (i=0;i<argn;i++) {
                         ex(p->opr.op[0]->opr.op[i],-1,-1,fp);
                         printf("\tputs_\n");//without newline
+                        (*fp)--;
                         }
-                    (*fp)--;
+                    
                     break;
                 case '[': // array element
                     name = p->opr.op[0]->id.name;

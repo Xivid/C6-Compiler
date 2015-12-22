@@ -14,7 +14,7 @@ ENTRY* ep;
 //l1 for continue 
 //l2 for break
 int ex(nodeType *p,int l1,int l2,int* fp) {
-    int lblx, lbly,lblz, lbl1, lbl2,i,argn;
+    int lblx, lbly,lblz, lbl1, lbl2,i,j,argn;
     int* size;
     int arrlength, initval, arrbase;
     char* initstr;
@@ -117,8 +117,7 @@ int ex(nodeType *p,int l1,int l2,int* fp) {
                             else{//initialize with string
                                 initstr = p->opr.op[1]->str.value;
                                 i=0;
-                                for (i;i<strlen(initstr);i++)
-                                {
+                                for (i;i<strlen(initstr);i++){
                                     printf("\tpush\t'%c'\n", initstr[i]);
                                 }
                                 printf("\tpush\t%d\n", 0);
@@ -385,17 +384,31 @@ int ex(nodeType *p,int l1,int l2,int* fp) {
                     (*fp)--;
                     break;
                 case PUTS:
-                    argn = p->opr.op[0]->opr.nops;
-                    if (argn ==1 || p->opr.op[0]->opr.op[0]->type != typeStr) {
+                    temp = p->opr.op[0];
+                    argn = temp->opr.nops;
+                    if (argn ==1 || temp->opr.op[0]->type != typeStr) {
+                        //without format string
                         for (i=0;i<argn;i++) {
-                            ex(p->opr.op[0]->opr.op[i],-1,-1,fp);
-                            printf("\tputs\n");//with newline
+                            ep = local_lookup(temp->opr.op[i]->id.name);
+                            if (ep->type ==typeArray){
+                                for (j=0;j<*(ep->array.size)-1;j++){
+                                    printf("\tpush\tfp[%d]\n",ep->array.base+j);
+                                    printf("\tputc_\n");
+                                }
+                                    printf("\tpush\tfp[%d]\n",ep->array.base+j);
+                                    printf("\tputc\n");//newline here
+                            }
+                            else {
+                                ex(temp->opr.op[i],-1,-1,fp);
+                                printf("\tputs\n");//with newline
+                            }
+                            
                         }
                     }
                     else {
-                         char* format = p->opr.op[0]->opr.op[0]->str.value;
+                         char* format = temp->opr.op[0]->str.value;
                          for (i=1;i<argn;i++) {
-                            ex(p->opr.op[0]->opr.op[i],-1,-1,fp);
+                            ex(temp->opr.op[i],-1,-1,fp);
                             printf("\tputs\t\"%s\"\n",format);//with newline
                         }
                     }

@@ -85,21 +85,20 @@ void allocate_ht()
 PARAMLIST* paramlist(){
 	PARAMLIST* p = malloc(sizeof(PARAMLIST));
 	p->no= 0;
-	p->paramlist = malloc(sizeof(char*)*PARAM_MAX);
+	p->head=NULL;
 	return p;
 }
 
-void add_param(PARAMLIST* p,char* name){
+void add_param(PARAMLIST* p,char* name,typeEnum type){
 	if (strlen(name)>=NAME_MAX){
 		printf("Error:%s name too long\n",name);return;	
 	}
-	if ((p->no+1)%10 == 0){
-		//extend paramlist
-		p->paramlist = malloc (sizeof(char*)* ((p->no+1)+PARAM_MAX));
-	}
-	(p->paramlist)[p->no] = name;
+	PARAM* pm = malloc(sizeof(PARAM));
+	pm->name= name;
+	pm->type = type;
+	pm->next = p->head;
+	p->head = pm;
 	p->no++;	
-
 }
 
 ENTRY* var_entry(char* name,int index){
@@ -108,6 +107,25 @@ ENTRY* var_entry(char* name,int index){
 	e->type =typeVar;
 	e->name = strdup(name);
 	e->var.index = index;
+	return e;
+}
+ENTRY* pointer_entry(char* name,int pos){
+	ENTRY* e;
+	e = malloc(sizeof(ENTRY));
+	e->type =typePointer;
+	e->name = strdup(name);
+	e->pointer.pos = pos;
+	return e;
+
+}
+ENTRY* array_pointer_entry(char* name, int basepos,int ndim, int* size){
+	ENTRY* e;
+	e = malloc(sizeof(ENTRY));
+	e->type =typeArrayPointer;
+	e->name = strdup(name);
+	e->ap.basepos = basepos;
+	e->ap.ndim = ndim;
+	e->ap.size = size;
 	return e;
 }
 ENTRY* func_entry(char* name,int label,PARAMLIST* params){
@@ -152,11 +170,8 @@ void free_ht()
 	pop_ht(ss);
 	return;
 }
-
-//fp[index] = value
-//variable
-void insert_var(char* name,int index)
-{	if (strlen(name)>=NAME_MAX) {
+void insert_entry(char* name,ENTRY* e){
+	if (strlen(name)>=NAME_MAX) {
 		printf("Error:%s name too long\n",name);return;
 	}
 	HASH_TABLE* ht = current_ht(ss);
@@ -167,39 +182,32 @@ void insert_var(char* name,int index)
 		if (h == original) printf("Error: sym table full!\n");
 	}
 	//create variable entry 
-	(*ht)[h] = var_entry(name,index);
+	(*ht)[h] = e;
+	return;
+}
+//fp[index] = value
+//variable
+void insert_array_pointer(char* name, int basepos, int ndim, int* size){
+	insert_entry(name,array_pointer_entry(name,basepos,ndim,size));
+	return;
+}
+void insert_pointer(char* name,int pos){
+	insert_entry(name,pointer_entry(name,pos));
+	return;
+}
+void insert_var(char* name,int index)
+{	insert_entry(name,var_entry(name,index));
 	return;
 }
 
 void insert_func(char* name,int label,PARAMLIST* params){
-	if (strlen(name)>=NAME_MAX) {
-		printf("Error:%s name too long\n",name);return;
-	}
-	HASH_TABLE* ht = current_ht(ss);
-	int h = hash(name);
-	int original= h;
-	while ((*ht)[h]!=NULL ) {
-		h=(h+1)%TABLE_SIZE;
-		if (h == original) printf("Error: sym table full!\n");
-	}
-	(*ht)[h] = func_entry(name,label,params);
+	insert_entry(name,func_entry(name,label,params));
 	return;
 }
 
 void insert_array(char* name,int base,int ndim,int* size)
 {
-	if (strlen(name)>=NAME_MAX) {
-		printf("Error:%s name too long\n",name);return;
-	}
-	HASH_TABLE* ht = current_ht(ss);
-	int h = hash(name);
-	int original= h;
-	while ((*ht)[h]!=NULL ) {
-		h=(h+1)%TABLE_SIZE;
-		if (h == original) printf("Error: sym table full!\n");
-	}
-	 
-	(*ht)[h] = array_entry(name,base,ndim,size);
+	insert_entry(name,array_entry(name,base,ndim,size));
 	return;
 }
 

@@ -50,7 +50,7 @@ int* fp = &var;
 %left '*' '/' '%'
 %nonassoc UMINUS
 
-%type <nPtr> stmt expr stmt_list definition arguments input output array array_def
+%type <nPtr> stmt expr stmt_list definition arguments input output array array_def reference
 
 %%
 
@@ -96,7 +96,13 @@ stmt_list:
 
 arguments:
          arguments ',' expr     { $$ = addOperand($1,$3);}
+        | arguments ',' reference { $$ = addOperand($1,$3);}
         | expr                  { $$ = opr('|',1,$1);}
+        | reference               { $$ = opr('|',1,$1);}
+        ;
+reference: 
+        '&' VARIABLE { $$ = opr('&', 1, id($2)); }
+        | '&' array { $$ = opr('&', 2, $2,NULL);}
         ;
 
 /* '$': function definition, '#': function call, '|': (function) parameter list or (array) index list

@@ -7,10 +7,8 @@
 //the number of labels
 static int lbl = 0;
 int local;
+int offset;
 //in the global scope sb = fp
-char* name;
-PARAMLIST* pl;
-ENTRY* ep;
 //l1 for continue 
 //l2 for break
 int ex(nodeType *p,int l1,int l2,int* fp) {
@@ -18,7 +16,10 @@ int ex(nodeType *p,int l1,int l2,int* fp) {
     int* size;
     int arrlength, initval, arrbase;
     char* initstr;
+    char* name;
     nodeType* temp;
+    PARAMLIST* pl;
+    ENTRY* ep;
     if (!p) return 0;
     switch(p->type) {
         case typeCh:
@@ -41,14 +42,24 @@ int ex(nodeType *p,int l1,int l2,int* fp) {
             (*fp)++;
             break;
         case typeId:
-            if (local_lookup(p->id.name) == NULL)
+            ep = local_lookup(p->id.name);
+            if (ep== NULL)
             {
                 printf("Variable %s not defined!\n",p->id.name);
                 return 1;
             }
-            else {     
-                printf("\tpush\tfp[%d]\n", local_lookup(p->id.name)->var.index); 
+            else {
+                if(ep->type==typeVar){
+                printf("\tpush\tfp[%d]\n", ep->var.index); 
                 (*fp)++;
+                }
+                else{
+                    if(ep->type==typePointer){
+                        printf("\tpush\tfp[%d]\n",ep->pointer.pos);
+                        printf("\tpop\tin\n");
+                        printf("\tpush\tfp[in]\n");
+                    }
+                }
             }
             break;
         case typeOpr:
@@ -148,8 +159,28 @@ int ex(nodeType *p,int l1,int l2,int* fp) {
                     break;
                 case '@'://global variable
                     name = (p->opr.op[0])->id.name;
-                    printf("\tpush\tsb[%d]\n", global_lookup(p->id.name)->var.index); 
+                    printf("\tpush\tsb[%d]\n", global_lookup(name)->var.index); 
                     (*fp)++;
+                    break;
+                case '&'://pointer
+                    name = (p->opr.op[0])->id.name;
+                    ep = local_lookup(name);
+                    if (ep==NULL) {
+                        printf("\\variable %s not declared!\n",name);
+                        return 1;
+                    }
+                    else{
+                        if (ep->type==typeVar){
+                            printf("\tpush\t%d\n",ep->var.index-offset);
+                            (*fp)++;
+                            break;
+                        }
+                        if(ep->type==typeArray){
+                            printf("\tpush\t%d\n",ep->array.base-offset);
+                            (*fp)++;
+                            break;
+                        }
+                    }
                     break;
                 case '$'://function def
                     printf("\tjmp\tL%03d\n", lbl1 = lbl++);
@@ -158,31 +189,51 @@ int ex(nodeType *p,int l1,int l2,int* fp) {
                         //create param list from argument op[1]
                         pl = paramlist();
                         for (i=0;i<args->opr.nops;i++)
-                        {
-                            name = args->opr.op[i]->id.name;
-                            add_param(pl,name);
+                        {   temp = args->opr.op[i];
+                            if(temp->type==typeId)
+                            {name = temp->id.name;
+                            add_param(pl,name,typeVar);
+                            }
+                            else if(temp->type == typeOpr && temp->opr.nops == 1)
+                                {
+                                name = temp->opr.op[0]->id.name;
+                                add_param(pl,name,typePointer);
+                                }
+                                else{//array pointer
+                                    name = temp->opr.op[0]->opr.op[0]->id.name;
+                                    add_param(pl,name,typeArrayPointer);
+                                }
                         }
                     }
                     printf("L%03d:\n", lbl2 = lbl++);
                     //labels are globally seen so it doesn't change here
-                    insert_func((p->opr.op[0])->id.name,lbl,pl);
+                    insert_func((p->opr.op[0])->id.name,lbl2,pl);
                     //insert param list into scope 
                     //new scope 
                     allocate_ht();//already pushed to stack
                     local = 1;
                     //insert params 
-                    char** varl = pl->paramlist;
-                    i= pl->no;
-                    while (1){
-                        insert_var(*varl,-(3+i));
-                        printf("//inserted %s at fp[%d]\n",*varl,-(3+i));
-                        i--;
-                        if (i==0) break;
-                        varl++;
+                    PARAM* pnode = pl->head;
+                    i=1;
+                    while (pnode!=NULL){
+                        if (pnode->type == typeVar) insert_var(pnode->name,-(3+i));
+                        else{
+                            if (pnode->type==typePointer) insert_pointer(pnode->name,-(3+i));
+                            else{//if type == typeArrayPointer
+                                //covert [2,3,4] to size and ndim
+                                temp = p->opr.op[1]->opr.op[pl->no-i]->opr.op[0]->opr.op[1]; // the '|' node (arguments)
+                                size = (int*) malloc(sizeof(int) * temp->opr.nops);
+                                for (j = 0; j < temp->opr.nops; ++j) {
+                                    size[j] = temp->opr.op[j]->con.value;}
+                            insert_array_pointer(pnode->name,-(3+i), temp->opr.nops, size);
+                            }
+                        } 
+                        printf("//inserted %s at fp[%d]\n",pnode->name,-(3+i));
+                        i++;
+                        pnode = pnode->next;
                     }
-
-                    pl=NULL;//release param list
-                    i =0;
+                    pl=NULL;//release param list?
+                    i=0;
                     int* newfp = &i;
                     ex(p->opr.op[2],l1,l2,newfp);//body
                     free_ht();
@@ -200,21 +251,22 @@ int ex(nodeType *p,int l1,int l2,int* fp) {
                         ex(p->opr.op[i],-1,-1,fp);
                     break;
                 case '#':
-                    ex(p->opr.op[1],l1,l2,fp);//execute arguments (push)
                     //VARIABLE '(' arguments ')'  {$$ = opr('#',2,id($1),$3)
                     //lookup function
-                    ENTRY* f;
-                    f= local_lookup(p->opr.op[0]->id.name);
-                    if (f == NULL) {
+                    ep= local_lookup(p->opr.op[0]->id.name);
+                    if (ep == NULL) {
                         printf("function %s not defined!",p->opr.op[0]->id.name);
                         return 1;
                     }
-                    printf("\tcall L%03d, %d\n",f->func.label,f->func.params->no);
+                    offset = (*fp)+ep->func.params->no +3;
+                    ex(p->opr.op[1],l1,l2,fp);//execute arguments (push)
+                    printf("\tcall L%03d, %d\n",ep->func.label,ep->func.params->no);
                     (*fp) = (*fp) - (p->opr.op[1])->opr.nops;
                     //end of function
+                    offset=0;
                     //add return value to scope
                     (*fp)++;
-                    insert_var(name,(*fp)-1);
+                    //insert_var(name,(*fp)-1);
                     printf("//inserted return value at fp[%d]\n",(*fp)-1);
                     break;
                 case CONTINUE:
@@ -462,71 +514,11 @@ int ex(nodeType *p,int l1,int l2,int* fp) {
                     name = p->opr.op[0]->id.name;
                     if ((ep = local_lookup(name)) == NULL) {
                         printf("error: array %s undeclared.\n", name);
-                    } else if (ep->type != typeArray) {
+                    } else if (ep->type != typeArray && ep->type != typeArrayPointer) {
                         printf("error: %s is not an array\n", name);
                     } else {
-                        p = p->opr.op[1]; // the '|' node (arguments)
-                        if (p->opr.nops != ep->array.ndim) {
-                            printf("error: array %s dimensions do not match!\n", name);
-                            return 1;
-                        }
-                        size = ep->array.size;
-                        arrbase = ep->array.base;
-                        ex(p->opr.op[0], l1, l2,fp); //push index(0)
-                        if (p->opr.nops > 1) {
-                            printf("\tpush\t%d; mul\n", size[1]);
-                            for (i = 1; i < p->opr.nops - 1; ++i) {
-                                ex(p->opr.op[i], l1, l2,fp); // push index(i)
-                                printf("\tadd; push\t%d; mul\n", size[i+1]);
-                                (*fp)--;
-                            }
-                            ex(p->opr.op[p->opr.nops - 1], l1, l2,fp);
-                            printf("\tadd\n");
-                            (*fp)--;
-                        }
-                        printf("\tpush\t%d; add\n", arrbase);
-                        printf("\tpop\tin; push\tfp[in]\n");
-                    }
-                    break;
-                case '=':       
-                    ex(p->opr.op[1],l1,l2,fp);
-                    if (p->opr.op[0]->type == typeId){
-                        name = p->opr.op[0]->id.name;
-                        if (p->opr.nops == 2){
-                            if (local_lookup(name) == NULL){
-                                //redundant push
-                                printf("\tpush\tsp[-1]\n");
-                                (*fp)++;
-                                printf("//variable %s not defined, saved at fp[%d]\n",name,(*fp)-2);
-                                insert_var(name,(*fp)-2);
-                            } 
-                            printf("\tpop\tfp[%d]\n", local_lookup(name)->var.index);
-                            (*fp)--;
-                        } else {
-                            //global variable 
-                            if (global_lookup(name) == NULL){
-                                if (local ==1) printf("global variable %s not defined!\n",name);
-                                else {
-                                    //redundant push
-                                    printf("\tpush\tsp[-1]\n");
-                                    (*fp)++;
-                                    printf("//variable %s not defined, saved at fp[%d]\n",name,(*fp)-2);
-                                    insert_var(name,(*fp)-2);
-                                }
-                            }
-                            printf("\tpop\tsb[%d]\n", global_lookup(name)->var.index);
-                            (*fp)--;
-
-                        }
-                    } else {
-                        //array element 
-                        name = p->opr.op[0]->opr.op[0]->id.name;
-                        if ((ep = local_lookup(name)) == NULL) {
-                            printf("error: array %s undeclared.\n", name);
-                        } else if (ep->type != typeArray) {
-                            printf("error: %s is not an array\n", name);
-                        } else {
-                            p = p->opr.op[0]->opr.op[1]; // the '|' node (arguments)
+                        if (ep->type == typeArray){
+                            p = p->opr.op[1]; // the '|' node (arguments)
                             if (p->opr.nops != ep->array.ndim) {
                                 printf("error: array %s dimensions do not match!\n", name);
                                 return 1;
@@ -546,8 +538,135 @@ int ex(nodeType *p,int l1,int l2,int* fp) {
                                 (*fp)--;
                             }
                             printf("\tpush\t%d; add\n", arrbase);
-                            printf("\tpop\tin; pop\tfp[in]\n");
-                            (*fp) -=2;
+                            printf("\tpop\tin; push\tfp[in]\n");
+                        }
+                        else{
+                            //arraypointer
+                            p = p->opr.op[1]; // the '|' node (arguments)
+                            if (p->opr.nops != ep->ap.ndim) {
+                                printf("error: array %s dimensions do not match!\n", name);
+                                return 1;
+                            }
+                            size = ep->ap.size;
+                            int pos = ep->ap.basepos;
+                            ex(p->opr.op[0], l1, l2,fp); //push index(0)
+                            if (p->opr.nops > 1) {
+                                printf("\tpush\t%d; mul\n", size[1]);
+                                for (i = 1; i < p->opr.nops - 1; ++i) {
+                                    ex(p->opr.op[i], l1, l2,fp); // push index(i)
+                                    printf("\tadd; push\t%d; mul\n", size[i+1]);
+                                    (*fp)--;
+                                }
+                                ex(p->opr.op[p->opr.nops - 1], l1, l2,fp);
+                                printf("\tadd\n");
+                                (*fp)--;
+                            }
+                            printf("\tpush\tfp[%d]; add\n",pos);
+                            printf("\tpop\tin; push\tfp[in]\n");
+                        }
+                    }
+                    break;
+                case '=':       
+                    ex(p->opr.op[1],l1,l2,fp);
+                    if (p->opr.op[0]->type == typeId){
+                        name = p->opr.op[0]->id.name;
+                        ep = local_lookup(name);
+                        if (p->opr.nops == 2){
+                            if (ep== NULL){
+                                //redundant push
+                                printf("\tpush\tsp[-1]\n");
+                                (*fp)++;
+                                printf("//variable %s not defined, saved at fp[%d]\n",name,(*fp)-2);
+                                insert_var(name,(*fp)-2);
+                                printf("\tpop\tfp[%d]\n", local_lookup(name)->var.index);
+                                (*fp)--; 
+                            } 
+                            else {
+                                if (ep->type == typeVar){
+                                    printf("\tpop\tfp[%d]\n", ep->var.index);
+                                    (*fp)--; 
+                                }
+                                else{
+                                    if(ep->type==typePointer){
+                                        printf("\tpush\tfp[%d]\n",ep->pointer.pos);
+                                        printf("\tpop\tin\n");
+                                        printf("\tpop\tfp[in]\n");
+                                        (*fp)--;
+                                    }
+                                }
+                            }
+                            
+                        } else {
+                            //global variable 
+                            if (global_lookup(name) == NULL){
+                                if (local ==1) printf("global variable %s not defined!\n",name);
+                                else {
+                                    //redundant push
+                                    printf("\tpush\tsp[-1]\n");
+                                    (*fp)++;
+                                    printf("//variable %s not defined, saved at fp[%d]\n",name,(*fp)-2);
+                                    insert_var(name,(*fp)-2);
+                                }
+                            }
+                            printf("\tpop\tsb[%d]\n", global_lookup(name)->var.index);
+                            (*fp)--;
+
+                        }
+                    } else {
+                        //array element or pointer
+                        name = p->opr.op[0]->opr.op[0]->id.name;
+                        if ((ep = local_lookup(name)) == NULL) {
+                            printf("error: array %s undeclared.\n", name);
+                        } else if (ep->type != typeArray && ep->type!=typeArrayPointer) {
+                            printf("error: %s is not an array\n", name);
+                        } else {
+                            p = p->opr.op[0]->opr.op[1]; // the '|' node (arguments)
+                            if (ep->type == typeArray){
+                                if (p->opr.nops != ep->array.ndim) {
+                                    printf("error: array %s dimensions do not match!\n", name);
+                                    return 1;
+                                }
+                                size = ep->array.size;
+                                arrbase = ep->array.base;
+                                ex(p->opr.op[0], l1, l2,fp); //push index(0)
+                                if (p->opr.nops > 1) {
+                                    printf("\tpush\t%d; mul\n", size[1]);
+                                    for (i = 1; i < p->opr.nops - 1; ++i) {
+                                        ex(p->opr.op[i], l1, l2,fp); // push index(i)
+                                        printf("\tadd; push\t%d; mul\n", size[i+1]);
+                                        (*fp)--;
+                                    }
+                                    ex(p->opr.op[p->opr.nops - 1], l1, l2,fp);
+                                    printf("\tadd\n");
+                                    (*fp)--;
+                                }
+                                printf("\tpush\t%d; add\n", arrbase);
+                                printf("\tpop\tin; pop\tfp[in]\n");
+                                (*fp) -=2;
+                            }
+                            else{//array pointer
+                                    if (p->opr.nops != ep->ap.ndim) {
+                                    printf("error: array %s dimensions do not match!\n", name);
+                                    return 1;
+                                    }
+                                    size = ep->ap.size;
+                                    int pos = ep->ap.basepos;
+                                    ex(p->opr.op[0], l1, l2,fp); //push index(0)
+                                    if (p->opr.nops > 1) {
+                                        printf("\tpush\t%d; mul\n", size[1]);
+                                        for (i = 1; i < p->opr.nops - 1; ++i) {
+                                            ex(p->opr.op[i], l1, l2,fp); // push index(i)
+                                            printf("\tadd; push\t%d; mul\n", size[i+1]);
+                                            (*fp)--;
+                                        }
+                                        ex(p->opr.op[p->opr.nops - 1], l1, l2,fp);
+                                        printf("\tadd\n");
+                                        (*fp)--;
+                                    }
+                                    printf("\tpush\tfp[%d]; add\n",pos);
+                                    printf("\tpop\tin; pop\tfp[in]\n");
+                                    (*fp) -=2;
+                            }
                         }
                     }
                     break;

@@ -1,4 +1,4 @@
-//function test
+//tests functions
 prime (x) {
 	if (x<=1) return 0;
 	if (x==2) return 1;

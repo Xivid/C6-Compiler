@@ -74,7 +74,7 @@ char text[500];
 <S>\\n      { strcat(text, "\n"); }
 <S>\\t      { strcat(text, "\t"); }
 <S>\\       { strcat(text, "\\"); }
-[-()<>=+*/;{}.%,@_\[\]] {return *yytext;}
+[-()<>=+*/;{}.%,@_\[\]&] {return *yytext;}
 
 \/\/.*\n	;	/* skip comments */
 

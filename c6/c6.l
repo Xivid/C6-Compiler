@@ -62,10 +62,11 @@ char text[500];
                 yylval.iValue = atoi(yytext);
                 return INTEGER;
             }
-'.'         {
-                yylval.cValue = yytext[1];//any character
-                return CHAR;
-            }
+'\\n'       { yylval.cValue = '\n'; return CHAR; }
+'\\t'       { yylval.cValue = '\t'; return CHAR; }
+'\\''       { yylval.cValue = (int) '\''; return CHAR; }
+''          { yylval.cValue = 0; return CHAR; }
+'[^']'      { yylval.cValue = yytext[1]; return CHAR; }
 \"          { BEGIN S;*text =0;}
 <S>[^"\\]*  { strcat(text,yytext);}
 <S>\"       {strcat(text, "\0"); yylval.sValue =strdup(text); BEGIN 0; return STRING;}

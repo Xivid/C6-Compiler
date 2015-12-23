@@ -121,6 +121,7 @@ array:
 
 input: 
         READ VARIABLE                   { $$ = opr(READ, 1, id($2)); }
+        | READ array                    { $$ = opr(READ, 1, $2); }
         | GETI '(' arguments ')'        { $$ = opr(GETI, 1, $3); }
         | GETC '(' arguments ')'        { $$ = opr(GETC, 1, $3); }
         | GETS '(' arguments ')'        { $$ = opr(GETS, 1, $3); }

@@ -162,7 +162,7 @@ int main(int argc, char *argv[]) {
   yyparse();
 
   // Second pass: execute the arrays
-  while (i < pc)
+  while (i < pc) {
     switch (in[i]) {
       case PUSHI:
 	st[SP] = op[i++]; ISP; break;
@@ -264,5 +264,7 @@ int main(int argc, char *argv[]) {
       case PUTC_:
 	putchar(st[--SP]); i++; break;
     }
+    fflush(stdout);
+  }
   return 0;
 }

@@ -7,10 +7,8 @@
 //the number of labels
 static int lbl = 0;
 int local;
+int offset;
 //in the global scope sb = fp
-char* name;
-PARAMLIST* pl;
-ENTRY* ep;
 //l1 for continue 
 //l2 for break
 int ex(nodeType *p,int l1,int l2,int* fp) {
@@ -18,7 +16,10 @@ int ex(nodeType *p,int l1,int l2,int* fp) {
     int* size;
     int arrlength, initval, arrbase;
     char* initstr;
+    char* name;
     nodeType* temp;
+    PARAMLIST* pl;
+    ENTRY* ep;
     if (!p) return 0;
     switch(p->type) {
         case typeCh:
@@ -34,14 +35,24 @@ int ex(nodeType *p,int l1,int l2,int* fp) {
             (*fp)++;
             break;
         case typeId:
-            if (local_lookup(p->id.name) == NULL)
+            ep = local_lookup(p->id.name);
+            if (ep== NULL)
             {
                 printf("Variable %s not defined!\n",p->id.name);
                 return 1;
             }
-            else {     
-                printf("\tpush\tfp[%d]\n", local_lookup(p->id.name)->var.index); 
+            else {
+                if(ep->type==typeVar){
+                printf("\tpush\tfp[%d]\n", ep->var.index); 
                 (*fp)++;
+                }
+                else{
+                    if(ep->type==typePointer){
+                        printf("\tpush\tfp[%d]\n",ep->pointer.pos);
+                        printf("\tpop\tin\n");
+                        printf("\tpush\tfp[in]\n");
+                    }
+                }
             }
             break;
         case typeOpr:
@@ -127,8 +138,30 @@ int ex(nodeType *p,int l1,int l2,int* fp) {
                     break;
                 case '@'://global variable
                     name = (p->opr.op[0])->id.name;
-                    printf("\tpush\tsb[%d]\n", global_lookup(p->id.name)->var.index); 
+                    printf("\tpush\tsb[%d]\n", global_lookup(name)->var.index); 
                     (*fp)++;
+                    break;
+                case '&'://pointer
+                    name = (p->opr.op[0])->id.name;
+                    ep = local_lookup(name);
+                    if (ep==NULL) {
+                        printf("\\variable %s not declared!\n",name);
+                        return 1;
+                    }
+                    else{
+                        if (ep->type==typeVar){
+                            printf("\tpush\t%d\n",ep->var.index-offset);
+                            (*fp)++;
+                            break;
+                        }
+                        // if(ep->type==typeArray){
+                        //     printf("\tpush\t%d\n",ep->array.base);
+                        //     printf("\tpush\t%d\n",ep->array.ndim);
+                        //     printf("\tpush\t%d\n",*(ep->array.size));
+                        //     (*fp)+=3;
+                        //     break;
+                        // }
+                    }
                     break;
                 case '$'://function def
                     printf("\tjmp\tL%03d\n", lbl1 = lbl++);
@@ -137,31 +170,41 @@ int ex(nodeType *p,int l1,int l2,int* fp) {
                         //create param list from argument op[1]
                         pl = paramlist();
                         for (i=0;i<args->opr.nops;i++)
-                        {
-                            name = args->opr.op[i]->id.name;
-                            add_param(pl,name);
+                        {   if(args->opr.op[i]->type==typeId)
+                            {name = args->opr.op[i]->id.name;
+                            add_param(pl,name,typeVar);
+                            }
+                            else if(args->opr.op[i]->type == typeOpr && args->opr.op[i]->opr.oper == '&')//reference
+                            {
+                                temp =args->opr.op[i];
+                                name = temp->opr.op[0]->id.name;
+                                add_param(pl,name,typePointer);
+
+                            }
+
                         }
                     }
                     printf("L%03d:\n", lbl2 = lbl++);
                     //labels are globally seen so it doesn't change here
-                    insert_func((p->opr.op[0])->id.name,lbl,pl);
+                    insert_func((p->opr.op[0])->id.name,lbl2,pl);
                     //insert param list into scope 
                     //new scope 
                     allocate_ht();//already pushed to stack
                     local = 1;
                     //insert params 
-                    char** varl = pl->paramlist;
-                    i= pl->no;
-                    while (1){
-                        insert_var(*varl,-(3+i));
-                        printf("//inserted %s at fp[%d]\n",*varl,-(3+i));
-                        i--;
-                        if (i==0) break;
-                        varl++;
+                    PARAM* pnode = pl->head;
+                    i=1;
+                    while (pnode!=NULL){
+                        if (pnode->type == typeVar) insert_var(pnode->name,-(3+i));
+                        else{
+                            if (pnode->type==typePointer) insert_pointer(pnode->name,-(3+i));
+                            //if type == typeArrayPointer
+                        } 
+                        printf("//inserted %s at fp[%d]\n",pnode->name,-(3+i));
+                        i++;
+                        pnode = pnode->next;
                     }
-
-                    pl=NULL;//release param list
-                    i =0;
+                    pl=NULL;//release param list?
                     int* newfp = &i;
                     ex(p->opr.op[2],l1,l2,newfp);//body
                     free_ht();
@@ -179,21 +222,22 @@ int ex(nodeType *p,int l1,int l2,int* fp) {
                         ex(p->opr.op[i],-1,-1,fp);
                     break;
                 case '#':
-                    ex(p->opr.op[1],l1,l2,fp);//execute arguments (push)
                     //VARIABLE '(' arguments ')'  {$$ = opr('#',2,id($1),$3)
                     //lookup function
-                    ENTRY* f;
-                    f= local_lookup(p->opr.op[0]->id.name);
-                    if (f == NULL) {
+                    ep= local_lookup(p->opr.op[0]->id.name);
+                    if (ep == NULL) {
                         printf("function %s not defined!",p->opr.op[0]->id.name);
                         return 1;
                     }
-                    printf("\tcall L%03d, %d\n",f->func.label,f->func.params->no);
+                    offset = ep->func.params->no +4;
+                    ex(p->opr.op[1],l1,l2,fp);//execute arguments (push)
+                    printf("\tcall L%03d, %d\n",ep->func.label,ep->func.params->no);
                     (*fp) = (*fp) - (p->opr.op[1])->opr.nops;
                     //end of function
+                    offset=0;
                     //add return value to scope
                     (*fp)++;
-                    insert_var(name,(*fp)-1);
+                    //insert_var(name,(*fp)-1);
                     printf("//inserted return value at fp[%d]\n",(*fp)-1);
                     break;
                 case CONTINUE:
@@ -471,16 +515,32 @@ int ex(nodeType *p,int l1,int l2,int* fp) {
                     ex(p->opr.op[1],l1,l2,fp);
                     if (p->opr.op[0]->type == typeId){
                         name = p->opr.op[0]->id.name;
+                        ep = local_lookup(name);
                         if (p->opr.nops == 2){
-                            if (local_lookup(name) == NULL){
+                            if (ep== NULL){
                                 //redundant push
                                 printf("\tpush\tsp[-1]\n");
                                 (*fp)++;
                                 printf("//variable %s not defined, saved at fp[%d]\n",name,(*fp)-2);
                                 insert_var(name,(*fp)-2);
+                                printf("\tpop\tfp[%d]\n", local_lookup(name)->var.index);
+                                (*fp)--; 
                             } 
-                            printf("\tpop\tfp[%d]\n", local_lookup(name)->var.index);
-                            (*fp)--;
+                            else {
+                                if (ep->type == typeVar){
+                                    printf("\tpop\tfp[%d]\n", ep->var.index);
+                                    (*fp)--; 
+                                }
+                                else{
+                                    if(ep->type==typePointer){
+                                        printf("\tpush\tfp[%d]\n",ep->pointer.pos);
+                                        printf("\tpop\tin\n");
+                                        printf("\tpop\tfp[in]\n");
+                                        (*fp--);
+                                    }
+                                }
+                            }
+                            
                         } else {
                             //global variable 
                             if (global_lookup(name) == NULL){

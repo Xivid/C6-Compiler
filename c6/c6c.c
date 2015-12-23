@@ -116,7 +116,14 @@ int ex(nodeType *p,int l1,int l2,int* fp) {
                                 printf("L%03d:\n", lblx = lbl++);
                                 printf("\tpush\tfp[%d]\n", *fp);
                                 printf("\tj0\tL%03d\n", lbly = lbl++);
-                                printf("\tpush\t'%c'\n", initval);
+                                if (initval == '\n')
+                                    printf("\tpush\t'\\n'\n");
+                                else if (initval == '\t')
+                                    printf("\tpush\t'\\t'\n");
+                                else if (initval == '\'')
+                                    printf("\tpush\t'\\''\n");
+                                else
+                                    printf("\tpush\t'%c'\n", initval);
                                 printf("\tpush\tfp[%d]; push\t1; sub; pop\tfp[%d]\n", *fp, *fp);
                                 printf("\tjmp\tL%03d\n", lblx);
                                 printf("L%03d:\n", lbly);
@@ -126,10 +133,17 @@ int ex(nodeType *p,int l1,int l2,int* fp) {
                         else {//initialize with string
                             initstr = p->opr.op[1]->str.value;
                             for (i=0;i<strlen(initstr);i++){
-                                printf("\tpush\t'%c'\n", initstr[i]);
+                                if (initstr[i] == '\n')
+                                    printf("\tpush\t'\\n'\n");
+                                else if (initstr[i] == '\t')
+                                    printf("\tpush\t'\\t'\n");
+                                else if (initstr[i] == '\'')
+                                    printf("\tpush\t'\\''\n");
+                                else
+                                    printf("\tpush\t'%c'\n", initstr[i]);
                             }
                             for (i=0;i<arrlength-strlen(initstr);i++)
-                                printf("\tpush\t%d\n", 0);
+                                printf("\tpush\t''\n");
                         }
                         
                         (*fp) += arrlength;

@@ -30,11 +30,5 @@ Features
 - arrays of nas strings (arrays of real strings can be implemented by 2-dimensional array)
 - pass arrays and variables by reference
 =================================
-
-
-
-
-
-
-
-
+Application
+Please refer to compiler-tests.docx

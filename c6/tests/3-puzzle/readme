@@ -1,0 +1,32 @@
+#3-puzzle game
+
+## Introduction
+
+A 3-puzzle game starts like this:
+
+```
++---+---+
+| 3 | 1 |
++---+---+
+|   | 2 |
++---+---+
+```
+
+A slice can be swapped with the empty slice if it has a common edge with the empty slice.
+What you need to do is to make it to the final state:
+
+```
++---+---+
+| 1 | 2 |
++---+---+
+| 3 |   |
++---+---+
+```
+
+## How to play
+
+run `../../nas 3-puzzle.as | ./3-puzzlegui`, and a graphic game board will be shown. The initial state is generated randomly and is guaranteed to be accessible to the goal. Input the number of the slice you want to move (or -1 if you want the program to automatically make the best move for you) in the terminal/console, press enter, and the operation will be done on the board. When you reach the goal, a message will be shown, and you can enter the character 'E' to exit or 'A' to play again.
+
+## Features
+
+It has something like an AI, helping the player to make a move. However, due to the small size of the state space of this problem, actually we do not need to search for the best move. The best moves are saved in a table instead.

@@ -66,7 +66,7 @@ char text[500];
                 yylval.cValue = yytext[1];//any character
                 return CHAR;
             }
-\"          { BEGIN S;}
+\"          { BEGIN S;*text =0;}
 <S>[^"\\]*  { strcat(text,yytext);}
 <S>\"       {strcat(text, "\0"); yylval.sValue =strdup(text); BEGIN 0; return STRING;}
 <S>\\\"     { strcat(text, "\""); }

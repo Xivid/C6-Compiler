@@ -31,7 +31,14 @@ int ex(nodeType *p,int l1,int l2,int* fp) {
             (*fp)++;
             break;
         case typeStr:
-            printf("\tpush\t\"%s\"\n",p->str.value);
+            printf("\tpush\t\"");
+            for(char* c = p->str.value; *c; c++)
+                if (*c == '\n') printf("\\n");
+                else if (*c == '\t') printf("\\t");
+                else if (*c == '\\') printf("\\");
+                else if (*c == '\"') printf("\\\"");
+                else printf("%c", *c);
+            printf("\"\n");
             (*fp)++;
             break;
         case typeId:

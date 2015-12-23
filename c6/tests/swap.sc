@@ -1,4 +1,4 @@
-//sequence of params
+//pass variable by reference
 swap(&a,&b){
 	c = a;
 	a = b;

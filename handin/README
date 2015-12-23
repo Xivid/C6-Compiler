@@ -1,0 +1,49 @@
+LI SHA [3035267231]
+YANG Zhifei [3035266380]
+==============================
+Source Files 
+calc3.h
+sym.h
+sym.c
+c6.l
+c6.y
+c6c.c
+*the source files of nas are also included
+===============================
+Instructions
+run "make all"
+*detailed instructions are in the Makefile
+===============================
+Platform
+The code has been tested on Ubuntu 14.04 and Mac OS X 10.11.2
+================================
+Features
+*c6c is compatible with c5c, supporting legacy instructions "print" and "read" for integers.
+- integer,char and static string types 
+- local and global variables 
+- multidimensional arrays
+- real strings (char arrays)
+- function calls (parameters are passed by value)
+- multiple argument input/output
+- input/output with format string (basic types)
+- input/output of char and integer arrays
+- arrays of nas strings (arrays of real strings can be implemented by 2-dimensional array)
+- pass arrays and variables by reference
+=================================
+Application
+Please refer to compiler-tests.docx
+=================================
+Test files
+constant.sc
+var.sc
+var2.sc
+array.sc
+prime.sc
+recursive.sc
+string.sc
+io.sc
+swap.sc
+strlen.sc
+ref.sc
+ref2.sc
+

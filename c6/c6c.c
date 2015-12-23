@@ -209,11 +209,13 @@ int ex(nodeType *p,int l1,int l2,int* fp) {
                     }
                     printf("L%03d:\n", lbl2 = lbl++);
                     //labels are globally seen so it doesn't change here
+                    printf("//number of params %d\n",pl->no);
                     insert_func((p->opr.op[0])->id.name,lbl2,pl);
                     //insert param list into scope 
                     //new scope 
                     allocate_ht();//already pushed to stack
-                    insert_func((p->opr.op[0])->id.name,lbl2,pl);
+                    //need a deep copy of pl!
+                    insert_func((p->opr.op[0])->id.name,lbl2,cpypl(pl));
                     local = 1;
                     //insert params 
                     PARAM* pnode = pl->head;
@@ -261,9 +263,11 @@ int ex(nodeType *p,int l1,int l2,int* fp) {
                         printf("function %s not defined!",p->opr.op[0]->id.name);
                         return 1;
                     }
-                    offset = (*fp)+ep->func.params->no +3;
+                    offset = (*fp)+p->opr.op[1]->opr.nops +3;
+                    printf("//fp at offset is %d",*fp);
+                    printf("//number of params %d\n",ep->func.params->no);
                     ex(p->opr.op[1],l1,l2,fp);//execute arguments (push)
-                    printf("\tcall L%03d, %d\n",ep->func.label,ep->func.params->no);
+                    printf("\tcall L%03d, %d\n",ep->func.label,p->opr.op[1]->opr.nops);
                     (*fp) = (*fp) - (p->opr.op[1])->opr.nops;
                     //end of function
                     offset=0;

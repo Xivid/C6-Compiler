@@ -1,0 +1,4 @@
+../../nas sortplot.as | python3 receiver.py
+
+input any number except -1: draw the sorted data since startup
+input -1: exit

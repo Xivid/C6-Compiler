@@ -30,8 +30,8 @@
    This special exception was added by the Free Software Foundation in
    version 2.2 of Bison.  */
 
-#ifndef YY_YY_NAS_TAB_H_INCLUDED
-# define YY_YY_NAS_TAB_H_INCLUDED
+#ifndef YY_YY_C6_TAB_H_INCLUDED
+# define YY_YY_C6_TAB_H_INCLUDED
 /* Debug traces.  */
 #ifndef YYDEBUG
 # define YYDEBUG 0
@@ -45,41 +45,38 @@ extern int yydebug;
 # define YYTOKENTYPE
   enum yytokentype
   {
-    INT = 258,
-    REG = 259,
-    LABEL = 260,
-    PUSH = 261,
-    POP = 262,
-    LT = 263,
-    GT = 264,
-    GE = 265,
-    LE = 266,
-    NE = 267,
-    EQ = 268,
-    STRING = 269,
-    CALL = 270,
-    RET = 271,
-    END = 272,
-    J0 = 273,
-    J1 = 274,
-    JMP = 275,
-    ADD = 276,
-    SUB = 277,
-    MUL = 278,
-    DIV = 279,
-    MOD = 280,
-    NEG = 281,
-    AND = 282,
-    OR = 283,
-    GETI = 284,
-    GETS = 285,
-    GETC = 286,
-    PUTI = 287,
-    PUTS = 288,
-    PUTC = 289,
-    PUTI_ = 290,
-    PUTS_ = 291,
-    PUTC_ = 292
+    INTEGER = 258,
+    VARIABLE = 259,
+    CHAR = 260,
+    STRING = 261,
+    FOR = 262,
+    WHILE = 263,
+    IF = 264,
+    PRINT = 265,
+    READ = 266,
+    DO = 267,
+    BREAK = 268,
+    CONTINUE = 269,
+    ARRAY = 270,
+    RETURN = 271,
+    GETI = 272,
+    GETC = 273,
+    GETS = 274,
+    PUTI = 275,
+    PUTC = 276,
+    PUTS = 277,
+    PUTI_ = 278,
+    PUTC_ = 279,
+    PUTS_ = 280,
+    IFX = 281,
+    ELSE = 282,
+    AND = 283,
+    OR = 284,
+    GE = 285,
+    LE = 286,
+    EQ = 287,
+    NE = 288,
+    UMINUS = 289
   };
 #endif
 
@@ -88,12 +85,15 @@ extern int yydebug;
 
 union YYSTYPE
 {
-#line 52 "nas.y" /* yacc.c:1915  */
+#line 29 "c6.y" /* yacc.c:1915  */
 
-  int i;
-  char s[500];
+    int iValue;                 /* integer value */
+    char* var;                /* symbol table variable name */
+    nodeType *nPtr;             /* node pointer */
+    char cValue; /* char value*/
+    char* sValue; /*string value*/
 
-#line 97 "nas.tab.h" /* yacc.c:1915  */
+#line 97 "c6.tab.h" /* yacc.c:1915  */
 };
 
 typedef union YYSTYPE YYSTYPE;
@@ -106,4 +106,4 @@ extern YYSTYPE yylval;
 
 int yyparse (void);
 
-#endif /* !YY_YY_NAS_TAB_H_INCLUDED  */
+#endif /* !YY_YY_C6_TAB_H_INCLUDED  */

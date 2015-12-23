@@ -101,6 +101,16 @@ void add_param(PARAMLIST* p,char* name,typeEnum type){
 	p->no++;	
 }
 
+PARAMLIST* cpypl(PARAMLIST* p){
+	PARAMLIST* p2 = paramlist();
+	PARAM* pm= p->head;
+	while (pm!=NULL){
+		add_param(p2,pm->name,pm->type);
+		pm=pm->next;
+	}
+	return p2;
+}
+
 ENTRY* var_entry(char* name,int index){
 	ENTRY* e;
 	e = malloc(sizeof(ENTRY));

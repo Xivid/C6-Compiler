@@ -30,6 +30,20 @@ Features
 - arrays of nas strings (arrays of real strings can be implemented by 2-dimensional array)
 - pass arrays and variables by reference
 =================================
+Test files
+constant.sc
+var.sc
+var2.sc
+array.sc
+prime.sc
+recursive.sc
+string.sc
+io.sc
+swap.sc
+strlen.sc
+ref.sc
+ref2.sc
+
 
 
 

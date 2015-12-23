@@ -1,5 +1,7 @@
 //function test
 prime (x) {
+	puts_("you want to check ");
+	puti(x);
 	if (x==1) return 0;
 	if (x==2) return 1;
 	for (i=2; i<x; i=i+1;)
@@ -10,5 +12,9 @@ prime (x) {
 }
 
 geti (x);
-puti (prime (x));
+puti_(x);
+if (prime (x))
+	puts(" is a prime");
+else
+	puts(" is not a prime");
 

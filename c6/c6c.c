@@ -570,7 +570,7 @@ int ex(nodeType *p,int l1,int l2,int* fp) {
                                         printf("\tpush\tfp[%d]\n",ep->pointer.pos);
                                         printf("\tpop\tin\n");
                                         printf("\tpop\tfp[in]\n");
-                                        (*fp--);
+                                        (*fp)--;
                                     }
                                 }
                             }

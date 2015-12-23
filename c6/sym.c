@@ -118,6 +118,16 @@ ENTRY* pointer_entry(char* name,int pos){
 	return e;
 
 }
+ENTRY* array_pointer_entry(char* name, int basepos,int ndim, int* size){
+	ENTRY* e;
+	e = malloc(sizeof(ENTRY));
+	e->type =typeArrayPointer;
+	e->name = strdup(name);
+	e->ap.basepos = basepos;
+	e->ap.ndim = ndim;
+	e->ap.size = size;
+	return e;
+}
 ENTRY* func_entry(char* name,int label,PARAMLIST* params){
 	ENTRY* e;
 	e = malloc(sizeof(ENTRY));
@@ -177,6 +187,10 @@ void insert_entry(char* name,ENTRY* e){
 }
 //fp[index] = value
 //variable
+void insert_array_pointer(char* name, int basepos, int ndim, int* size){
+	insert_entry(name,array_pointer_entry(name,basepos,ndim,size));
+	return;
+}
 void insert_pointer(char* name,int pos){
 	insert_entry(name,pointer_entry(name,pos));
 	return;

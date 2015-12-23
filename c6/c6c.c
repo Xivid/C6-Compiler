@@ -154,13 +154,11 @@ int ex(nodeType *p,int l1,int l2,int* fp) {
                             (*fp)++;
                             break;
                         }
-                        // if(ep->type==typeArray){
-                        //     printf("\tpush\t%d\n",ep->array.base);
-                        //     printf("\tpush\t%d\n",ep->array.ndim);
-                        //     printf("\tpush\t%d\n",*(ep->array.size));
-                        //     (*fp)+=3;
-                        //     break;
-                        // }
+                        if(ep->type==typeArray){
+                            printf("\tpush\t%d\n",ep->array.base-offset);
+                            (*fp)++;
+                            break;
+                        }
                     }
                     break;
                 case '$'://function def
@@ -170,18 +168,20 @@ int ex(nodeType *p,int l1,int l2,int* fp) {
                         //create param list from argument op[1]
                         pl = paramlist();
                         for (i=0;i<args->opr.nops;i++)
-                        {   if(args->opr.op[i]->type==typeId)
-                            {name = args->opr.op[i]->id.name;
+                        {   temp = args->opr.op[i];
+                            if(temp->type==typeId)
+                            {name = temp->id.name;
                             add_param(pl,name,typeVar);
                             }
-                            else if(args->opr.op[i]->type == typeOpr && args->opr.op[i]->opr.oper == '&')//reference
-                            {
-                                temp =args->opr.op[i];
+                            else if(temp->type == typeOpr && temp->opr.nops == 1)
+                                {
                                 name = temp->opr.op[0]->id.name;
                                 add_param(pl,name,typePointer);
-
-                            }
-
+                                }
+                                else{//array pointer
+                                    name = temp->opr.op[0]->opr.op[0]->id.name;
+                                    add_param(pl,name,typeArrayPointer);
+                                }
                         }
                     }
                     printf("L%03d:\n", lbl2 = lbl++);
@@ -198,13 +198,21 @@ int ex(nodeType *p,int l1,int l2,int* fp) {
                         if (pnode->type == typeVar) insert_var(pnode->name,-(3+i));
                         else{
                             if (pnode->type==typePointer) insert_pointer(pnode->name,-(3+i));
-                            //if type == typeArrayPointer
+                            else{//if type == typeArrayPointer
+                                //covert [2,3,4] to size and ndim
+                                temp = p->opr.op[1]->opr.op[pl->no-i]->opr.op[0]->opr.op[1]; // the '|' node (arguments)
+                                size = (int*) malloc(sizeof(int) * temp->opr.nops);
+                                for (j = 0; j < temp->opr.nops; ++j) {
+                                    size[j] = temp->opr.op[j]->con.value;}
+                            insert_array_pointer(pnode->name,-(3+i), temp->opr.nops, size);
+                            }
                         } 
                         printf("//inserted %s at fp[%d]\n",pnode->name,-(3+i));
                         i++;
                         pnode = pnode->next;
                     }
                     pl=NULL;//release param list?
+                    i=0;
                     int* newfp = &i;
                     ex(p->opr.op[2],l1,l2,newfp);//body
                     free_ht();
@@ -229,7 +237,7 @@ int ex(nodeType *p,int l1,int l2,int* fp) {
                         printf("function %s not defined!",p->opr.op[0]->id.name);
                         return 1;
                     }
-                    offset = ep->func.params->no +4;
+                    offset = (*fp)+ep->func.params->no +3;
                     ex(p->opr.op[1],l1,l2,fp);//execute arguments (push)
                     printf("\tcall L%03d, %d\n",ep->func.label,ep->func.params->no);
                     (*fp) = (*fp) - (p->opr.op[1])->opr.nops;
@@ -485,30 +493,56 @@ int ex(nodeType *p,int l1,int l2,int* fp) {
                     name = p->opr.op[0]->id.name;
                     if ((ep = local_lookup(name)) == NULL) {
                         printf("error: array %s undeclared.\n", name);
-                    } else if (ep->type != typeArray) {
+                    } else if (ep->type != typeArray && ep->type != typeArrayPointer) {
                         printf("error: %s is not an array\n", name);
                     } else {
-                        p = p->opr.op[1]; // the '|' node (arguments)
-                        if (p->opr.nops != ep->array.ndim) {
-                            printf("error: array %s dimensions do not match!\n", name);
-                            return 1;
-                        }
-                        size = ep->array.size;
-                        arrbase = ep->array.base;
-                        ex(p->opr.op[0], l1, l2,fp); //push index(0)
-                        if (p->opr.nops > 1) {
-                            printf("\tpush\t%d; mul\n", size[1]);
-                            for (i = 1; i < p->opr.nops - 1; ++i) {
-                                ex(p->opr.op[i], l1, l2,fp); // push index(i)
-                                printf("\tadd; push\t%d; mul\n", size[i+1]);
+                        if (ep->type == typeArray){
+                            p = p->opr.op[1]; // the '|' node (arguments)
+                            if (p->opr.nops != ep->array.ndim) {
+                                printf("error: array %s dimensions do not match!\n", name);
+                                return 1;
+                            }
+                            size = ep->array.size;
+                            arrbase = ep->array.base;
+                            ex(p->opr.op[0], l1, l2,fp); //push index(0)
+                            if (p->opr.nops > 1) {
+                                printf("\tpush\t%d; mul\n", size[1]);
+                                for (i = 1; i < p->opr.nops - 1; ++i) {
+                                    ex(p->opr.op[i], l1, l2,fp); // push index(i)
+                                    printf("\tadd; push\t%d; mul\n", size[i+1]);
+                                    (*fp)--;
+                                }
+                                ex(p->opr.op[p->opr.nops - 1], l1, l2,fp);
+                                printf("\tadd\n");
                                 (*fp)--;
                             }
-                            ex(p->opr.op[p->opr.nops - 1], l1, l2,fp);
-                            printf("\tadd\n");
-                            (*fp)--;
+                            printf("\tpush\t%d; add\n", arrbase);
+                            printf("\tpop\tin; push\tfp[in]\n");
                         }
-                        printf("\tpush\t%d; add\n", arrbase);
-                        printf("\tpop\tin; push\tfp[in]\n");
+                        else{
+                            //arraypointer
+                            p = p->opr.op[1]; // the '|' node (arguments)
+                            if (p->opr.nops != ep->ap.ndim) {
+                                printf("error: array %s dimensions do not match!\n", name);
+                                return 1;
+                            }
+                            size = ep->ap.size;
+                            int pos = ep->ap.basepos;
+                            ex(p->opr.op[0], l1, l2,fp); //push index(0)
+                            if (p->opr.nops > 1) {
+                                printf("\tpush\t%d; mul\n", size[1]);
+                                for (i = 1; i < p->opr.nops - 1; ++i) {
+                                    ex(p->opr.op[i], l1, l2,fp); // push index(i)
+                                    printf("\tadd; push\t%d; mul\n", size[i+1]);
+                                    (*fp)--;
+                                }
+                                ex(p->opr.op[p->opr.nops - 1], l1, l2,fp);
+                                printf("\tadd\n");
+                                (*fp)--;
+                            }
+                            printf("\tpush\tfp[%d]; add\n",pos);
+                            printf("\tpop\tin; push\tfp[in]\n");
+                        }
                     }
                     break;
                 case '=':       
@@ -558,35 +592,60 @@ int ex(nodeType *p,int l1,int l2,int* fp) {
 
                         }
                     } else {
-                        //array element 
+                        //array element or pointer
                         name = p->opr.op[0]->opr.op[0]->id.name;
                         if ((ep = local_lookup(name)) == NULL) {
                             printf("error: array %s undeclared.\n", name);
-                        } else if (ep->type != typeArray) {
+                        } else if (ep->type != typeArray && ep->type!=typeArrayPointer) {
                             printf("error: %s is not an array\n", name);
                         } else {
                             p = p->opr.op[0]->opr.op[1]; // the '|' node (arguments)
-                            if (p->opr.nops != ep->array.ndim) {
-                                printf("error: array %s dimensions do not match!\n", name);
-                                return 1;
-                            }
-                            size = ep->array.size;
-                            arrbase = ep->array.base;
-                            ex(p->opr.op[0], l1, l2,fp); //push index(0)
-                            if (p->opr.nops > 1) {
-                                printf("\tpush\t%d; mul\n", size[1]);
-                                for (i = 1; i < p->opr.nops - 1; ++i) {
-                                    ex(p->opr.op[i], l1, l2,fp); // push index(i)
-                                    printf("\tadd; push\t%d; mul\n", size[i+1]);
+                            if (ep->type == typeArray){
+                                if (p->opr.nops != ep->array.ndim) {
+                                    printf("error: array %s dimensions do not match!\n", name);
+                                    return 1;
+                                }
+                                size = ep->array.size;
+                                arrbase = ep->array.base;
+                                ex(p->opr.op[0], l1, l2,fp); //push index(0)
+                                if (p->opr.nops > 1) {
+                                    printf("\tpush\t%d; mul\n", size[1]);
+                                    for (i = 1; i < p->opr.nops - 1; ++i) {
+                                        ex(p->opr.op[i], l1, l2,fp); // push index(i)
+                                        printf("\tadd; push\t%d; mul\n", size[i+1]);
+                                        (*fp)--;
+                                    }
+                                    ex(p->opr.op[p->opr.nops - 1], l1, l2,fp);
+                                    printf("\tadd\n");
                                     (*fp)--;
                                 }
-                                ex(p->opr.op[p->opr.nops - 1], l1, l2,fp);
-                                printf("\tadd\n");
-                                (*fp)--;
+                                printf("\tpush\t%d; add\n", arrbase);
+                                printf("\tpop\tin; pop\tfp[in]\n");
+                                (*fp) -=2;
                             }
-                            printf("\tpush\t%d; add\n", arrbase);
-                            printf("\tpop\tin; pop\tfp[in]\n");
-                            (*fp) -=2;
+                            else{//array pointer
+                                    if (p->opr.nops != ep->ap.ndim) {
+                                    printf("error: array %s dimensions do not match!\n", name);
+                                    return 1;
+                                    }
+                                    size = ep->ap.size;
+                                    int pos = ep->ap.basepos;
+                                    ex(p->opr.op[0], l1, l2,fp); //push index(0)
+                                    if (p->opr.nops > 1) {
+                                        printf("\tpush\t%d; mul\n", size[1]);
+                                        for (i = 1; i < p->opr.nops - 1; ++i) {
+                                            ex(p->opr.op[i], l1, l2,fp); // push index(i)
+                                            printf("\tadd; push\t%d; mul\n", size[i+1]);
+                                            (*fp)--;
+                                        }
+                                        ex(p->opr.op[p->opr.nops - 1], l1, l2,fp);
+                                        printf("\tadd\n");
+                                        (*fp)--;
+                                    }
+                                    printf("\tpush\tfp[%d]; add\n",pos);
+                                    printf("\tpop\tin; pop\tfp[in]\n");
+                                    (*fp) -=2;
+                            }
                         }
                     }
                     break;

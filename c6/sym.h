@@ -6,7 +6,7 @@
 #define STACK_SIZE 10
 #define NAME_MAX 13
 #define PARAM_MAX 10
-typedef enum {typeVar,typeFunc,typeArray,typePointer} typeEnum;
+typedef enum {typeVar,typeFunc,typeArray,typePointer,typeArrayPointer} typeEnum;
 
 typedef struct PARAM{
 	typeEnum type;
@@ -27,6 +27,12 @@ typedef struct {
 	int pos;
 }pointerType;
 
+typedef struct{
+	int basepos;
+	int ndim;
+	int* size;
+}arraypointerType;
+
 typedef struct {
 	int label;
 	PARAMLIST* params;
@@ -46,6 +52,7 @@ typedef struct{
 		functionType func; 
 		arrayType array;
 		pointerType pointer;
+		arraypointerType ap;
 	};	
 }ENTRY;
 

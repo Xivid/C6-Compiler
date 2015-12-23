@@ -28,9 +28,10 @@ Features
 - input/output with format string (basic types)
 - input/output of char and integer arrays
 - arrays of nas strings (arrays of real strings can be implemented by 2-dimensional array)
+- pass arrays and variables by reference
 =================================
-Test cases
-prime.sc
+
+
 
 
 

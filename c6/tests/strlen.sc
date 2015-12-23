@@ -7,6 +7,6 @@ length(&s[200]){
 	return l;
 }
 
-array g[100]="Good morning!\n";
-puti(length(&g));
+array greetings[100]="Good morning!\n";
+puti(length(&greetings));
 

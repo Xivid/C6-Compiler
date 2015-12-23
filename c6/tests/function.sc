@@ -1,8 +1,6 @@
 //function test
 prime (x) {
-	puts_("you want to check ");
-	puti(x);
-	if (x==1) return 0;
+	if (x<=1) return 0;
 	if (x==2) return 1;
 	for (i=2; i<x; i=i+1;)
 	{

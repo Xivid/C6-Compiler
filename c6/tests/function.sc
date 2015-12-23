@@ -33,10 +33,9 @@ puti (a,b,max(a,b),max(a,2));
 
 fib(x) {
 	if (x == 0 || x == 1) return 1;
-	ret = fib(x-1) + fib(x-2);
-	return ret;
+	return fib(x-1) + fib(x-2);
 }
 
-puts("Please input a number: ");
+puts("Fibonacci - Please input a number: ");
 geti(x);
 puti(fib(x));

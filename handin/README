@@ -15,7 +15,7 @@ run "make all"
 *detailed instructions are in the Makefile
 ===============================
 Platform
-The code has been tested on Ubuntu 14.04 and MacOS (version?)
+The code has been tested on Ubuntu 14.04 and Mac OS X 10.11.2
 ================================
 Features
 *c6c is compatible with c5c, supporting legacy instructions "print" and "read" for integers.

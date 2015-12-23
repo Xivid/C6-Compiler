@@ -23,7 +23,6 @@ typedef struct {
 }functionType;
 
 typedef struct {
-	typeEnum type;
 	int* size;
 	int base;
 	int ndim;

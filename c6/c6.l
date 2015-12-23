@@ -7,7 +7,10 @@
 #include "calc3.h"
 #include "y.tab.h"
 void yyerror(char *);
+char text[500];
 %}
+
+%x S
 
 %%
 
@@ -63,27 +66,25 @@ void yyerror(char *);
                 yylval.cValue = yytext[1];//any character
                 return CHAR;
             }
-\"[^\n]*\"  {
-                yylval.sValue = strdup(yytext+1);
-                yylval.sValue[yyleng-2] = 0;   //without the quotes
-                return STRING;
-            }
-[-()<>=+*/;{}.%,@_\[\]] {
-                return *yytext;
-             }
-
-
+\"          { BEGIN S;}
+<S>[^"\\]*  { strcat(text,yytext);}
+<S>\"       {strcat(text, "\0"); yylval.sValue =strdup(text); BEGIN 0; return STRING;}
+<S>\\\"     { strcat(text, "\""); }
+<S>\\n      { strcat(text, "\n"); }
+<S>\\t      { strcat(text, "\t"); }
+<S>\\       { strcat(text, "\\"); }
+[-()<>=+*/;{}.%,@_\[\]] {return *yytext;}
 
 \/\/.*\n	;	/* skip comments */
 
 [ \t\n\r]+    ;   /* ignore whitespace */
 
 .               yyerror("Unknown character");
+
 %%
-int yywrap(void) {
-    return 1;
-}
+int yywrap(void) {return 1;}
 
 void yyerror(char *s) {
-    fprintf(stderr, "line %d: %s\n", yylineno, s);
+fprintf(stderr, "line %d: %s\n", yylineno, s);
 }
+

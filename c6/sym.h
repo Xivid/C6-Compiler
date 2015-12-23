@@ -2,8 +2,8 @@
 #define SYM_H
 
 #include <string.h>
-#define TABLE_SIZE 101 
-#define STACK_SIZE 10
+#define TABLE_SIZE 223 
+#define STACK_SIZE 50
 #define NAME_MAX 13
 #define PARAM_MAX 10
 typedef enum {typeVar,typeFunc,typeArray,typePointer,typeArrayPointer} typeEnum;

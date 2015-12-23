@@ -32,7 +32,8 @@ int ex(nodeType *p,int l1,int l2,int* fp) {
             break;
         case typeStr:
             printf("\tpush\t\"");
-            for(char* c = p->str.value; *c; c++)
+            char* c;
+            for(c = p->str.value; *c; c++)
                 if (*c == '\n') printf("\\n");
                 else if (*c == '\t') printf("\\t");
                 else if (*c == '\\') printf("\\");
@@ -58,6 +59,7 @@ int ex(nodeType *p,int l1,int l2,int* fp) {
                         printf("\tpush\tfp[%d]\n",ep->pointer.pos);
                         printf("\tpop\tin\n");
                         printf("\tpush\tfp[in]\n");
+                        (*fp)++;
                     }
                 }
             }
@@ -211,6 +213,7 @@ int ex(nodeType *p,int l1,int l2,int* fp) {
                     //insert param list into scope 
                     //new scope 
                     allocate_ht();//already pushed to stack
+                    insert_func((p->opr.op[0])->id.name,lbl2,pl);
                     local = 1;
                     //insert params 
                     PARAM* pnode = pl->head;

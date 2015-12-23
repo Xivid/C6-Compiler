@@ -4,3 +4,5 @@ str[0] = 'a';
 str[1] = 'b';
 putc (str[0]);
 puts (str);
+specialch = '\t';
+putc(specialch);

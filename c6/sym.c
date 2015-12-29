@@ -43,15 +43,14 @@ void pop_ht(SCOPE_STACK* s)
 }
 //symbol table 
 //internal hash function
-int hash(char* name)
+unsigned int hash(char* name)
 {
-	int result=5381;
+	unsigned int result=5381;
 	int i=0;
 
 	while (name[i] != '\0')
 	{
-		result = (result<<5) +result+ name[i];i++;
-
+		result = (result<<5) + result + name[i]; i++;
 	}
 	return result % TABLE_SIZE;
 }
@@ -78,6 +77,14 @@ void allocate_ht()
 	{
 		(*ht)[i]=NULL;//pointing to no entry
 	}
+	push_ht(ss,ht);
+	return;
+}
+
+void propagate_ht()
+{
+	HASH_TABLE* ht = (HASH_TABLE*) (malloc (sizeof(HASH_TABLE)));
+	memcpy(ht, current_ht(ss), sizeof(HASH_TABLE));
 	push_ht(ss,ht);
 	return;
 }
@@ -179,6 +186,11 @@ void free_ht()
 	free(ht);
 	pop_ht(ss);
 	return;
+}
+void delete_ht() {
+	// delete propagated hashtable (without removing the not-really-copied entries)
+	free(current_ht(ss));
+	pop_ht(ss);
 }
 void insert_entry(char* name,ENTRY* e){
 	if (strlen(name)>=NAME_MAX) {

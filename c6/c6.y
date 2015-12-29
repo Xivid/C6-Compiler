@@ -59,8 +59,8 @@ program:
         ;
 
 definition:
-         VARIABLE '(' arguments ')' '{' stmt_list'}'    { $$= opr('$',3,id($1),$3,$6); } 
-         | VARIABLE '(' ')''{' stmt_list'}'             { $$= opr('$',2,id($1),$5); } 
+         VARIABLE '(' arguments ')' '{' stmt_list '}'     { $$= opr('$',3,id($1),$3,$6); } 
+         | VARIABLE '(' ')' '{' stmt_list '}'             { $$= opr('$',2,id($1),$5); } 
          ;
 
 function:
@@ -73,7 +73,7 @@ stmt:
           ';'                             { $$ = opr(';', 2, NULL, NULL); }
         | expr ';'                        { $$ = $1; }
         | array_def ';'                   { $$ = $1; }
-        | RETURN expr ';'                 { $$=opr(RETURN,1,$2); }
+        | RETURN expr ';'                 { $$ = opr(RETURN,1,$2); }
         | BREAK ';'                       { $$ = opr(BREAK,0);}
         | CONTINUE ';'                    { $$ = opr(CONTINUE,0);}
         | input ';'                       { $$ = $1; }
@@ -95,9 +95,9 @@ stmt_list:
         ;
 
 arguments:
-         arguments ',' expr     { $$ = addOperand($1,$3);}
+         arguments ',' expr       { $$ = addOperand($1,$3);}
         | arguments ',' reference { $$ = addOperand($1,$3);}
-        | expr                  { $$ = opr('|',1,$1);}
+        | expr                    { $$ = opr('|',1,$1);}
         | reference               { $$ = opr('|',1,$1);}
         ;
 reference: 

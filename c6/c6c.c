@@ -15,6 +15,7 @@ int ex(nodeType *p,int l1,int l2,int* fp) {
     int lblx, lbly,lblz, lbl1, lbl2,i,j,argn;
     int* size;
     int arrlength, initval, arrbase;
+    int oldfp;
     char* initstr;
     char* name;
     nodeType* temp;
@@ -23,7 +24,15 @@ int ex(nodeType *p,int l1,int l2,int* fp) {
     if (!p) return 0;
     switch(p->type) {
         case typeCh:
-            printf("\tpush\t'%c'\n",p->ch.value);
+            printf("\tpush\t'");
+            switch (p->ch.value) {
+                case '\n': printf("\\n"); break;
+                case '\t': printf("\\t"); break;
+                case '\\': printf("\\"); break;
+                case '\"': printf("\\\""); break;
+                default: printf("%c", p->ch.value);
+            }
+            printf("'\n");
             (*fp)++;
             break;
         case typeCon:       
@@ -282,6 +291,8 @@ int ex(nodeType *p,int l1,int l2,int* fp) {
                     else printf("invalid break !\n");
                     return 1;
                 case FOR:
+                    propagate_ht();
+                    oldfp = *fp;
                     ex(p->opr.op[0],l1,l2,fp);
                     printf("L%03d:\n", lblx = lbl++);
                     ex(p->opr.op[1],l1,l2,fp);
@@ -293,8 +304,12 @@ int ex(nodeType *p,int l1,int l2,int* fp) {
                     ex(p->opr.op[2],l1,l2,fp);
                     printf("\tjmp\tL%03d\n", lblx);
                     printf("L%03d:\n", lbly);
+                    delete_ht();
+                    *fp = oldfp;
                     break;
                 case WHILE:
+                    propagate_ht();
+                    oldfp = *fp;
                     printf("L%03d:\n", lbl1 = lbl++);
                     ex(p->opr.op[0],l1,l2,fp);
                     printf("\tj0\tL%03d\n", lbl2 = lbl++);
@@ -302,9 +317,13 @@ int ex(nodeType *p,int l1,int l2,int* fp) {
                     ex(p->opr.op[1],lbl1,lbl2,fp);
                     printf("\tjmp\tL%03d\n", lbl1);
                     printf("L%03d:\n", lbl2);
+                    delete_ht();
+                    *fp = oldfp;
                     break;
                 case DO:
                 //do stmt while (expr)
+                    propagate_ht();
+                    oldfp = *fp;
                     printf("L%03d:\n", lbl1 = lbl++);
                     lbl2 = lbl++;
                     ex(p->opr.op[0],lbl1,lbl2,fp);
@@ -313,6 +332,8 @@ int ex(nodeType *p,int l1,int l2,int* fp) {
                     (*fp)--;
                     printf("\tjmp\tL%03d\n", lbl1);
                     printf("L%03d:\n", lbl2);
+                    delete_ht();
+                    *fp = oldfp;
                     break;
                 case IF:
                     ex(p->opr.op[0],l1,l2,fp);
@@ -320,16 +341,27 @@ int ex(nodeType *p,int l1,int l2,int* fp) {
                         /* if else */
                         printf("\tj0\tL%03d\n", lbl1 = lbl++);
                         (*fp)--;
+                        propagate_ht();
+                        oldfp = *fp;
                         ex(p->opr.op[1],l1,l2,fp);
+                        delete_ht();
+                        *fp = oldfp;
                         printf("\tjmp\tL%03d\n", lbl2 = lbl++);
                         printf("L%03d:\n", lbl1);
+                        propagate_ht();
                         ex(p->opr.op[2],l1,l2,fp);
+                        delete_ht();
+                        *fp = oldfp;
                         printf("L%03d:\n", lbl2);
                     } else {
                         /* if */
                         printf("\tj0\tL%03d\n", lbl1 = lbl++);
                         (*fp)--;
+                        propagate_ht();
+                        oldfp = *fp;
                         ex(p->opr.op[1],l1,l2,fp);
+                        delete_ht();
+                        *fp = oldfp;
                         printf("L%03d:\n", lbl1);
                     }
                     break;
@@ -566,7 +598,15 @@ int ex(nodeType *p,int l1,int l2,int* fp) {
                         char* format = temp->opr.op[0]->str.value;
                         for (i=1;i<argn;i++) {
                             ex(temp->opr.op[i],-1,-1,fp);
-                            printf("\tputi\t\"%s\"\n",format);//with newline
+                            printf("\tputi\t\"");
+                            char* c;
+                            for(c = format; *c; c++)
+                                if (*c == '\n') printf("\\n");
+                                else if (*c == '\t') printf("\\t");
+                                else if (*c == '\\') printf("\\");
+                                else if (*c == '\"') printf("\\\"");
+                                else printf("%c", *c);
+                            printf("\"\n"); //with newline
                             (*fp)--;
                         }
                     }
@@ -592,7 +632,15 @@ int ex(nodeType *p,int l1,int l2,int* fp) {
                          char* format = p->opr.op[0]->opr.op[0]->str.value;
                          for (i=1;i<argn;i++) {
                             ex(p->opr.op[0]->opr.op[i],-1,-1,fp);
-                            printf("\tputc\t\"%s\"\n",format);//with newline
+                            printf("\tputc\t\"");
+                            char* c;
+                            for(c = format; *c; c++)
+                                if (*c == '\n') printf("\\n");
+                                else if (*c == '\t') printf("\\t");
+                                else if (*c == '\\') printf("\\");
+                                else if (*c == '\"') printf("\\\"");
+                                else printf("%c", *c);
+                            printf("\"\n"); //with newline
                             (*fp)--;
                         }
                     }
@@ -632,18 +680,38 @@ int ex(nodeType *p,int l1,int l2,int* fp) {
                          char* format = temp->opr.op[0]->str.value;
                          for (i=1;i<argn;i++) {
                             ex(temp->opr.op[i],-1,-1,fp);
-                            printf("\tputs\t\"%s\"\n",format);//with newline
+                            printf("\tputs\t\"");
+                            char* c;
+                            for(c = format; *c; c++)
+                                if (*c == '\n') printf("\\n");
+                                else if (*c == '\t') printf("\\t");
+                                else if (*c == '\\') printf("\\");
+                                else if (*c == '\"') printf("\\\"");
+                                else printf("%c", *c);
+                            printf("\"\n"); //with newline
                             (*fp)--;
                         }
                     }
                     break;
                 case PUTS_:
-                    argn = p->opr.op[0]->opr.nops;
+                    temp = p->opr.op[0];
+                    argn = temp->opr.nops;
                     for (i=0;i<argn;i++) {
-                        ex(p->opr.op[0]->opr.op[i],-1,-1,fp);
-                        printf("\tputs_\n");//without newline
-                        (*fp)--;
-                        }
+                        if (temp->opr.op[i]->type == typeId && local_lookup(temp->opr.op[i]->id.name)->type == typeArray){
+                                ep = local_lookup(temp->opr.op[i]->id.name);
+                                for (j=0;j<*(ep->array.size)-1;j++){
+                                    printf("\tpush\tfp[%d]\n",ep->array.base+j);
+                                    printf("\tputc_\n");
+                                }
+                                    printf("\tpush\tfp[%d]\n",ep->array.base+j);
+                                    printf("\tputc_\n");//newline here
+                            }
+                            else {
+                                ex(temp->opr.op[i],-1,-1,fp);
+                                printf("\tputs_\n");//with newline
+                                (*fp)--;
+                            }
+                    }
                     
                     break;
                 case '[': // array element
@@ -706,9 +774,9 @@ int ex(nodeType *p,int l1,int l2,int* fp) {
                     ex(p->opr.op[1],l1,l2,fp);
                     if (p->opr.op[0]->type == typeId){
                         name = p->opr.op[0]->id.name;
-                        ep = local_lookup(name);
-                        if (p->opr.nops == 2){
-                            if (ep== NULL){
+                        if (p->opr.nops == 2) {
+                            ep = local_lookup(name);
+                            if (ep == NULL) {
                                 //redundant push
                                 printf("\tpush\tsp[-1]\n");
                                 (*fp)++;
@@ -716,7 +784,7 @@ int ex(nodeType *p,int l1,int l2,int* fp) {
                                 insert_var(name,(*fp)-2);
                                 printf("\tpop\tfp[%d]\n", local_lookup(name)->var.index);
                                 (*fp)--; 
-                            } 
+                            }
                             else {
                                 if (ep->type == typeVar){
                                     printf("\tpop\tfp[%d]\n", ep->var.index);
@@ -731,12 +799,13 @@ int ex(nodeType *p,int l1,int l2,int* fp) {
                                     }
                                 }
                             }
-                            
                         } else {
                             //global variable 
                             if (global_lookup(name) == NULL){
-                                if (local ==1) printf("global variable %s not defined!\n",name);
-                                else {
+                                if (local == 1) {
+                                    printf("error: global variable %s not defined!\n",name);
+                                    return 1;
+                                } else {
                                     //redundant push
                                     printf("\tpush\tsp[-1]\n");
                                     (*fp)++;
@@ -744,7 +813,7 @@ int ex(nodeType *p,int l1,int l2,int* fp) {
                                     insert_var(name,(*fp)-2);
                                 }
                             }
-                            printf("\tpop\tsb[%d]\n", global_lookup(name)->var.index);
+                            printf("\tpop\tsb[%d]\n", global_lookup(name)->var.index); // only ordinary variables
                             (*fp)--;
 
                         }
@@ -814,19 +883,19 @@ int ex(nodeType *p,int l1,int l2,int* fp) {
                     ex(p->opr.op[0],l1,l2,fp);
                     ex(p->opr.op[1],l1,l2,fp);
                     switch(p->opr.oper) {
-                        case '+':   printf("\tadd\n"); (*fp)--;break;
-                        case '-':   printf("\tsub\n"); (*fp)--;break; 
-                        case '*':   printf("\tmul\n"); (*fp)--;break;
-                        case '/':   printf("\tdiv\n"); (*fp)--;break;
-                        case '%':   printf("\tmod\n"); (*fp)--;break;
-                        case '<':   printf("\tcomplt\n"); (*fp)--;break;
-                        case '>':   printf("\tcompgt\n"); (*fp)--;break;
-                        case GE:    printf("\tcompge\n"); (*fp)--;break;
-                        case LE:    printf("\tcomple\n"); (*fp)--;break;
-                        case NE:    printf("\tcompne\n"); (*fp)--;break;
-                        case EQ:    printf("\tcompeq\n"); (*fp)--;break;
-                        case AND:   printf("\tand\n"); (*fp)--;break;
-                        case OR:    printf("\tor\n"); (*fp)--;break;
+                        case '+':   printf("\tadd\n"); (*fp)--; break;
+                        case '-':   printf("\tsub\n"); (*fp)--; break; 
+                        case '*':   printf("\tmul\n"); (*fp)--; break;
+                        case '/':   printf("\tdiv\n"); (*fp)--; break;
+                        case '%':   printf("\tmod\n"); (*fp)--; break;
+                        case '<':   printf("\tcomplt\n"); (*fp)--; break;
+                        case '>':   printf("\tcompgt\n"); (*fp)--; break;
+                        case GE:    printf("\tcompge\n"); (*fp)--; break;
+                        case LE:    printf("\tcomple\n"); (*fp)--; break;
+                        case NE:    printf("\tcompne\n"); (*fp)--; break;
+                        case EQ:    printf("\tcompeq\n"); (*fp)--; break;
+                        case AND:   printf("\tand\n"); (*fp)--; break;
+                        case OR:    printf("\tor\n"); (*fp)--; break;
                     }
             }
     }

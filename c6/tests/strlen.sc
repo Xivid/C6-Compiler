@@ -8,5 +8,6 @@ length(&s[200]){
 }
 
 array greetings[100]="Good morning!\n";
+puts(greetings);
 puti(length(&greetings));
 

@@ -20,6 +20,7 @@ else
 
 //MAX
 max (x, y){
+	z = 0;
 	if (x> y) z=x;
 	else z=y;
 	return z;

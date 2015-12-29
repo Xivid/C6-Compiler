@@ -94,7 +94,6 @@ while (cur != 1230) {
 	if (c == '\n' || c == '\t' || c == ' ')
 		continue;
 	else if (c == '?') {
-		puts("make a best move");
 		cur = best[hash(cur)];
 	}
 	else if (c == 'E')
@@ -108,10 +107,7 @@ while (cur != 1230) {
 		puts("STEP 0");
 		continue;
 	} else {
-		puti("cur = %d\n", cur);
-
 		tmp = next(cur, c);
-		puti("tmp = %d\n", tmp);
 		if (tmp != cur)
 			cur = tmp;
 		else {
@@ -125,6 +121,8 @@ while (cur != 1230) {
 	if (cur == 1230) {
 		puts("SUCCESS");
 		getc(c);
+		while (c == '\n' || c == '\t' || c == '') 
+			getc(c);
 		if (c == 'A') {
 			puts("BEGIN");
 			geti(lucky);

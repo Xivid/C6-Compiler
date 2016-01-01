@@ -87,7 +87,7 @@ puts("BEGIN");
 geti(lucky);
 cur = init[lucky % 11];
 step = 0;
-puti("DRAW %d\n", cur);
+puti("DRAW %04d\n", cur);
 puts("STEP 0");
 while (cur != 1230) {
 	getc(c);
@@ -103,7 +103,7 @@ while (cur != 1230) {
 		geti(lucky);
 		cur = init[lucky % 11];
 		step = 0;
-		puti("DRAW %d\n", cur);
+		puti("DRAW %04d\n", cur);
 		puts("STEP 0");
 		continue;
 	} else {
@@ -116,7 +116,7 @@ while (cur != 1230) {
 		}
 	}
 	step = step + 1;
-	puts("DRAW %d\n", cur);
+	puts("DRAW %04d\n", cur);
 	puts("STEP %d\n", step);
 	if (cur == 1230) {
 		puts("SUCCESS");
@@ -128,7 +128,7 @@ while (cur != 1230) {
 			geti(lucky);
 			cur = init[lucky % 11];
 			step = 0;
-			puti("DRAW %d\n", cur);
+			puti("DRAW %04d\n", cur);
 			puts("STEP 0");
 		}
 	}
